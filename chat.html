@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Firebase Chat App</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    :root{
+      --bg:#020617;
+      --sidebar:#0f172a;
+      --card:#1e293b;
+      --primary:#2563eb;
+      --primary-hover:#1d4ed8;
+      --text:#ffffff;
+      --gray:#94a3b8;
+      --danger:#ef4444;
+      --success:#22c55e;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      height:100vh;
+      overflow:hidden;
+    }
+
+    .chat-app{
+      display:flex;
+      width:100%;
+      height:100vh;
+    }
+
+    /* ================= MOBILE MENU ================= */
+
+    .mobile-menu-btn{
+      display:none;
+      position:fixed;
+      top:15px;
+      left:15px;
+      z-index:999;
+      width:45px;
+      height:45px;
+      border:none;
+      border-radius:12px;
+      background:var(--primary);
+      color:white;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar{
+      width:340px;
+      background:var(--sidebar);
+      border-right:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      flex-direction:column;
+      transition:0.3s;
+    }
+
+    .sidebar.active{
+      left:0;
+    }
+
+    .sidebar-header{
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo{
+      font-size:24px;
+      font-weight:bold;
+      color:#60a5fa;
+    }
+
+    .logout-btn{
+      padding:10px 14px;
+      border:none;
+      border-radius:10px;
+      background:var(--danger);
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .logout-btn:hover{
+      background:#dc2626;
+    }
+
+    /* ================= PROFILE ================= */
+
+    .profile{
+      padding:25px 20px;
+      text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .avatar{
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#2563eb,#60a5fa);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin:auto;
+      font-size:35px;
+      font-weight:bold;
+      margin-bottom:15px;
+      box-shadow:0 0 25px rgba(37,99,235,0.5);
+    }
+
+    .profile h3{
+      margin-bottom:5px;
+      color:#60a5fa;
+    }
+
+    .profile p{
+      color:var(--gray);
+      font-size:14px;
+      word-break:break-word;
+    }
+
+    .status{
+      margin-top:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,197,94,0.15);
+      color:#22c55e;
+      padding:8px 14px;
+      border-radius:30px;
+      font-size:13px;
+    }
+
+    .status-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#22c55e;
+    }
+
+    /* ================= SEARCH ================= */
+
+    .search-box{
+      padding:15px;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:var(--card);
+      color:white;
+      outline:none;
+      font-size:14px;
+    }
+
+    /* ================= USERS ================= */
+
+    .users-list{
+      flex:1;
+      overflow-y:auto;
+      padding:15px;
+    }
+
+    .users-title{
+      color:var(--gray);
+      margin-bottom:15px;
+      font-size:14px;
+    }
+
+    .user{
+      background:var(--card);
+      padding:12px;
+      border-radius:14px;
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      transition:0.3s;
+      cursor:pointer;
+    }
+
+    .user:hover{
+      background:#334155;
+      transform:translateY(-2px);
+    }
+
+    .user-avatar{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:#2563eb;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-weight:bold;
+      font-size:18px;
+    }
+
+    .user-details{
+      flex:1;
+    }
+
+    .user-details h4{
+      margin-bottom:4px;
+      font-size:15px;
+    }
+
+    .user-details p{
+      color:var(--gray);
+      font-size:12px;
+    }
+
+    .online-dot{
+      width:10px;
+      height:10px;
+      background:#22c55e;
+      border-radius:50%;
+    }
+
+    /* ================= CHAT ================= */
+
+    .chat-section{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      background:var(--bg);
+    }
+
+    .chat-header{
+      background:var(--sidebar);
+      padding:20px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .chat-title h1{
+      font-size:24px;
+    }
+
+    .chat-title p{
+      color:var(--gray);
+      margin-top:5px;
+      font-size:13px;
+    }
+
+    .chat-actions{
+      display:flex;
+      gap:10px;
+    }
+
+    .header-btn{
+      background:var(--card);
+      border:none;
+      color:white;
+      padding:10px 15px;
+      border-radius:10px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .header-btn:hover{
+      background:#334155;
+    }
+
+    /* ================= MESSAGES ================= */
+
+    .messages{
+      flex:1;
+      overflow-y:auto;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+      scroll-behavior:smooth;
+    }
+
+    .message{
+      max-width:75%;
+      padding:14px;
+      border-radius:18px;
+      animation:fadeIn 0.2s ease;
+      position:relative;
+      word-wrap:break-word;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .sent{
+      align-self:flex-end;
+      background:var(--primary);
+      border-bottom-right-radius:5px;
+    }
+
+    .received{
+      align-self:flex-start;
+      background:var(--card);
+      border-bottom-left-radius:5px;
+    }
+
+    .message-name{
+      font-size:13px;
+      color:#bfdbfe;
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    .message-text{
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .message-time{
+      font-size:11px;
+      opacity:0.7;
+      margin-top:8px;
+      text-align:right;
+    }
+
+    .typing{
+      padding:0 20px 10px;
+      color:#94a3b8;
+      font-size:13px;
+    }
+
+    /* ================= INPUT ================= */
+
+    .chat-input-area{
+      padding:20px;
+      background:var(--sidebar);
+      border-top:1px solid rgba(255,255,255,0.08);
+    }
+
+    .input-wrapper{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .chat-input-area input{
+      flex:1;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:var(--card);
+      color:white;
+      outline:none;
+      font-size:15px;
+    }
+
+    .send-btn{
+      padding:15px 22px;
+      border:none;
+      border-radius:14px;
+      background:var(--primary);
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .send-btn:hover{
+      background:var(--primary-hover);
+    }
+
+    /* ================= EMPTY ================= */
+
+    .empty-chat{
+      margin:auto;
+      text-align:center;
+      color:var(--gray);
+      line-height:1.8;
+    }
+
+    /* ================= SCROLL ================= */
+
+    ::-webkit-scrollbar{
+      width:6px;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#334155;
+      border-radius:10px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:900px){
+
+      .sidebar{
+        position:fixed;
+        left:-100%;
+        top:0;
+        z-index:998;
+        height:100%;
+      }
+
+      .mobile-menu-btn{
+        display:block;
+      }
+
+      .chat-section{
+        width:100%;
+      }
+
+    }
+
+    @media(max-width:600px){
+
+      .chat-header{
+        padding:15px;
+      }
+
+      .chat-title h1{
+        font-size:20px;
+      }
+
+      .messages{
+        padding:15px;
+      }
+
+      .message{
+        max-width:90%;
+      }
+
+      .chat-input-area{
+        padding:15px;
+      }
+
+      .input-wrapper{
+        gap:8px;
+      }
+
+      .chat-input-area input{
+        padding:14px;
+        font-size:14px;
+      }
+
+      .send-btn{
+        padding:14px 18px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- MOBILE BUTTON -->
+
+<button class="mobile-menu-btn" id="menuBtn">
+  ☰
+</button>
+
+<div class="chat-app">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <div class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+      <div class="logo">
+        Let's Chat
+      </div>
+
+      <button class="logout-btn" id="logoutBtn">
+        Logout
+      </button>
+
+    </div>
+
+    <!-- PROFILE -->
+
+    <div class="profile">
+
+      <div class="avatar" id="avatar">
+        U
+      </div>
+
+      <h3 id="username">
+        Loading...
+      </h3>
+
+      <p id="email">
+        Loading...
+      </p>
+
+      <div class="status">
+        <div class="status-dot"></div>
+        Online
+      </div>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search users..."
+      />
+
+    </div>
+
+    <!-- USERS -->
+
+    <div class="users-list">
+
+      <div class="users-title">
+        Users
+      </div>
+
+      <div id="usersContainer"></div>
+
+    </div>
+
+  </div>
+
+  <!-- ================= CHAT SECTION ================= -->
+
+  <div class="chat-section">
+
+    <div class="chat-header">
+
+      <div class="chat-title">
+
+        <h1>Global Chat Room</h1>
+
+        <p>
+          Seeker Realtime Chat Application
+        </p>
+
+      </div>
+
+      <div class="chat-actions">
+
+        <button class="header-btn" id="clearBtn">
+          Clear Input
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- MESSAGES -->
+
+    <div class="messages" id="messages">
+
+      <div class="empty-chat">
+        No messages yet 🚀<br/>
+        Start chatting now
+      </div>
+
+    </div>
+
+    <!-- TYPING -->
+
+    <div class="typing" id="typingText"></div>
+
+    <!-- INPUT -->
+
+    <div class="chat-input-area">
+
+      <div class="input-wrapper">
+
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type your message..."
+        />
+
+        <button class="send-btn" id="sendBtn">
+          Send
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+  // FIREBASE
+  import { auth, db }
+  from "./firebase.js";
+
+import {
+
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+}
+
+
+  from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  import {
+
+    signOut,
+    onAuthStateChanged
+
+  }
+  from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // ELEMENTS
+
+  const username =
+  document.getElementById("username");
+
+  const email =
+  document.getElementById("email");
+
+  const avatar =
+  document.getElementById("avatar");
+
+  const usersContainer =
+  document.getElementById("usersContainer");
+
+  const messages =
+  document.getElementById("messages");
+
+  const messageInput =
+  document.getElementById("messageInput");
+
+  const sendBtn =
+  document.getElementById("sendBtn");
+
+  const logoutBtn =
+  document.getElementById("logoutBtn");
+
+  const searchInput =
+  document.getElementById("searchInput");
+
+  const clearBtn =
+  document.getElementById("clearBtn");
+
+  const typingText =
+  document.getElementById("typingText");
+
+  const menuBtn =
+  document.getElementById("menuBtn");
+
+  const sidebar =
+  document.getElementById("sidebar");
+
+  // ================= MOBILE MENU =================
+
+  menuBtn.addEventListener("click",()=>{
+
+    sidebar.classList.toggle("active");
+
+  });
+
+  // ================= AUTH =================
+function getInitials(name){
+
+  if(!name) return "U";
+
+  const names = name.trim().split(" ");
+
+  if(names.length === 1){
+
+    return names[0][0].toUpperCase();
+
+  }
+
+  return (
+    names[0][0] +
+    names[1][0]
+  ).toUpperCase();
+
+}
+
+onAuthStateChanged(auth, (user) => {
+
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  username.innerText = user.displayName || "User";
+  email.innerText = user.email;
+
+  avatar.innerText = getInitials(user.displayName);
+
+});
+
+  // ================= SEND MESSAGE =================
+
+  async function sendMessage(){
+
+    const text =
+    messageInput.value.trim();
+
+    if(text === "") return;
+
+    const user =
+    auth.currentUser;
+
+    try{
+
+      await addDoc(
+
+        collection(db,"messages"),
+
+        {
+
+          text:text,
+
+          uid:user.uid,
+
+          username:
+          user.displayName || "User",
+
+          email:user.email,
+
+          createdAt:
+          serverTimestamp()
+
+        }
+
+      );
+
+      messageInput.value = "";
+      typingText.innerText = "";
+
+    }catch(error){
+
+      console.log(error);
+
+      alert("Failed to send message");
+
+    }
+
+  }
+
+  sendBtn.addEventListener(
+    "click",
+    sendMessage
+  );
+
+  messageInput.addEventListener(
+    "keydown",
+    (e)=>{
+
+      typingText.innerText =
+      "Typing...";
+
+      if(e.key === "Enter"){
+
+        sendMessage();
+
+      }
+
+    }
+  );
+
+  // ================= CLEAR INPUT =================
+
+  clearBtn.addEventListener(
+    "click",
+    ()=>{
+
+      messageInput.value = "";
+      messageInput.focus();
+
+    }
+  );
+
+  // ================= REALTIME MESSAGES =================
+
+  const q = query(
+
+    collection(db,"messages"),
+
+    orderBy("createdAt","asc")
+
+  );
+
+  onSnapshot(q,(snapshot)=>{
+
+    messages.replaceChildren();
+
+    if(snapshot.empty){
+
+      messages.innerHTML = `
+
+        <div class="empty-chat">
+          No messages yet 🚀<br/>
+          Start chatting now
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+    snapshot.forEach((doc)=>{
+
+      const data =
+      doc.data();
+
+      const div =
+      document.createElement("div");
+
+      const isCurrentUser =
+      auth.currentUser &&
+      data.uid === auth.currentUser.uid;
+
+      div.classList.add(
+        "message",
+        isCurrentUser
+        ? "sent"
+        : "received"
+      );
+
+      let time = "";
+
+      if(data.createdAt){
+
+        time =
+        new Date(
+          data.createdAt.seconds * 1000
+        ).toLocaleTimeString([],{
+
+          hour:"2-digit",
+          minute:"2-digit"
+
+        });
+
+      }
+
+      div.innerHTML = `
+
+        <div class="message-name">
+          ${data.username}
+        </div>
+
+        <div class="message-text">
+          ${data.text}
+        </div>
+
+        <div class="message-time">
+          ${time}
+        </div>
+
+      `;
+
+      messages.appendChild(div);
+
+    });
+
+    messages.scrollTop =
+    messages.scrollHeight;
+
+  });
+
+  // ================= LOAD USERS =================
+
+  let allUsers = [];
+
+// ================= REALTIME USERS =================
+
+onSnapshot(
+
+  collection(db,"users"),
+
+  (snapshot)=>{
+
+    allUsers = [];
+
+    snapshot.forEach((doc)=>{
+
+      allUsers.push(doc.data());
+
+    });
+
+    displayUsers(allUsers);
+
+  }
+
+);
+
+  function displayUsers(users){
+
+    usersContainer.innerHTML = "";
+
+    users.forEach((user)=>{
+
+      const div =
+      document.createElement("div");
+
+      div.classList.add("user");
+
+      div.innerHTML = `
+
+        <div class="user-avatar">
+
+          ${user.username
+            ? user.username.charAt(0).toUpperCase()
+            : "U"}
+
+        </div>
+
+        <div class="user-details">
+
+          <h4>${user.username}</h4>
+
+          <p>${user.email}</p>
+
+        </div>
+
+        <div class="online-dot"></div>
+
+      `;
+
+      usersContainer.appendChild(div);
+
+    });
+
+  }
+
+  // ================= SEARCH USERS =================
+
+  searchInput.addEventListener(
+    "input",
+    ()=>{
+
+      const value =
+      searchInput.value.toLowerCase();
+
+      const filteredUsers =
+      allUsers.filter((user)=>{
+
+        return (
+
+          user.username
+          .toLowerCase()
+          .includes(value)
+
+          ||
+
+          user.email
+          .toLowerCase()
+          .includes(value)
+
+        );
+
+      });
+
+      displayUsers(filteredUsers);
+
+    }
+  );
+
+  // ================= LOGOUT =================
+
+  logoutBtn.addEventListener(
+    "click",
+    async()=>{
+
+      await signOut(auth);
+
+      window.location.href =
+      "login.html";
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
