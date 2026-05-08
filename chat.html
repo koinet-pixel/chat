@@ -1915,74 +1915,49 @@ async function sendMessage(){
 
     // FILES
 
-    for(const file of files){
+    // ================= FILES =================
 
-      for (const file of files) {
+    for (const file of files) {
 
-  const type =
-    file.type.startsWith("image/") ? "image" :
-    file.type.startsWith("video/") ? "video" :
-    file.type.startsWith("audio/") ? "audio" : "file";
+      // DETECT FILE TYPE
 
-  // 1. Create storage reference
-  const storageRef = ref(
-    storage,
-    `chatFiles/${Date.now()}_${file.name}`
-  );
+      const type =
+        file.type.startsWith("image/")
+          ? "image"
+          : file.type.startsWith("video/")
+          ? "video"
+          : file.type.startsWith("audio/")
+          ? "audio"
+          : "file";
 
-  // 2. Upload file
-  await uploadBytes(storageRef, file);
+      // CREATE STORAGE REFERENCE
 
-  // 3. Get real download URL
-  const downloadURL = await getDownloadURL(storageRef);
+      const storageRef = ref(
+        storage,
+        `chatFiles/${Date.now()}_${file.name}`
+      );
 
-  // 4. Save to Firestore
-  await addDoc(collection(db, "messages"), {
-    fileURL: downloadURL,
-    fileName: file.name,
-    type: type,
-    uid: currentUser.uid,
-    username: currentUser.displayName || "User",
-    email: currentUser.email,
-    createdAt: serverTimestamp()
-  });
+      // UPLOAD FILE TO FIREBASE STORAGE
 
-}
+      await uploadBytes(storageRef, file);
 
-      let type = "file";
+      // GET DOWNLOAD URL
 
-      if(file.type.startsWith("image/")){
+      const downloadURL =
+      await getDownloadURL(storageRef);
 
-        type = "image";
-
-      }
-
-      else if(
-        file.type.startsWith("video/")
-      ){
-
-        type = "video";
-
-      }
-
-      else if(
-        file.type.startsWith("audio/")
-      ){
-
-        type = "audio";
-
-      }
+      // SAVE MESSAGE TO FIRESTORE
 
       await addDoc(
         collection(db, "messages"),
         {
-          fileURL:fileURL,
+          fileURL: downloadURL,
 
-          fileName:file.name,
+          fileName: file.name,
 
-          type:type,
+          type: type,
 
-          uid:currentUser.uid,
+          uid: currentUser.uid,
 
           username:
           currentUser.displayName || "User",
@@ -1996,7 +1971,6 @@ async function sendMessage(){
       );
 
     }
-
     // CLEAR
 
     messageInput.value = "";
