@@ -1147,26 +1147,6 @@ body::after{
 
 }
 
-/* ================= TYPING BUBBLE ANIMATION ================= */
-
-.typing-bubble .dots span{
-  animation: blink 1.4s infinite;
-  font-weight:900;
-}
-
-.typing-bubble .dots span:nth-child(2){
-  animation-delay:0.2s;
-}
-
-.typing-bubble .dots span:nth-child(3){
-  animation-delay:0.4s;
-}
-
-@keyframes blink{
-  0%, 80%, 100% { opacity:0.2; }
-  40% { opacity:1; }
-}
-
 </style>
 </head>
 
@@ -1306,547 +1286,283 @@ body::after{
 <script type="module">
 
   // FIREBASE
-  import { auth, db }
-  from "./firebase.js";
-import {
-
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-  doc,
-  setDoc,
-  updateDoc,
-  deleteDoc
-
-}
-
-  from
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { auth, db } from "./firebase.js";
 
   import {
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    onSnapshot,
+    serverTimestamp,
+    doc,
+    setDoc,
+    updateDoc,
+    deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+  import {
     signOut,
     onAuthStateChanged
-
-  }
-  from
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   // ELEMENTS
-
-  const username =
-  document.getElementById("username");
-
-  const email =
-  document.getElementById("email");
-
-  const avatar =
-  document.getElementById("avatar");
-
-  const usersContainer =
-  document.getElementById("usersContainer");
-
-  const messages =
-  document.getElementById("messages");
-
-  const messageInput =
-  document.getElementById("messageInput");
-
-  const sendBtn =
-  document.getElementById("sendBtn");
-
-  const logoutBtn =
-  document.getElementById("logoutBtn");
-
-  const searchInput =
-  document.getElementById("searchInput");
-
-  const clearBtn =
-  document.getElementById("clearBtn");
-
-  const typingText =
-  document.getElementById("typingText");
-
-  const menuBtn =
-  document.getElementById("menuBtn");
-
-  const sidebar =
-  document.getElementById("sidebar");
+  const username = document.getElementById("username");
+  const email = document.getElementById("email");
+  const avatar = document.getElementById("avatar");
+  const usersContainer = document.getElementById("usersContainer");
+  const messages = document.getElementById("messages");
+  const messageInput = document.getElementById("messageInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const searchInput = document.getElementById("searchInput");
+  const clearBtn = document.getElementById("clearBtn");
+  const typingText = document.getElementById("typingText");
+  const menuBtn = document.getElementById("menuBtn");
+  const sidebar = document.getElementById("sidebar");
 
   // ================= MOBILE MENU =================
-
-  menuBtn.addEventListener("click",()=>{
-
+  menuBtn.addEventListener("click", () => {
     sidebar.classList.toggle("active");
-
   });
 
-  // ================= AUTH =================
-function getInitials(name){
-
-  if(!name) return "U";
-
-  const names = name.trim().split(" ");
-
-  if(names.length === 1){
-
-    return names[0][0].toUpperCase();
-
+  function getInitials(name) {
+    if (!name) return "U";
+    const names = name.trim().split(" ");
+    if (names.length === 1) return names[0][0].toUpperCase();
+    return (names[0][0] + names[1][0]).toUpperCase();
   }
 
-  return (
-    names[0][0] +
-    names[1][0]
-  ).toUpperCase();
+  let currentUser = null;
 
-}
-
-onAuthStateChanged(auth, async (user) => {
-
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  username.innerText = user.displayName || "User";
-  email.innerText = user.email;
-
-  avatar.innerText = getInitials(user.displayName);
-
-  // SET USER ONLINE
-
-  await setDoc(
-
-    doc(db, "users", user.uid),
-
-    {
-
-      username: user.displayName || "User",
-
-      email: user.email,
-
-      online: true
-
-    },
-
-    { merge:true }
-
-  );
-
-  // SET OFFLINE WHEN USER LEAVES
-
-  window.addEventListener("beforeunload", async ()=>{
-
-    await updateDoc(
-
-      doc(db,"users",user.uid),
-
-      {
-
-        online:false
-
-      }
-
-    );
-
-  });
-
-});
-  // ================= SEND MESSAGE =================
-
-  async function sendMessage(){
-
-const text =
-    await deleteDoc(
-  doc(db,"typing",user.uid)
-);
-    messageInput.value.trim();
-
-    if(text === "") return;
-
-    const user =
-    auth.currentUser;
-
-    try{
-
-      await addDoc(
-
-        collection(db,"messages"),
-
-        {
-
-          text:text,
-
-          uid:user.uid,
-
-          username:
-          user.displayName || "User",
-
-          email:user.email,
-
-          createdAt:
-          serverTimestamp()
-
-        }
-
-      );
-
-      messageInput.value = "";
-      typingText.innerText = "";
-
-    }catch(error){
-
-      console.log(error);
-
-      alert("Failed to send message");
-
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
     }
 
+    currentUser = user;
+
+    username.innerText = user.displayName || "User";
+    email.innerText = user.email;
+    avatar.innerText = getInitials(user.displayName);
+
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        username: user.displayName || "User",
+        email: user.email,
+        online: true
+      },
+      { merge: true }
+    );
+
+    window.addEventListener("beforeunload", async () => {
+      await updateDoc(doc(db, "users", user.uid), {
+        online: false
+      });
+    });
+  });
+
+  // ================= FIXED SEND MESSAGE =================
+  async function sendMessage() {
+    const text = messageInput.value.trim();
+
+    if (!text || !currentUser) return;
+
+    try {
+      await addDoc(collection(db, "messages"), {
+        text: text,
+        uid: currentUser.uid,
+        username: currentUser.displayName || "User",
+        email: currentUser.email,
+        createdAt: serverTimestamp()
+      });
+
+      messageInput.value = "";
+
+      await deleteDoc(doc(db, "typing", currentUser.uid));
+
+    } catch (error) {
+      console.log(error);
+      alert("Failed to send message");
+    }
   }
 
-  sendBtn.addEventListener(
-    "click",
-    sendMessage
-  );
+  sendBtn.addEventListener("click", sendMessage);
 
-  messageInput.addEventListener(
-    "keydown",
-    (e)=>{
-// ================= REAL-TIME TYPING BUBBLES =================
+  messageInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
 
-let typingBubble = null;
+  // ================= TYPING STATUS =================
+  let typingTimeout;
 
-function removeTypingBubble(){
-  if (typingBubble) {
-    typingBubble.remove();
-    typingBubble = null;
+  messageInput.addEventListener("input", async () => {
+    if (!currentUser) return;
+
+    await setDoc(doc(db, "typing", currentUser.uid), {
+      username: currentUser.displayName || "User",
+      typing: true,
+      timestamp: Date.now()
+    });
+
+    clearTimeout(typingTimeout);
+
+    typingTimeout = setTimeout(async () => {
+      await deleteDoc(doc(db, "typing", currentUser.uid));
+    }, 1200);
+  });
+
+  // ================= REAL-TIME MESSAGES =================
+  const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+
+  onSnapshot(q, (snapshot) => {
+    messages.innerHTML = "";
+
+    if (snapshot.empty) {
+      messages.innerHTML = `
+        <div class="empty-chat">
+          No messages yet 🚀<br/>
+          Start chatting now
+        </div>
+      `;
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+
+      const div = document.createElement("div");
+
+      const isCurrentUser =
+        currentUser && data.uid === currentUser.uid;
+
+      div.classList.add("message", isCurrentUser ? "sent" : "received");
+
+      let time = "";
+      if (data.createdAt) {
+        time = new Date(
+          data.createdAt.seconds * 1000
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      }
+
+      div.innerHTML = `
+        <div class="message-name">${data.username}</div>
+        <div class="message-text">${data.text}</div>
+        <div class="message-time">${time}</div>
+      `;
+
+      messages.appendChild(div);
+    });
+
+    messages.scrollTop = messages.scrollHeight;
+  });
+
+  // ================= USERS =================
+  let allUsers = [];
+
+  onSnapshot(collection(db, "users"), (snapshot) => {
+    allUsers = [];
+
+    snapshot.forEach((docSnap) => {
+      allUsers.push({ id: docSnap.id, ...docSnap.data() });
+    });
+
+    displayUsers(allUsers);
+  });
+
+  function displayUsers(users) {
+    usersContainer.innerHTML = "";
+
+    users.forEach((user) => {
+      const div = document.createElement("div");
+      div.classList.add("user");
+
+      div.innerHTML = `
+        <div class="user-avatar">
+          ${user.username ? user.username.charAt(0).toUpperCase() : "U"}
+        </div>
+
+        <div class="user-details">
+          <h4>${user.username}</h4>
+          <p>${user.online ? "Online" : "Offline"}</p>
+        </div>
+
+        ${user.online ? '<div class="online-dot"></div>' : ""}
+      `;
+
+      usersContainer.appendChild(div);
+    });
   }
-}
 
-onSnapshot(
-  collection(db,"typing"),
-  (snapshot)=>{
+  // ================= TYPING BUBBLES =================
+  let typingBubble = null;
 
+  function removeTypingBubble() {
+    if (typingBubble) {
+      typingBubble.remove();
+      typingBubble = null;
+    }
+  }
+
+  onSnapshot(collection(db, "typing"), (snapshot) => {
     let typingUsers = [];
 
-    snapshot.forEach((doc)=>{
-
-      const data = doc.data();
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
 
       if (
-        auth.currentUser &&
-        doc.id !== auth.currentUser.uid &&
+        currentUser &&
+        docSnap.id !== currentUser.uid &&
         Date.now() - data.timestamp < 3000
       ) {
         typingUsers.push(data.username);
       }
-
     });
 
-    // REMOVE OLD BUBBLE FIRST
     removeTypingBubble();
 
-    if(typingUsers.length > 0){
-
+    if (typingUsers.length > 0) {
       typingBubble = document.createElement("div");
-
-      typingBubble.classList.add("message","received","typing-bubble");
+      typingBubble.classList.add("message", "received", "typing-bubble");
 
       typingBubble.innerHTML = `
         <div class="message-name">System</div>
         <div class="message-text">
           ${typingUsers.join(", ")} is typing
-          <span class="dots">
-            <span>.</span><span>.</span><span>.</span>
-          </span>
+          <span>...</span>
         </div>
       `;
 
       messages.appendChild(typingBubble);
       messages.scrollTop = messages.scrollHeight;
-
     }
+  });
 
-  }
-);
+  // ================= SEARCH =================
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value.toLowerCase();
 
-      if(e.key === "Enter"){
-
-        sendMessage();
-
-      }
-
-    }
-  );
-
-// ================= TYPING STATUS =================
-
-let typingTimeout;
-
-messageInput.addEventListener("input", async ()=>{
-
-  const user = auth.currentUser;
-  if(!user) return;
-
-  await setDoc(
-    doc(db,"typing",user.uid),
-    {
-      username:user.displayName || "User",
-      typing:true,
-      timestamp: Date.now()
-    }
-  );
-
-  clearTimeout(typingTimeout);
-
-  typingTimeout = setTimeout(async ()=>{
-
-    await deleteDoc(
-      doc(db,"typing",user.uid)
-    );
-
-  }, 1200);
-
-});
-  // ================= REALTIME MESSAGES =================
-
-  const q = query(
-
-    collection(db,"messages"),
-
-    orderBy("createdAt","asc")
-
-  );
-
-  onSnapshot(q,(snapshot)=>{
-
-messages.innerHTML = "";
-
-    if(snapshot.empty){
-
-      messages.innerHTML = `
-
-        <div class="empty-chat">
-          No messages yet 🚀<br/>
-          Start chatting now
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-    snapshot.forEach((doc)=>{
-
-      const data =
-      doc.data();
-
-      const div =
-      document.createElement("div");
-
-      const isCurrentUser =
-      auth.currentUser &&
-      data.uid === auth.currentUser.uid;
-
-      div.classList.add(
-        "message",
-        isCurrentUser
-        ? "sent"
-        : "received"
+    const filteredUsers = allUsers.filter((user) => {
+      return (
+        (user.username || "").toLowerCase().includes(value) ||
+        (user.email || "").toLowerCase().includes(value)
       );
-
-      let time = "";
-
-      if(data.createdAt){
-
-        time =
-        new Date(
-          data.createdAt.seconds * 1000
-        ).toLocaleTimeString([],{
-
-          hour:"2-digit",
-          minute:"2-digit"
-
-        });
-
-      }
-
-      div.innerHTML = `
-
-        <div class="message-name">
-          ${data.username}
-        </div>
-
-        <div class="message-text">
-          ${data.text}
-        </div>
-
-        <div class="message-time">
-          ${time}
-        </div>
-
-      `;
-
-      messages.appendChild(div);
-
     });
 
-    requestAnimationFrame(()=>{
-  messages.scrollTop = messages.scrollHeight;
-});
-
+    displayUsers(filteredUsers);
   });
-
-  // ================= LOAD USERS =================
-
-  let allUsers = [];
-
-// ================= REALTIME USERS =================
-
-onSnapshot(
-
-  collection(db,"users"),
-
-  (snapshot)=>{
-
-    allUsers = [];
-
-    snapshot.forEach((doc)=>{
-
-      allUsers.push({ id: doc.id, ...doc.data() });
-    });
-
-    displayUsers(allUsers);
-
-  }
-
-);
-
-  function displayUsers(users){
-
-  usersContainer.innerHTML = "";
-
-  users.forEach((user)=>{
-
-    const div =
-    document.createElement("div");
-
-    div.classList.add("user");
-
-    div.innerHTML = `
-
-      <div class="user-avatar">
-
-        ${user.username
-          ? user.username.charAt(0).toUpperCase()
-          : "U"}
-
-      </div>
-
-      <div class="user-details">
-
-        <h4>${user.username}</h4>
-
-        <p>
-          ${user.online ? "Online" : "Offline"}
-        </p>
-
-      </div>
-
-      ${user.online
-        ? '<div class="online-dot"></div>'
-        : ''}
-
-    `;
-
-    usersContainer.appendChild(div);
-
-  });
-
-}
-
-// ================= REALTIME TYPING =================
-
-onSnapshot(
-  collection(db,"typing"),
-  (snapshot)=>{
-
-    let typingUsers = [];
-
-    snapshot.forEach((doc)=>{
-
-      const data = doc.data();
-
-      if (
-        auth.currentUser &&
-        doc.id !== auth.currentUser.uid &&
-        Date.now() - data.timestamp < 3000
-      ) {
-        typingUsers.push(data.username);
-      }
-
-    });
-
-    if(typingUsers.length > 0){
-      typingText.innerText = `${typingUsers.join(", ")} typing...`;
-    } else {
-      typingText.innerText = "";
-    }
-
-  }
-);  
-// ================= SEARCH USERS =================
-
-  searchInput.addEventListener(
-    "input",
-    ()=>{
-
-      const value =
-      searchInput.value.toLowerCase();
-
-      const filteredUsers =
-      allUsers.filter((user)=>{
-
-        return (
-
-          user.username
-          .toLowerCase()
-          .includes(value)
-
-          ||
-
-          user.email
-          .toLowerCase()
-          .includes(value)
-
-        );
-
-      });
-
-      displayUsers(filteredUsers);
-
-    }
-  );
 
   // ================= LOGOUT =================
-
-  logoutBtn.addEventListener(
-    "click",
-    async()=>{
-
-      await signOut(auth);
-
-      window.location.href =
-      "login.html";
-
-    }
-  );
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "login.html";
+  });
 
 </script>
-
 </body>
 </html>
