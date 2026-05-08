@@ -1230,19 +1230,25 @@ body::after{
 
     <div class="chat-header">
 
-      <div class="chat-title">
+  <div class="chat-title">
 
-        <h1>Global Chat Room</h1>
+    <h1>Global Chat Room</h1>
 
-        <p>
-          Seeker Realtime Chat Application
-        </p>
+    <p>
+      Seeker Realtime Chat Application
+    </p>
 
-      </div>
+  </div>
 
+  <div class="chat-actions">
 
-    </div>
+    <button class="header-btn" id="clearBtn">
+      Clear Input
+    </button>
 
+  </div>
+
+</div>
     <!-- MESSAGES -->
 
     <div class="messages" id="messages">
@@ -1316,6 +1322,19 @@ body::after{
   const logoutBtn = document.getElementById("logoutBtn");
   const searchInput = document.getElementById("searchInput");
   const clearBtn = document.getElementById("clearBtn") || null;
+  // ================= CLEAR INPUT =================
+
+if(clearBtn){
+
+  clearBtn.addEventListener("click", () => {
+
+    messageInput.value = "";
+
+    messageInput.focus();
+
+  });
+
+}
   const typingText = document.getElementById("typingText");
   const menuBtn = document.getElementById("menuBtn");
   const sidebar = document.getElementById("sidebar");
