@@ -1500,14 +1500,6 @@ body::after{
   }
 
   // ================= TYPING BUBBLES =================
-  let typingBubble = null;
-
-  function removeTypingBubble() {
-    if (typingBubble) {
-      typingBubble.remove();
-      typingBubble = null;
-    }
-  }
 
   onSnapshot(collection(db, "typing"), (snapshot) => {
     let typingUsers = [];
