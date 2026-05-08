@@ -1065,6 +1065,35 @@ body::after{
 
 }
 
+/* ================= MOBILE MENU FIX ================= */
+
+.mobile-menu-btn{
+  display:none;
+}
+
+/* show only on small screens */
+@media(max-width:900px){
+
+  .mobile-menu-btn{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .sidebar{
+    position:fixed;
+    left:-100%;
+    top:0;
+    height:100%;
+    z-index:998;
+    transition:left 0.3s ease;
+  }
+
+  .sidebar.active{
+    left:0;
+  }
+
+}
 
 </style>
 </head>
@@ -1441,30 +1470,18 @@ let typingTimeout;
 messageInput.addEventListener("input", async ()=>{
 
   const user = auth.currentUser;
-
   if(!user) return;
 
-  // SET TYPING TRUE
-
   await setDoc(
-
     doc(db,"typing",user.uid),
-
     {
-
       username:user.displayName || "User",
-
-      typing:true
-
+      typing:true,
+      timestamp: Date.now()
     }
-
   );
 
-  // REMOVE OLD TIMEOUT
-
   clearTimeout(typingTimeout);
-
-  // STOP TYPING AFTER 1.5 SECONDS
 
   typingTimeout = setTimeout(async ()=>{
 
@@ -1472,10 +1489,9 @@ messageInput.addEventListener("input", async ()=>{
       doc(db,"typing",user.uid)
     );
 
-  },1500);
+  }, 1200);
 
 });
-
   // ================= CLEAR INPUT =================
 
   clearBtn.addEventListener(
@@ -1500,7 +1516,7 @@ messageInput.addEventListener("input", async ()=>{
 
   onSnapshot(q,(snapshot)=>{
 
-    messages.replaceChildren();
+messages.innerHTML = "";
 
     if(snapshot.empty){
 
@@ -1572,8 +1588,9 @@ messageInput.addEventListener("input", async ()=>{
 
     });
 
-    messages.scrollTop =
-    messages.scrollHeight;
+    requestAnimationFrame(()=>{
+  messages.scrollTop = messages.scrollHeight;
+});
 
   });
 
@@ -1593,8 +1610,7 @@ onSnapshot(
 
     snapshot.forEach((doc)=>{
 
-      allUsers.push(doc.data());
-
+      allUsers.push({ id: doc.id, ...doc.data() });
     });
 
     displayUsers(allUsers);
@@ -1649,9 +1665,7 @@ onSnapshot(
 // ================= REALTIME TYPING =================
 
 onSnapshot(
-
   collection(db,"typing"),
-
   (snapshot)=>{
 
     let typingUsers = [];
@@ -1660,34 +1674,25 @@ onSnapshot(
 
       const data = doc.data();
 
-      // DON'T SHOW YOURSELF TYPING
-
-      if(
+      if (
         auth.currentUser &&
-        doc.id !== auth.currentUser.uid
-      ){
-
+        doc.id !== auth.currentUser.uid &&
+        Date.now() - data.timestamp < 3000
+      ) {
         typingUsers.push(data.username);
-
       }
 
     });
 
     if(typingUsers.length > 0){
-
-      typingText.innerText =
-      `${typingUsers.join(", ")} typing...`;
-
-    }else{
-
+      typingText.innerText = `${typingUsers.join(", ")} typing...`;
+    } else {
       typingText.innerText = "";
-
     }
 
   }
-
-);
-  // ================= SEARCH USERS =================
+);  
+// ================= SEARCH USERS =================
 
   searchInput.addEventListener(
     "input",
