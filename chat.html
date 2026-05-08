@@ -1066,9 +1066,33 @@ body::after{
 }
 
 /* ================= MOBILE MENU FIX ================= */
+/* ================= MOBILE MENU FIX ================= */
 
 .mobile-menu-btn{
   display:none;
+}
+
+@media(max-width:900px){
+
+  .mobile-menu-btn{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .sidebar{
+    position:fixed;
+    left:-100%;
+    top:0;
+    height:100%;
+    z-index:998;
+    transition:left 0.3s ease;
+  }
+
+  .sidebar.active{
+    left:0;
+  }
+
 }
 
 /* show only on small screens */
@@ -1091,6 +1115,34 @@ body::after{
 
   .sidebar.active{
     left:0;
+  }
+
+}
+
+@media(max-width:900px){
+
+  .profile{
+    padding:15px 10px;
+  }
+
+  .avatar{
+    width:70px;
+    height:70px;
+    font-size:28px;
+    margin-bottom:10px;
+  }
+
+  .profile h3{
+    font-size:18px;
+  }
+
+  .profile p{
+    font-size:12px;
+  }
+
+  .status{
+    padding:8px 12px;
+    font-size:12px;
   }
 
 }
