@@ -1384,29 +1384,27 @@ if(clearBtn){
 
   // ================= FIXED SEND MESSAGE =================
   async function sendMessage() {
-    const text = messageInput.value.trim();
+  const text = messageInput.value.trim();
 
-    if (!text || !currentUser) return;
+  if (!text || !currentUser) return;
 
-    try {
-      await addDoc(collection(db, "messages"), {
-        text: text,
-        uid: currentUser.uid,
-        username: currentUser.displayName || "User",
-        email: currentUser.email,
-        createdAt: serverTimestamp()
-      });
+  try {
+    await addDoc(collection(db, "messages"), {
+      text: text,
+      uid: currentUser.uid,
+      username: currentUser.displayName || "User",
+      email: currentUser.email,
+      createdAt: serverTimestamp()
+    });
 
-      messageInput.value = "";
+    messageInput.value = "";
 
-      await deleteDoc(doc(db, "typing", currentUser.uid));
-
-    } catch (error) {
-      console.log(error);
-      alert("Failed to send message");
-    }
+    await deleteDoc(doc(db, "typing", currentUser.uid));
+    
+  } finally {
+    // optional cleanup code
   }
-
+}
   sendBtn.addEventListener("click", sendMessage);
 
   messageInput.addEventListener("keydown", (e) => {
