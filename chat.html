@@ -1506,7 +1506,13 @@ body::after{
 // ================= FIREBASE =================
 
 import { auth, db } from "./firebase.js";
-
+const storage = getStorage();
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import {
   collection,
   addDoc,
@@ -1911,8 +1917,37 @@ async function sendMessage(){
 
     for(const file of files){
 
-      const fileURL =
-      URL.createObjectURL(file);
+      for (const file of files) {
+
+  const type =
+    file.type.startsWith("image/") ? "image" :
+    file.type.startsWith("video/") ? "video" :
+    file.type.startsWith("audio/") ? "audio" : "file";
+
+  // 1. Create storage reference
+  const storageRef = ref(
+    storage,
+    `chatFiles/${Date.now()}_${file.name}`
+  );
+
+  // 2. Upload file
+  await uploadBytes(storageRef, file);
+
+  // 3. Get real download URL
+  const downloadURL = await getDownloadURL(storageRef);
+
+  // 4. Save to Firestore
+  await addDoc(collection(db, "messages"), {
+    fileURL: downloadURL,
+    fileName: file.name,
+    type: type,
+    uid: currentUser.uid,
+    username: currentUser.displayName || "User",
+    email: currentUser.email,
+    createdAt: serverTimestamp()
+  });
+
+}
 
       let type = "file";
 
