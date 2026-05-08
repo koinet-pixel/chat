@@ -1316,7 +1316,7 @@ body::after{
   const sendBtn = document.getElementById("sendBtn");
   const logoutBtn = document.getElementById("logoutBtn");
   const searchInput = document.getElementById("searchInput");
-  const clearBtn = document.getElementById("clearBtn");
+  const clearBtn = document.getElementById("clearBtn") || null;
   const typingText = document.getElementById("typingText");
   const menuBtn = document.getElementById("menuBtn");
   const sidebar = document.getElementById("sidebar");
@@ -1398,21 +1398,21 @@ body::after{
   // ================= TYPING STATUS =================
   let typingTimeout;
 
-  messageInput.addEventListener("input", async () => {
-    if (!currentUser) return;
+messageInput.addEventListener("input", async () => {
+  if (!currentUser) return;
 
-    await setDoc(doc(db, "typing", currentUser.uid), {
-      username: currentUser.displayName || "User",
-      typing: true,
-      timestamp: Date.now()
-    });
-
-    clearTimeout(typingTimeout);
-
-    typingTimeout = setTimeout(async () => {
-      await deleteDoc(doc(db, "typing", currentUser.uid));
-    }, 1200);
+  await setDoc(doc(db, "typing", currentUser.uid), {
+    username: currentUser.displayName || "User",
+    typing: true,
+    timestamp: Date.now()
   });
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(async () => {
+    await deleteDoc(doc(db, "typing", currentUser.uid));
+  }, 1500);
+});
 
   // ================= REAL-TIME MESSAGES =================
   const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
@@ -1509,39 +1509,32 @@ body::after{
     }
   }
 
-  onSnapshot(collection(db, "typing"), (snapshot) => {
-    let typingUsers = [];
+onSnapshot(collection(db, "typing"), (snapshot) => {
 
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
+  let typingUsers = [];
 
-      if (
-        currentUser &&
-        docSnap.id !== currentUser.uid &&
-        Date.now() - data.timestamp < 3000
-      ) {
-        typingUsers.push(data.username);
-      }
-    });
+  snapshot.forEach((docSnap) => {
 
-    removeTypingBubble();
+    const data = docSnap.data();
 
-    if (typingUsers.length > 0) {
-      typingBubble = document.createElement("div");
-      typingBubble.classList.add("message", "received", "typing-bubble");
-
-      typingBubble.innerHTML = `
-        <div class="message-name">System</div>
-        <div class="message-text">
-          ${typingUsers.join(", ")} is typing
-          <span>...</span>
-        </div>
-      `;
-
-      messages.appendChild(typingBubble);
-      messages.scrollTop = messages.scrollHeight;
+    if (
+      currentUser &&
+      docSnap.id !== currentUser.uid &&
+      data.timestamp &&
+      Date.now() - data.timestamp < 5000
+    ) {
+      typingUsers.push(data.username);
     }
+
   });
+
+  if (typingUsers.length > 0) {
+    typingText.innerText = `${typingUsers.join(", ")} typing...`;
+  } else {
+    typingText.innerText = "";
+  }
+
+});
 
   // ================= SEARCH =================
   searchInput.addEventListener("input", () => {
