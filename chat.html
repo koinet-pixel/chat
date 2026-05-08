@@ -1506,13 +1506,18 @@ body::after{
 // ================= FIREBASE =================
 
 import { auth, db } from "./firebase.js";
-const storage = getStorage();
+
+
+import { auth, db } from "./firebase.js";
+
 import {
   getStorage,
   ref,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const storage = getStorage();
 import {
   collection,
   addDoc,
