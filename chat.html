@@ -1543,6 +1543,8 @@ const avatar = document.getElementById("avatar");
 const usersContainer = document.getElementById("usersContainer");
 const messages = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
+messageInput.disabled = true;
+messageInput.placeholder = "Select a user to chat...";
 const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const searchInput = document.getElementById("searchInput");
@@ -1695,8 +1697,12 @@ micBtn.addEventListener("click", async () => {
 // ================= OPEN DM =================
 
 function openDM(userId, name) {
+  messageInput.disabled = false;
+messageInput.placeholder = "Type a message...";
 
   activeDMUser = userId;
+  if (!currentUser) return;
+
   activeChatId = getChatId(currentUser.uid, userId);
 
   document.querySelector(".chat-title h1").innerText = name;
@@ -1707,7 +1713,7 @@ function openDM(userId, name) {
 // ================= LISTEN DM =================
 
 function listenToDM(chatId) {
-
+  if (!chatId) return;
   const dmQuery = query(
     collection(db, "chats", chatId, "messages"),
     orderBy("createdAt", "asc")
@@ -1715,7 +1721,7 @@ function listenToDM(chatId) {
 
   onSnapshot(dmQuery, (snapshot) => {
 
-    messages.innerHTML = "";
+    messages.innerHTML = `<div class="empty-chat">Loading chat...</div>`;
 
     snapshot.forEach(docSnap => {
 
@@ -1753,7 +1759,12 @@ function listenToDM(chatId) {
 
 async function sendMessage() {
 
-  if (!currentUser || !activeChatId) return;
+  if (!currentUser) return;
+
+if (!activeChatId) {
+  alert("Select a user to start chatting");
+  return;
+}
 
   const text = messageInput.value.trim();
   const files = fileInput.files;
