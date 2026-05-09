@@ -1514,6 +1514,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const storage = getStorage();
+
 import {
   collection,
   addDoc,
@@ -1536,894 +1537,332 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ================= ELEMENTS =================
 
-const username =
-document.getElementById("username");
+const username = document.getElementById("username");
+const email = document.getElementById("email");
+const avatar = document.getElementById("avatar");
+const usersContainer = document.getElementById("usersContainer");
+const messages = document.getElementById("messages");
+const messageInput = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
+const typingText = document.getElementById("typingText");
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
 
-const email =
-document.getElementById("email");
+const fileInput = document.getElementById("fileInput");
+const previewContainer = document.getElementById("previewContainer");
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPicker = document.getElementById("emojiPicker");
+const micBtn = document.getElementById("micBtn");
 
-const avatar =
-document.getElementById("avatar");
+// ================= DM STATE =================
 
-const usersContainer =
-document.getElementById("usersContainer");
-
-const messages =
-document.getElementById("messages");
-
-const messageInput =
-document.getElementById("messageInput");
-
-const sendBtn =
-document.getElementById("sendBtn");
-
-const logoutBtn =
-document.getElementById("logoutBtn");
-
-const searchInput =
-document.getElementById("searchInput");
-
-const clearBtn =
-document.getElementById("clearBtn");
-
-const typingText =
-document.getElementById("typingText");
-
-const menuBtn =
-document.getElementById("menuBtn");
-
-const sidebar =
-document.getElementById("sidebar");
-
-// EXTRA
-
-const fileInput =
-document.getElementById("fileInput");
-
-const previewContainer =
-document.getElementById("previewContainer");
-
-const emojiBtn =
-document.getElementById("emojiBtn");
-
-const emojiPicker =
-document.getElementById("emojiPicker");
-
-const micBtn =
-document.getElementById("micBtn");
-
-function getChatId(uid1, uid2){
+function getChatId(uid1, uid2) {
   return [uid1, uid2].sort().join("_");
 }
+
+let currentUser = null;
+let activeDMUser = null;
+let activeChatId = null;
 
 // ================= MOBILE MENU =================
 
 menuBtn.addEventListener("click", () => {
-
   sidebar.classList.toggle("active");
-
 });
 
-// ================= CLEAR INPUT =================
+// ================= CLEAR =================
 
-if(clearBtn){
+clearBtn?.addEventListener("click", () => {
+  messageInput.value = "";
+  previewContainer.innerHTML = "";
+  fileInput.value = "";
+});
 
-  clearBtn.addEventListener("click", () => {
+// ================= INITIALS =================
 
-    messageInput.value = "";
-
-    previewContainer.innerHTML = "";
-
-    fileInput.value = "";
-
-    messageInput.focus();
-
-  });
-
+function getInitials(name) {
+  if (!name) return "U";
+  const parts = name.trim().split(" ");
+  return parts.length === 1
+    ? parts[0][0].toUpperCase()
+    : (parts[0][0] + parts[1][0]).toUpperCase();
 }
-
-// ================= GET INITIALS =================
-
-function getInitials(name){
-
-  if(!name) return "U";
-
-  const names = name.trim().split(" ");
-
-  if(names.length === 1){
-
-    return names[0][0].toUpperCase();
-
-  }
-
-  return (
-    names[0][0] +
-    names[1][0]
-  ).toUpperCase();
-
-}
-
-// ================= CURRENT USER =================
-
-let currentUser = null;
 
 // ================= AUTH =================
 
-onAuthStateChanged(auth, async(user)=>{
+onAuthStateChanged(auth, async (user) => {
 
-  if(!user){
-
+  if (!user) {
     window.location.href = "login.html";
-
     return;
-
   }
 
   currentUser = user;
 
-  username.innerText =
-  user.displayName || "User";
+  username.innerText = user.displayName || "User";
+  email.innerText = user.email;
+  avatar.innerText = getInitials(user.displayName);
 
-  email.innerText =
-  user.email;
-
-  avatar.innerText =
-  getInitials(user.displayName);
-
-  // SAVE USER
-
-  await setDoc(
-    doc(db, "users", user.uid),
-    {
-      username:
-      user.displayName || "User",
-
-      email:user.email,
-
-      online:true
-    },
-    { merge:true }
-  );
-
-  // OFFLINE
-
-  window.addEventListener(
-    "beforeunload",
-    async()=>{
-
-    await updateDoc(
-      doc(db, "users", user.uid),
-      {
-        online:false
-      }
-    );
-
-  });
+  await setDoc(doc(db, "users", user.uid), {
+    username: user.displayName || "User",
+    email: user.email,
+    online: true
+  }, { merge: true });
 
 });
 
-// ================= EMOJI PICKER =================
+// ================= EMOJI =================
 
-emojiBtn.addEventListener("click", ()=>{
-
+emojiBtn.addEventListener("click", () => {
   emojiPicker.style.display =
-  emojiPicker.style.display === "flex"
-  ? "none"
-  : "flex";
-
+    emojiPicker.style.display === "flex" ? "none" : "flex";
 });
 
-document
-.querySelectorAll(".emoji-picker span")
-.forEach((emoji)=>{
-
-  emoji.addEventListener("click", ()=>{
-
-    messageInput.value +=
-    emoji.textContent;
-
-    messageInput.focus();
-
+document.querySelectorAll(".emoji-picker span").forEach(e => {
+  e.addEventListener("click", () => {
+    messageInput.value += e.textContent;
   });
-
 });
 
 // ================= FILE PREVIEW =================
 
-fileInput.addEventListener("change", (e)=>{
+fileInput.addEventListener("change", (e) => {
 
   previewContainer.innerHTML = "";
 
-  const files = e.target.files;
-
-  Array.from(files).forEach((file)=>{
+  Array.from(e.target.files).forEach(file => {
 
     const reader = new FileReader();
 
-    reader.onload = (event)=>{
+    reader.onload = (event) => {
 
-      const div =
-      document.createElement("div");
-
+      const div = document.createElement("div");
       div.classList.add("preview-item");
 
-      // IMAGE
-
-      if(file.type.startsWith("image/")){
-
-        div.innerHTML = `
-          <img src="${event.target.result}">
-        `;
-
-      }
-
-      // VIDEO
-
-      else if(file.type.startsWith("video/")){
-
-        div.innerHTML = `
-          <video
-            src="${event.target.result}"
-            controls>
-          </video>
-        `;
-
-      }
-
-      // AUDIO
-
-      else if(file.type.startsWith("audio/")){
-
-        div.innerHTML = `
-          <audio controls>
-            <source
-              src="${event.target.result}">
-          </audio>
-        `;
-
+      if (file.type.startsWith("image/")) {
+        div.innerHTML = `<img src="${event.target.result}">`;
+      } else if (file.type.startsWith("video/")) {
+        div.innerHTML = `<video controls src="${event.target.result}"></video>`;
+      } else if (file.type.startsWith("audio/")) {
+        div.innerHTML = `<audio controls src="${event.target.result}"></audio>`;
       }
 
       previewContainer.appendChild(div);
-
     };
 
     reader.readAsDataURL(file);
-
   });
-
 });
 
-// ================= VOICE RECORDING =================
+// ================= VOICE =================
 
 let mediaRecorder;
-
 let audioChunks = [];
 
-micBtn.addEventListener("click",
-async()=>{
+micBtn.addEventListener("click", async () => {
 
-  // START
+  if (!mediaRecorder || mediaRecorder.state === "inactive") {
 
-  if(
-    !mediaRecorder ||
-    mediaRecorder.state === "inactive"
-  ){
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    const stream =
-    await navigator.mediaDevices
-    .getUserMedia({
-      audio:true
-    });
-
-    mediaRecorder =
-    new MediaRecorder(stream);
-
+    mediaRecorder = new MediaRecorder(stream);
     audioChunks = [];
 
     mediaRecorder.start();
-
     micBtn.innerHTML = "⏹️";
 
-    mediaRecorder.addEventListener(
-      "dataavailable",
-      (event)=>{
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-      audioChunks.push(event.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(audioChunks, { type: "audio/webm" });
+      const url = URL.createObjectURL(blob);
 
-    });
-
-    mediaRecorder.addEventListener(
-      "stop",
-      ()=>{
-
-      const audioBlob =
-      new Blob(audioChunks,{
-        type:"audio/webm"
-      });
-
-      const audioURL =
-      URL.createObjectURL(audioBlob);
-
-      const div =
-      document.createElement("div");
-
-      div.classList.add("preview-item");
-
-      div.innerHTML = `
-        <audio controls>
-          <source src="${audioURL}">
-        </audio>
-      `;
-
+      const div = document.createElement("div");
+      div.innerHTML = `<audio controls src="${url}"></audio>`;
       previewContainer.appendChild(div);
 
       micBtn.innerHTML = "🎤";
+    };
 
-    });
-
-  }
-
-  // STOP
-
-  else{
-
+  } else {
     mediaRecorder.stop();
-
   }
-
 });
 
-// ================= SEND MESSAGE =================
+// ================= OPEN DM =================
 
+function openDM(userId, name) {
 
-async function sendMessage(){
+  activeDMUser = userId;
+  activeChatId = getChatId(currentUser.uid, userId);
 
-  if(!currentUser) return;
+  document.querySelector(".chat-title h1").innerText = name;
 
-  const text =
-  messageInput.value.trim();
-
-  const files =
-  fileInput.files;
-
-  if(
-    !text &&
-    files.length === 0
-  ) return;
-
-  try{
-
-    // TEXT
-
-    if(text){
-      
-
-      const targetCollection =
-        activeChatId
-          ? `chats/${activeChatId}/messages`
-        : "messages";
-        
-      await addDoc(
-        collection(db, targetCollection),
-        {
-          text:text,
-
-          uid:currentUser.uid,
-
-          username:
-          currentUser.displayName || "User",
-
-          email:
-          currentUser.email,
-
-          type:"text",
-
-          createdAt:
-          serverTimestamp()
-        }
-      );
-
-    }
-
-    // FILES
-
-    // ================= FILES =================
-
-    for (const file of files) {
-
-      // DETECT FILE TYPE
-
-      const type =
-        file.type.startsWith("image/")
-          ? "image"
-          : file.type.startsWith("video/")
-          ? "video"
-          : file.type.startsWith("audio/")
-          ? "audio"
-          : "file";
-
-      // CREATE STORAGE REFERENCE
-
-      const storageRef = ref(
-        storage,
-        `chatFiles/${Date.now()}_${file.name}`
-      );
-
-      // UPLOAD FILE TO FIREBASE STORAGE
-
-      await uploadBytes(storageRef, file);
-
-      // GET DOWNLOAD URL
-
-      const downloadURL =
-      await getDownloadURL(storageRef);
-
-      // SAVE MESSAGE TO FIRESTORE
-
-      await addDoc(
-        collection(db, `chats/${activeChatId}/messages`),
-        {
-          fileURL: downloadURL,
-
-          fileName: file.name,
-
-          type: type,
-
-          uid: currentUser.uid,
-
-          username:
-          currentUser.displayName || "User",
-
-          email:
-          currentUser.email,
-
-          createdAt:
-          serverTimestamp()
-        }
-      );
-
-    }
-    // CLEAR
-
-    messageInput.value = "";
-
-    fileInput.value = "";
-
-    previewContainer.innerHTML = "";
-
-    await deleteDoc(
-      doc(db, "typing", currentUser.uid)
-    );
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-  }
-
+  listenToDM(activeChatId);
 }
 
-// SEND BUTTON
+// ================= LISTEN DM =================
 
-sendBtn.addEventListener(
-  "click",
-  sendMessage
-);
-
-// ENTER KEY
-
-messageInput.addEventListener(
-  "keydown",
-  (e)=>{
-
-  if(e.key === "Enter"){
-
-    sendMessage();
-
-  }
-
-});
-
-// ================= TYPING =================
-
-let typingTimeout;
-
-messageInput.addEventListener(
-  "input",
-  async()=>{
-
-  if(!currentUser) return;
-
-  await setDoc(
-    doc(db, "typing", currentUser.uid),
-    {
-      username:
-      currentUser.displayName || "User",
-
-      typing:true,
-
-      timestamp:Date.now()
-    }
-  );
-
-  clearTimeout(typingTimeout);
-
-  typingTimeout =
-  setTimeout(async()=>{
-
-    await deleteDoc(
-      doc(db, "typing", currentUser.uid)
-    );
-
-  },1500);
-
-});
-
-// ================= REALTIME MESSAGES =================
-
-const q =
-query(
-  collection(db, "messages"),
-  orderBy("createdAt", "asc")
-);
-
-onSnapshot(q, (snapshot)=>{
-
-  messages.innerHTML = "";
-
-  if(snapshot.empty){
-
-    messages.innerHTML = `
-      <div class="empty-chat">
-        No messages yet 🚀<br>
-        Start chatting now
-      </div>
-    `;
-
-    return;
-
-  }
-
-  snapshot.forEach((docSnap)=>{
-
-    const data =
-    docSnap.data();
-
-    const div =
-    document.createElement("div");
-
-    const isCurrentUser =
-    currentUser &&
-    data.uid === currentUser.uid;
-
-    div.classList.add(
-      "message",
-      isCurrentUser
-      ? "sent"
-      : "received"
-    );
-
-    let time = "";
-
-    if(data.createdAt){
-
-      time =
-      new Date(
-        data.createdAt.seconds * 1000
-      ).toLocaleTimeString([],{
-        hour:"2-digit",
-        minute:"2-digit"
-      });
-
-    }
-
-    let content = "";
-
-    // TEXT
-
-    if(data.type === "text"){
-
-      content = `
-        <div class="message-text">
-          ${data.text}
-        </div>
-      `;
-
-    }
-
-    // IMAGE
-
-    else if(data.type === "image"){
-
-      content = `
-        <img
-          src="${data.fileURL}"
-          style="
-            width:100%;
-            max-width:260px;
-            border-radius:18px;
-            margin-top:8px;
-          "
-        />
-      `;
-
-    }
-
-    // VIDEO
-
-    else if(data.type === "video"){
-
-      content = `
-        <video
-          controls
-          src="${data.fileURL}"
-          style="
-            width:100%;
-            max-width:280px;
-            border-radius:18px;
-            margin-top:8px;
-          ">
-        </video>
-      `;
-
-    }
-
-    // AUDIO
-
-    else if(data.type === "audio"){
-
-      content = `
-        <audio
-          controls
-          src="${data.fileURL}"
-          style="margin-top:8px;">
-        </audio>
-      `;
-
-    }
-
-    div.innerHTML = `
-
-      <div class="message-name">
-        ${data.username}
-      </div>
-
-      ${content}
-
-      <div class="message-time">
-        ${time}
-      </div>
-
-    `;
-
-    messages.appendChild(div);
-
-  });
-
-  messages.scrollTop =
-  messages.scrollHeight;
-
-});
-
-function listenToDM(chatId){
-  if(!chatId) return;
+function listenToDM(chatId) {
 
   const dmQuery = query(
     collection(db, "chats", chatId, "messages"),
     orderBy("createdAt", "asc")
   );
 
-  onSnapshot(dmQuery, (snapshot)=>{
+  onSnapshot(dmQuery, (snapshot) => {
 
     messages.innerHTML = "";
 
     snapshot.forEach(docSnap => {
+
       const data = docSnap.data();
+      const isMe = data.uid === currentUser.uid;
 
       const div = document.createElement("div");
-
-      const isMe = currentUser.uid === data.senderId;
-
       div.classList.add("message", isMe ? "sent" : "received");
 
+      let content = "";
+
+      if (data.type === "text") {
+        content = `<div class="message-text">${data.text}</div>`;
+      } else if (data.type === "image") {
+        content = `<img src="${data.fileURL}" style="max-width:260px;border-radius:12px;">`;
+      } else if (data.type === "video") {
+        content = `<video controls src="${data.fileURL}" style="max-width:260px;"></video>`;
+      } else if (data.type === "audio") {
+        content = `<audio controls src="${data.fileURL}"></audio>`;
+      }
+
       div.innerHTML = `
-        <div class="message-text">${data.text || ""}</div>
+        <div class="message-name">${data.username}</div>
+        ${content}
       `;
 
       messages.appendChild(div);
     });
 
+    messages.scrollTop = messages.scrollHeight;
   });
 }
 
+// ================= SEND MESSAGE =================
+
+async function sendMessage() {
+
+  if (!currentUser || !activeChatId) return;
+
+  const text = messageInput.value.trim();
+  const files = fileInput.files;
+
+  if (!text && files.length === 0) return;
+
+  // TEXT
+  if (text) {
+
+    await addDoc(
+      collection(db, "chats", activeChatId, "messages"),
+      {
+        text,
+        uid: currentUser.uid,
+        username: currentUser.displayName || "User",
+        type: "text",
+        createdAt: serverTimestamp()
+      }
+    );
+  }
+
+  // FILES
+  for (const file of files) {
+
+    const type =
+      file.type.startsWith("image/")
+        ? "image"
+        : file.type.startsWith("video/")
+        ? "video"
+        : file.type.startsWith("audio/")
+        ? "audio"
+        : "file";
+
+    const storageRef = ref(storage, `chatFiles/${Date.now()}_${file.name}`);
+
+    await uploadBytes(storageRef, file);
+
+    const url = await getDownloadURL(storageRef);
+
+    await addDoc(
+      collection(db, "chats", activeChatId, "messages"),
+      {
+        fileURL: url,
+        type,
+        uid: currentUser.uid,
+        username: currentUser.displayName || "User",
+        createdAt: serverTimestamp()
+      }
+    );
+  }
+
+  messageInput.value = "";
+  fileInput.value = "";
+  previewContainer.innerHTML = "";
+}
+
+// ================= SEND EVENTS =================
+
+sendBtn.addEventListener("click", sendMessage);
+
+messageInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
 
 // ================= USERS =================
 
 let allUsers = [];
 
-onSnapshot(
-  collection(db, "users"),
-  (snapshot)=>{
+onSnapshot(collection(db, "users"), (snapshot) => {
 
-  allUsers = [];
-
-  snapshot.forEach((docSnap)=>{
-
-    allUsers.push({
-      id:docSnap.id,
-      ...docSnap.data()
-    });
-
-  });
-
-  displayUsers(allUsers);
-
-});
-
-let activeDMUser = null;
-let activeChatId = null;
-
-function openDM(userId, username){
-
-  activeDMUser = userId;
-  activeChatId = getChatId(currentUser.uid, userId);
-
-  document.querySelector(".chat-title h1").innerText = username;
-
-  listenToDM(activeChatId);
-}
-
-function displayUsers(users){
+  allUsers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
   usersContainer.innerHTML = "";
 
-  users.forEach((user)=>{
+  allUsers.forEach(user => {
 
-    const div =
-    document.createElement("div");
-
+    const div = document.createElement("div");
     div.classList.add("user");
-    div.addEventListener("click", () => {
-  openDM(user.id, user.username);
-});
+
+    div.onclick = () => openDM(user.id, user.username);
 
     div.innerHTML = `
-
-      <div class="user-avatar">
-        ${
-          user.username
-          ? user.username
-          .charAt(0)
-          .toUpperCase()
-          : "U"
-        }
-      </div>
-
+      <div class="user-avatar">${getInitials(user.username)}</div>
       <div class="user-details">
-
-        <h4>
-          ${user.username}
-        </h4>
-
-        <p>
-          ${
-            user.online
-            ? "Online"
-            : "Offline"
-          }
-        </p>
-
+        <h4>${user.username}</h4>
+        <p>${user.online ? "Online" : "Offline"}</p>
       </div>
-
-      ${
-        user.online
-        ? '<div class="online-dot"></div>'
-        : ""
-      }
-
     `;
 
     usersContainer.appendChild(div);
-
   });
-
-}
-
-// ================= TYPING USERS =================
-
-onSnapshot(
-  collection(db, "typing"),
-  (snapshot)=>{
-
-  let typingUsers = [];
-
-  snapshot.forEach((docSnap)=>{
-
-    const data =
-    docSnap.data();
-
-    if(
-      currentUser &&
-      docSnap.id !== currentUser.uid &&
-      data.timestamp &&
-      Date.now() - data.timestamp < 5000
-    ){
-
-      typingUsers.push(
-        data.username
-      );
-
-    }
-
-  });
-
-  typingText.innerText =
-  typingUsers.length > 0
-  ? `${typingUsers.join(", ")} typing...`
-  : "";
-
-});
-
-// ================= SEARCH =================
-
-searchInput.addEventListener(
-  "input",
-  ()=>{
-
-  const value =
-  searchInput.value.toLowerCase();
-
-  const filteredUsers =
-  allUsers.filter((user)=>{
-
-    return (
-
-      (user.username || "")
-      .toLowerCase()
-      .includes(value)
-
-      ||
-
-      (user.email || "")
-      .toLowerCase()
-      .includes(value)
-
-    );
-
-  });
-
-  displayUsers(filteredUsers);
 
 });
 
 // ================= LOGOUT =================
 
-logoutBtn.addEventListener(
-  "click",
-  async()=>{
+logoutBtn.addEventListener("click", async () => {
 
-  if(currentUser){
-
-    await updateDoc(
-      doc(db, "users", currentUser.uid),
-      {
-        online:false
-      }
-    );
-
+  if (currentUser) {
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      online: false
+    });
   }
 
   await signOut(auth);
-
-  window.location.href =
-  "login.html";
-
+  window.location.href = "login.html";
 });
 
 </script>
-
 
 </body>
 </html>
