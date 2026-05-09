@@ -57,6 +57,10 @@
   --blur:blur(14px);
 
 }
+html,
+body{
+  height:100%;
+}
 
 body{
 
@@ -121,7 +125,7 @@ body::after{
 .chat-app{
   display:flex;
   width:100%;
-  height:100dvh;
+  height:100%;
   overflow:hidden;
 }
 /* ================= MOBILE MENU ================= */
@@ -549,13 +553,13 @@ body::after{
 }
 
 /* ================= CHAT ================= */
-
 .chat-section{
   flex:1;
   display:flex;
   flex-direction:column;
-  height:100%;
-  min-height:0;
+  min-width:0;
+  width:100%;
+  height:100dvh;
   overflow:hidden;
 }
 
@@ -652,12 +656,14 @@ body::after{
 .messages{
   flex:1;
   overflow-y:auto;
+  overflow-x:hidden;
   padding:24px;
   display:flex;
   flex-direction:column;
   gap:18px;
   scroll-behavior:smooth;
   min-height:0;
+  width:100%;
 }
 
 .chat-input-area{
@@ -1133,21 +1139,17 @@ body::after{
 @media(max-width:700px){
 
   .chat-header{
-
     padding:18px;
-
     padding-left:75px;
 
   }
 
   .chat-title h1{
-
     font-size:22px;
 
   }
 
   .messages{
-
     padding:16px;
 
   }
@@ -1306,13 +1308,38 @@ body::after{
 
 }
 
+
 @media(max-width:700px){
-
-  .chat-input-area{
-    padding-bottom:calc(15px + env(safe-area-inset-bottom));
-  }
-
+  .chat-section{
+  width:100%;
+  min-width:0;
 }
+
+.input-wrapper{
+  width:100%;
+}
+
+.chat-input-area{
+  width:100%;
+}
+
+.send-btn{
+  flex-shrink:0;
+}
+
+.chat-input-area input{
+  min-width:0;
+}
+}
+
+@media(max-width:700px){
+ .chat-header{
+  padding:14px;
+  padding-left:70px;
+}
+}
+
+
 
 </style>
 </head>
@@ -1934,6 +1961,50 @@ onSnapshot(collection(db, "users"), (snapshot) => {
 
     usersContainer.appendChild(div);
   });
+
+});
+
+// ================= SEARCH USERS =================
+
+searchInput.addEventListener("input", () => {
+
+  const value =
+    searchInput.value.toLowerCase();
+
+  usersContainer.innerHTML = "";
+
+  allUsers
+    .filter(user =>
+      user.id !== currentUser?.uid &&
+      user.username
+        .toLowerCase()
+        .includes(value)
+    )
+    .forEach(user => {
+
+      const div = document.createElement("div");
+
+      div.classList.add("user");
+
+      div.onclick = () =>
+        openDM(user.id, user.username);
+
+      div.innerHTML = `
+        <div class="user-avatar">
+          ${getInitials(user.username)}
+        </div>
+
+        <div class="user-details">
+          <h4>${user.username}</h4>
+          <p>
+            ${user.online ? "Online" : "Offline"}
+          </p>
+        </div>
+      `;
+
+      usersContainer.appendChild(div);
+
+    });
 
 });
 
