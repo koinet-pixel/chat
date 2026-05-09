@@ -1596,6 +1596,10 @@ document.getElementById("emojiPicker");
 const micBtn =
 document.getElementById("micBtn");
 
+function getChatId(uid1, uid2){
+  return [uid1, uid2].sort().join("_");
+}
+
 // ================= MOBILE MENU =================
 
 menuBtn.addEventListener("click", () => {
@@ -1875,6 +1879,7 @@ async()=>{
 
 // ================= SEND MESSAGE =================
 
+
 async function sendMessage(){
 
   if(!currentUser) return;
@@ -1895,9 +1900,15 @@ async function sendMessage(){
     // TEXT
 
     if(text){
+      
 
+      const targetCollection =
+        activeChatId
+          ? `chats/${activeChatId}/messages`
+        : "messages";
+        
       await addDoc(
-        collection(db, "messages"),
+        collection(db, targetCollection),
         {
           text:text,
 
@@ -2200,6 +2211,47 @@ onSnapshot(q, (snapshot)=>{
 
 });
 
+function listenToDM(){
+
+  if(!activeChatId) return;
+
+  const dmQuery = query(
+    collection(db, "chats", activeChatId, "messages"),
+    orderBy("createdAt", "asc")
+  );
+
+  onSnapshot(dmQuery, (snapshot)=>{
+
+    messages.innerHTML = "";
+
+    snapshot.forEach(docSnap => {
+
+      const data = docSnap.data();
+
+      const div = document.createElement("div");
+
+      const isMe =
+      currentUser.uid === data.uid;
+
+      div.classList.add(
+        "message",
+        isMe ? "sent" : "received"
+      );
+
+      div.innerHTML = `
+        <div class="message-text">
+          ${data.text || ""}
+        </div>
+      `;
+
+      messages.appendChild(div);
+
+    });
+
+  });
+  listenToDM();
+
+}
 // ================= USERS =================
 
 let allUsers = [];
@@ -2223,6 +2275,18 @@ onSnapshot(
 
 });
 
+let activeDMUser = null;
+let activeChatId = null;
+
+function openDM(userId, username){
+
+  activeDMUser = userId;
+  activeChatId = getChatId(currentUser.uid, userId);
+
+  alert("Chat opened with " + username);
+
+}
+
 function displayUsers(users){
 
   usersContainer.innerHTML = "";
@@ -2233,6 +2297,9 @@ function displayUsers(users){
     document.createElement("div");
 
     div.classList.add("user");
+    div.addEventListener("click", () => {
+  openDM(user.id, user.username);
+});
 
     div.innerHTML = `
 

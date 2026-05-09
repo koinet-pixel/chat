@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Messages Monitor</title>
+
+  <link rel="stylesheet" href="../admin.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',sans-serif;
+    }
+
+    body{
+      background:linear-gradient(135deg,#dfe9f3,#c7d8ee,#d8ede4);
+      min-height:100vh;
+      color:#0f172a;
+    }
+
+    /* ===== DASHBOARD LAYOUT ===== */
+    .dashboard{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:260px;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(14px);
+  border-right:1px solid rgba(148,163,184,0.2);
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:800;
+  color:#3b82f6;
+  margin-bottom:40px;
+}
+
+nav{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+nav a{
+  text-decoration:none;
+  padding:14px;
+  border-radius:14px;
+  color:#0f172a;
+  background:rgba(255,255,255,0.6);
+  transition:0.3s;
+  font-weight:600;
+}
+
+nav a:hover{
+  background:#3b82f6;
+  color:white;
+}
+
+    #logoutBtn{
+      margin-top:30px;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      background:#ef4444;
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content{
+      flex:1;
+      padding:30px;
+    }
+
+    /* HEADER */
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:15px;
+      margin-bottom:25px;
+    }
+
+    h1{
+      font-size:32px;
+      font-weight:800;
+    }
+
+    .stats{
+      display:flex;
+      gap:12px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,0.65);
+      border:1px solid rgba(255,255,255,0.4);
+      padding:12px 16px;
+      border-radius:16px;
+      backdrop-filter:blur(12px);
+      font-size:14px;
+      color:#334155;
+      font-weight:600;
+    }
+
+    /* GRID */
+    #messagesList{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:18px;
+      margin-top:20px;
+    }
+
+    /* MESSAGE CARD */
+    .message-card{
+      background:rgba(255,255,255,0.65);
+      border:1px solid rgba(255,255,255,0.4);
+      border-radius:22px;
+      padding:18px;
+      backdrop-filter:blur(14px);
+      transition:.25s;
+    }
+
+    .message-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(59,130,246,0.5);
+    }
+
+    .top{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .avatar{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      text-transform:uppercase;
+      color:white;
+    }
+
+    .username{
+      font-weight:700;
+    }
+
+    .message{
+      margin-top:8px;
+      color:#334155;
+      font-size:14px;
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .btn{
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      color:white;
+    }
+
+    .delete{
+      background:linear-gradient(135deg,#ef4444,#dc2626);
+    }
+
+    .reply{
+      background:linear-gradient(135deg,#3b82f6,#2563eb);
+    }
+
+    /* LOADER */
+    .loader{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      border:4px solid rgba(0,0,0,0.1);
+      border-top:4px solid #3b82f6;
+      margin:60px auto;
+      animation:spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      100%{transform:rotate(360deg);}
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .dashboard{
+        flex-direction:column;
+      }
+
+      .sidebar{
+        width:100%;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR (MATCHED EXACTLY) -->
+  <aside class="sidebar">
+
+    <div>
+      <div class="logo">Chat Admin</div>
+
+      <nav>
+        <a href="../pages/dashboard.html">Dashboard</a>
+        <a href="../pages/users.html">Users</a>
+        <a class="active" href="../pages/messages.html">Messages</a>
+        <a href="../pages/settings.html">Settings</a>
+      </nav>
+    </div>
+
+    <button id="logoutBtn">Logout</button>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="header">
+
+      <h1>Messages Monitor</h1>
+
+      <div class="stats">
+        <div class="stat">Total: <span id="total">0</span></div>
+        <div class="stat">Today: <span id="today">0</span></div>
+      </div>
+
+    </div>
+
+    <div id="loader" class="loader"></div>
+
+    <div id="messagesList"></div>
+
+  </main>
+
+</div>
+
+<script type="module">
+
+import { db } from '../firebase.js';
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const messagesList = document.getElementById("messagesList");
+const loader = document.getElementById("loader");
+const totalEl = document.getElementById("total");
+
+function escapeHtml(str){
+  return (str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
+
+function render(data){
+
+  messagesList.innerHTML = "";
+
+  data.forEach((docSnap)=>{
+
+    const m = docSnap.data();
+
+    const div = document.createElement("div");
+    div.className = "message-card";
+
+    div.innerHTML = `
+      <div class="top">
+        <div class="avatar">${(m.username || "?")[0]}</div>
+        <div class="username">${m.username || "Unknown"}</div>
+      </div>
+
+      <div class="message">
+        ${escapeHtml(m.text || "")}
+      </div>
+
+      <div class="actions">
+        <button class="btn reply">Reply</button>
+        <button class="btn delete">Delete</button>
+      </div>
+    `;
+
+    div.querySelector(".delete").onclick = async()=>{
+      await deleteDoc(doc(db,"messages",docSnap.id));
+    };
+
+    div.querySelector(".reply").onclick = ()=>{
+      alert("Reply feature can be connected to chat UI");
+    };
+
+    messagesList.appendChild(div);
+
+  });
+
+}
+
+const q = query(
+  collection(db,"messages"),
+  orderBy("createdAt","desc")
+);
+
+onSnapshot(q,(snap)=>{
+
+  loader.style.display = "none";
+
+  totalEl.textContent = snap.size;
+
+  render(snap.docs);
+
+});
+
+</script>
+
+</body>
+</html>
