@@ -1543,8 +1543,6 @@ const avatar = document.getElementById("avatar");
 const usersContainer = document.getElementById("usersContainer");
 const messages = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
-messageInput.disabled = true;
-messageInput.placeholder = "Select a user to chat...";
 const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const searchInput = document.getElementById("searchInput");
@@ -1552,7 +1550,6 @@ const clearBtn = document.getElementById("clearBtn");
 const typingText = document.getElementById("typingText");
 const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.getElementById("sidebar");
-
 const fileInput = document.getElementById("fileInput");
 const previewContainer = document.getElementById("previewContainer");
 const emojiBtn = document.getElementById("emojiBtn");
@@ -1568,6 +1565,7 @@ function getChatId(uid1, uid2) {
 let currentUser = null;
 let activeDMUser = null;
 let activeChatId = null;
+let unsubscribeMessages = null;
 
 // ================= MOBILE MENU =================
 
@@ -1697,54 +1695,133 @@ micBtn.addEventListener("click", async () => {
 // ================= OPEN DM =================
 
 function openDM(userId, name) {
-  messageInput.disabled = false;
-messageInput.placeholder = "Type a message...";
+
+  if (!currentUser) return;
+
+  // prevent chatting with yourself
+  if (userId === currentUser.uid) {
+    alert("You cannot message yourself");
+    return;
+  }
 
   activeDMUser = userId;
-  if (!currentUser) return;
 
   activeChatId = getChatId(currentUser.uid, userId);
 
   document.querySelector(".chat-title h1").innerText = name;
 
-  listenToDM(activeChatId);
-}
+  messageInput.disabled = false;
+  messageInput.placeholder = `Message ${name}...`;
 
+  listenToDM(activeChatId);
+
+  // close mobile sidebar
+  sidebar.classList.remove("active");
+}
 // ================= LISTEN DM =================
 
 function listenToDM(chatId) {
+
   if (!chatId) return;
+
+  // remove old realtime listener
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+  }
+
   const dmQuery = query(
     collection(db, "chats", chatId, "messages"),
     orderBy("createdAt", "asc")
   );
 
-  onSnapshot(dmQuery, (snapshot) => {
+  unsubscribeMessages = onSnapshot(dmQuery, (snapshot) => {
 
-    messages.innerHTML = `<div class="empty-chat">Loading chat...</div>`;
+    messages.innerHTML = "";
 
-    snapshot.forEach(docSnap => {
+    // EMPTY CHAT
+    if (snapshot.empty) {
+
+      messages.innerHTML = `
+        <div class="empty-chat">
+          No messages yet 🚀<br/>
+          Start chatting now
+        </div>
+      `;
+
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
 
       const data = docSnap.data();
+
       const isMe = data.uid === currentUser.uid;
 
       const div = document.createElement("div");
-      div.classList.add("message", isMe ? "sent" : "received");
+
+      div.classList.add(
+        "message",
+        isMe ? "sent" : "received"
+      );
 
       let content = "";
 
+      // TEXT
       if (data.type === "text") {
-        content = `<div class="message-text">${data.text}</div>`;
-      } else if (data.type === "image") {
-        content = `<img src="${data.fileURL}" style="max-width:260px;border-radius:12px;">`;
-      } else if (data.type === "video") {
-        content = `<video controls src="${data.fileURL}" style="max-width:260px;"></video>`;
-      } else if (data.type === "audio") {
-        content = `<audio controls src="${data.fileURL}"></audio>`;
+
+        content = `
+          <div class="message-text">
+            ${data.text}
+          </div>
+        `;
+
+      }
+
+      // IMAGE
+      else if (data.type === "image") {
+
+        content = `
+          <img
+            src="${data.fileURL}"
+            style="
+              max-width:260px;
+              border-radius:12px;
+            "
+          >
+        `;
+
+      }
+
+      // VIDEO
+      else if (data.type === "video") {
+
+        content = `
+          <video
+            controls
+            src="${data.fileURL}"
+            style="
+              max-width:260px;
+              border-radius:12px;
+            "
+          ></video>
+        `;
+
+      }
+
+      // AUDIO
+      else if (data.type === "audio") {
+
+        content = `
+          <audio controls src="${data.fileURL}"></audio>
+        `;
+
       }
 
       div.innerHTML = `
-        <div class="message-name">${data.username}</div>
+        <div class="message-name">
+          ${data.username}
+        </div>
+
         ${content}
       `;
 
@@ -1754,7 +1831,6 @@ function listenToDM(chatId) {
     messages.scrollTop = messages.scrollHeight;
   });
 }
-
 // ================= SEND MESSAGE =================
 
 async function sendMessage() {
@@ -1839,8 +1915,10 @@ onSnapshot(collection(db, "users"), (snapshot) => {
 
   usersContainer.innerHTML = "";
 
-  allUsers.forEach(user => {
-
+  allUsers
+  .filter(user => user.id !== currentUser?.uid)
+  .forEach(user => {
+    
     const div = document.createElement("div");
     div.classList.add("user");
 
