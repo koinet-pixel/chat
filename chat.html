@@ -1506,10 +1506,6 @@ body::after{
 // ================= FIREBASE =================
 
 import { auth, db } from "./firebase.js";
-
-
-import { auth, db } from "./firebase.js";
-
 import {
   getStorage,
   ref,
@@ -1965,7 +1961,7 @@ async function sendMessage(){
       // SAVE MESSAGE TO FIRESTORE
 
       await addDoc(
-        collection(db, "messages"),
+        collection(db, `chats/${activeChatId}/messages`),
         {
           fileURL: downloadURL,
 
@@ -2211,12 +2207,11 @@ onSnapshot(q, (snapshot)=>{
 
 });
 
-function listenToDM(){
-
-  if(!activeChatId) return;
+function listenToDM(chatId){
+  if(!chatId) return;
 
   const dmQuery = query(
-    collection(db, "chats", activeChatId, "messages"),
+    collection(db, "chats", chatId, "messages"),
     orderBy("createdAt", "asc")
   );
 
@@ -2225,33 +2220,25 @@ function listenToDM(){
     messages.innerHTML = "";
 
     snapshot.forEach(docSnap => {
-
       const data = docSnap.data();
 
       const div = document.createElement("div");
 
-      const isMe =
-      currentUser.uid === data.uid;
+      const isMe = currentUser.uid === data.senderId;
 
-      div.classList.add(
-        "message",
-        isMe ? "sent" : "received"
-      );
+      div.classList.add("message", isMe ? "sent" : "received");
 
       div.innerHTML = `
-        <div class="message-text">
-          ${data.text || ""}
-        </div>
+        <div class="message-text">${data.text || ""}</div>
       `;
 
       messages.appendChild(div);
-
     });
 
   });
-  listenToDM();
-
 }
+
+
 // ================= USERS =================
 
 let allUsers = [];
@@ -2283,8 +2270,9 @@ function openDM(userId, username){
   activeDMUser = userId;
   activeChatId = getChatId(currentUser.uid, userId);
 
-  alert("Chat opened with " + username);
+  document.querySelector(".chat-title h1").innerText = username;
 
+  listenToDM(activeChatId);
 }
 
 function displayUsers(users){
