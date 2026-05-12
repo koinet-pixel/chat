@@ -137,6 +137,9 @@ body::after{
 /* ================= MOBILE MENU ================= */
 
 .mobile-menu-btn{
+transition:
+  transform 0.25s ease,
+  background 0.25s ease;
 
   display:none;
 
@@ -169,6 +172,10 @@ body::after{
 
   box-shadow:var(--shadow);
 
+}
+
+.mobile-menu-btn:active{
+  transform:scale(0.95);
 }
 
 /* ================= SIDEBAR ================= */
@@ -1368,9 +1375,23 @@ let activeChatId = null;
 let unsubscribeMessages = null;
 
 // ================= MOBILE MENU =================
+// ================= MOBILE MENU =================
 
 menuBtn.addEventListener("click", () => {
+
   sidebar.classList.toggle("active");
+
+  // CHANGE ICON
+  if (sidebar.classList.contains("active")) {
+
+    menuBtn.innerHTML = "✕";
+
+  } else {
+
+    menuBtn.innerHTML = "☰";
+
+  }
+
 });
 
 // ================= CLEAR =================
@@ -1516,8 +1537,15 @@ function openDM(userId, name) {
   listenToDM(activeChatId);
 
   // close mobile sidebar
-  sidebar.classList.remove("active");
-}
+  // close mobile sidebar
+// close mobile sidebar
+sidebar.classList.remove("active");
+
+// reset menu icon
+menuBtn.innerHTML = "☰";
+
+} // CLOSE openDM FUNCTION HERE
+
 // ================= LISTEN DM =================
 
 function listenToDM(chatId) {
