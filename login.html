@@ -434,20 +434,19 @@
 <script type="module">
 
   // FIREBASE
+
   import { auth }
   from "./firebase.js";
 
   import {
 
     signInWithEmailAndPassword,
-
     sendPasswordResetEmail,
-
     setPersistence,
-
     browserLocalPersistence
 
   }
+
   from
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -480,32 +479,74 @@
     "click",
     () => {
 
-      const isPassword =
+      const isHidden =
       password.type === "password";
 
       password.type =
-      isPassword
+      isHidden
       ? "text"
       : "password";
 
       togglePasswordBtn.textContent =
-      isPassword
+      isHidden
       ? "Hide"
       : "Show";
 
     }
   );
 
-  // KEEP USER LOGGED IN
+  // FAST MESSAGE FUNCTION
 
-  setPersistence(
-    auth,
-    browserLocalPersistence
-  ).catch((error) => {
+  function showMessage(text, type){
+
+    message.textContent = text;
+    message.className = type;
+
+  }
+
+  // BUTTON STATE
+
+  function setLoading(state){
+
+    loginBtn.disabled = state;
+
+    if(state){
+
+      loginBtn.innerText =
+      "Logging in...";
+
+      loginBtn.classList.add(
+        "loading"
+      );
+
+    }else{
+
+      loginBtn.innerText =
+      "Login";
+
+      loginBtn.classList.remove(
+        "loading"
+      );
+
+    }
+
+  }
+
+  // KEEP USER LOGGED IN
+  // RUN ONLY ONCE
+
+  try{
+
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
+
+  }catch(error){
 
     console.log(error);
 
-  });
+  }
 
   // LOGIN
 
@@ -525,19 +566,23 @@
         !userEmail ||
         !userPassword
       ){
+
+        showMessage(
+          "Please fill all fields.",
+          "error"
+        );
+
         return;
+
       }
 
-      loginBtn.innerText =
-      "Logging in...";
-
-      loginBtn.classList.add(
-        "loading"
-      );
-
-      message.innerText = "";
-
       try{
+
+        setLoading(true);
+
+        showMessage("", "");
+
+        // FAST LOGIN
 
         const userCredential =
         await signInWithEmailAndPassword(
@@ -551,78 +596,74 @@
         const user =
         userCredential.user;
 
-        message.innerText =
-        `Welcome ${user.email}`;
+        showMessage(
 
-        message.className =
-        "success";
+          `Welcome ${user.email}`,
 
-        setTimeout(() => {
+          "success"
 
-          window.location.href =
-          "chat.html";
+        );
 
-        }, 800);
+        // INSTANT REDIRECT
+
+        window.location.replace(
+          "chat.html"
+        );
 
       }catch(error){
 
         console.log(error);
+
+        let errorMessage =
+        "Login failed.";
 
         switch(error.code){
 
           case
           "auth/invalid-credential":
 
-            message.innerText =
+            errorMessage =
             "Invalid email or password.";
             break;
 
           case
           "auth/user-not-found":
 
-            message.innerText =
+            errorMessage =
             "No account found.";
             break;
 
           case
           "auth/wrong-password":
 
-            message.innerText =
+            errorMessage =
             "Wrong password.";
             break;
 
           case
           "auth/too-many-requests":
 
-            message.innerText =
+            errorMessage =
             "Too many attempts. Try again later.";
             break;
 
           case
           "auth/network-request-failed":
 
-            message.innerText =
+            errorMessage =
             "Check your internet connection.";
             break;
 
-          default:
-
-            message.innerText =
-            error.message;
-
         }
 
-        message.className =
-        "error";
+        showMessage(
+          errorMessage,
+          "error"
+        );
 
       }finally{
 
-        loginBtn.innerText =
-        "Login";
-
-        loginBtn.classList.remove(
-          "loading"
-        );
+        setLoading(false);
 
       }
 
@@ -642,11 +683,10 @@
 
       if(!userEmail){
 
-        message.innerText =
-        "Enter your email first.";
-
-        message.className =
-        "error";
+        showMessage(
+          "Enter your email first.",
+          "error"
+        );
 
         email.focus();
 
@@ -661,21 +701,19 @@
           userEmail
         );
 
-        message.innerText =
-        "Password reset email sent.";
-
-        message.className =
-        "success";
+        showMessage(
+          "Password reset email sent.",
+          "success"
+        );
 
       }catch(error){
 
         console.log(error);
 
-        message.innerText =
-        error.message;
-
-        message.className =
-        "error";
+        showMessage(
+          error.message,
+          "error"
+        );
 
       }
 

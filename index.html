@@ -439,103 +439,169 @@
 
   <script type="module">
 
-    // ================= FIREBASE =================
+  // ================= FIREBASE =================
 
-    import { auth, db }
-    from "./firebase.js";
+  import { auth, db }
+  from "./firebase.js";
 
-    import {
+  import {
 
-      createUserWithEmailAndPassword,
-      updateProfile
+    createUserWithEmailAndPassword,
+    updateProfile,
+    setPersistence,
+    browserLocalPersistence
+
+  }
+
+  from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  import {
+
+    doc,
+    setDoc,
+    serverTimestamp
+
+  }
+
+  from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ================= ELEMENTS =================
+
+  const signupForm =
+  document.getElementById("signup-form");
+
+  const username =
+  document.getElementById("username");
+
+  const email =
+  document.getElementById("email");
+
+  const password =
+  document.getElementById("password");
+
+  const confirmPassword =
+  document.getElementById("confirmPassword");
+
+  const signupBtn =
+  document.getElementById("signupBtn");
+
+  const message =
+  document.getElementById("message");
+
+  const passwordStrength =
+  document.getElementById("password-strength");
+
+  const passwordMatch =
+  document.getElementById("password-match");
+
+  // ================= FIREBASE PERSISTENCE =================
+
+  try{
+
+    await setPersistence(
+      auth,
+      browserLocalPersistence
+    );
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+  // ================= MESSAGE =================
+
+  function showMessage(text,type){
+
+    message.textContent = text;
+    message.className = type;
+
+  }
+
+  // ================= BUTTON STATE =================
+
+  function setLoading(state){
+
+    signupBtn.disabled = state;
+
+    if(state){
+
+      signupBtn.textContent =
+      "Creating Account...";
+
+      signupBtn.classList.add(
+        "loading"
+      );
+
+    }else{
+
+      signupBtn.textContent =
+      "Create Account";
+
+      signupBtn.classList.remove(
+        "loading"
+      );
 
     }
-    from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    import {
+  }
 
-      doc,
-      setDoc,
-      serverTimestamp
+  // ================= TOGGLE PASSWORD =================
 
-    }
-    from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  document
+  .querySelectorAll(".show-btn")
+  .forEach((button)=>{
 
-    // ================= ELEMENTS =================
-
-    const signupForm =
-    document.getElementById("signup-form");
-
-    const username =
-    document.getElementById("username");
-
-    const email =
-    document.getElementById("email");
-
-    const password =
-    document.getElementById("password");
-
-    const confirmPassword =
-    document.getElementById("confirmPassword");
-
-    const signupBtn =
-    document.getElementById("signupBtn");
-
-    const message =
-    document.getElementById("message");
-
-    const passwordStrength =
-    document.getElementById("password-strength");
-
-    const passwordMatch =
-    document.getElementById("password-match");
-
-    // ================= TOGGLE PASSWORD =================
-
-    document.querySelectorAll(".show-btn")
-    .forEach((button)=>{
-
-      button.addEventListener("click",()=>{
+    button.addEventListener(
+      "click",
+      ()=>{
 
         const targetId =
         button.dataset.target;
 
         const input =
-        document.getElementById(targetId);
+        document.getElementById(
+          targetId
+        );
 
-        const isPassword =
+        const hidden =
         input.type === "password";
 
         input.type =
-        isPassword ? "text" : "password";
+        hidden
+        ? "text"
+        : "password";
 
         button.textContent =
-        isPassword ? "Hide" : "Show";
+        hidden
+        ? "Hide"
+        : "Show";
 
-      });
+      }
+    );
 
-    });
+  });
 
-    // ================= PASSWORD STRENGTH =================
+  // ================= PASSWORD STRENGTH =================
 
-    password.addEventListener("input",()=>{
+  password.addEventListener(
+    "input",
+    ()=>{
 
       const value =
       password.value.trim();
 
-      if(value.length === 0){
+      if(!value){
 
         passwordStrength.textContent = "";
-        passwordStrength.className = "strength";
+        passwordStrength.className =
+        "strength";
 
         return;
 
       }
-
-      let strengthText = "";
-      let strengthClass = "";
 
       const hasUpper =
       /[A-Z]/.test(value);
@@ -546,13 +612,13 @@
       const hasSymbol =
       /[^A-Za-z0-9]/.test(value);
 
+      let text = "";
+      let strength = "";
+
       if(value.length < 6){
 
-        strengthText =
-        "Weak Password";
-
-        strengthClass =
-        "weak";
+        text = "Weak Password";
+        strength = "weak";
 
       }else if(
 
@@ -563,89 +629,72 @@
 
       ){
 
-        strengthText =
-        "Strong Password";
-
-        strengthClass =
-        "strong";
+        text = "Strong Password";
+        strength = "strong";
 
       }else{
 
-        strengthText =
-        "Medium Password";
-
-        strengthClass =
-        "medium";
+        text = "Medium Password";
+        strength = "medium";
 
       }
 
       passwordStrength.textContent =
-      strengthText;
+      text;
 
       passwordStrength.className =
-      `strength ${strengthClass}`;
+      `strength ${strength}`;
 
-    });
+    }
+  );
 
-    // ================= PASSWORD MATCH =================
+  // ================= PASSWORD MATCH =================
 
-    function validatePasswordMatch(){
+  function validatePasswordMatch(){
 
-      if(confirmPassword.value === ""){
+    if(!confirmPassword.value){
 
-        passwordMatch.textContent = "";
-        passwordMatch.className = "match-text";
-
-        return false;
-
-      }
-
-      if(password.value === confirmPassword.value){
-
-        passwordMatch.textContent =
-        "Passwords Match";
-
-        passwordMatch.className =
-        "match-text success";
-
-        return true;
-
-      }
-
-      passwordMatch.textContent =
-      "Passwords Do Not Match";
-
+      passwordMatch.textContent = "";
       passwordMatch.className =
-      "match-text error";
+      "match-text";
 
       return false;
 
     }
 
-    password.addEventListener(
-      "input",
-      validatePasswordMatch
-    );
+    const matched =
+    password.value ===
+    confirmPassword.value;
 
-    confirmPassword.addEventListener(
-      "input",
-      validatePasswordMatch
-    );
+    passwordMatch.textContent =
+    matched
+    ? "Passwords Match"
+    : "Passwords Do Not Match";
 
-    // ================= MESSAGE =================
+    passwordMatch.className =
+    matched
+    ? "match-text success"
+    : "match-text error";
 
-    function showMessage(text,type){
+    return matched;
 
-      message.textContent = text;
-      message.className = type;
+  }
 
-    }
+  password.addEventListener(
+    "input",
+    validatePasswordMatch
+  );
 
-    // ================= SIGNUP =================
+  confirmPassword.addEventListener(
+    "input",
+    validatePasswordMatch
+  );
 
-    signupForm.addEventListener(
-      "submit",
-      async(e)=>{
+  // ================= SIGNUP =================
+
+  signupForm.addEventListener(
+    "submit",
+    async(e)=>{
 
       e.preventDefault();
 
@@ -661,7 +710,7 @@
       const confirmValue =
       confirmPassword.value;
 
-      // Validation
+      // VALIDATION
 
       if(usernameValue.length < 3){
 
@@ -698,12 +747,11 @@
 
       try{
 
-        signupBtn.textContent =
-        "Creating Account...";
+        setLoading(true);
 
-        signupBtn.classList.add("loading");
+        showMessage("", "");
 
-        // Create User
+        // CREATE USER
 
         const userCredential =
         await createUserWithEmailAndPassword(
@@ -717,15 +765,16 @@
         const user =
         userCredential.user;
 
-        // Update Profile
+        // UPDATE PROFILE
 
         await updateProfile(user,{
 
-          displayName:usernameValue
+          displayName:
+          usernameValue
 
         });
 
-        // Save User
+        // SAVE USER
 
         await setDoc(
           doc(db,"users",user.uid),
@@ -733,9 +782,11 @@
 
             uid:user.uid,
 
-            username:usernameValue,
+            username:
+            usernameValue,
 
-            email:emailValue,
+            email:
+            emailValue,
 
             online:true,
 
@@ -755,76 +806,66 @@
         passwordStrength.textContent = "";
         passwordMatch.textContent = "";
 
-        setTimeout(()=>{
+        // FAST REDIRECT
 
-          window.location.href =
-          "login.html";
-
-        },1200);
+        window.location.replace(
+          "login.html"
+        );
 
       }catch(error){
 
         console.log(error);
 
+        let errorMessage =
+        "Signup failed.";
+
         switch(error.code){
 
-          case "auth/email-already-in-use":
+          case
+          "auth/email-already-in-use":
 
-            showMessage(
-              "Email already exists.",
-              "error"
-            );
-
+            errorMessage =
+            "Email already exists.";
             break;
 
-          case "auth/invalid-email":
+          case
+          "auth/invalid-email":
 
-            showMessage(
-              "Invalid email address.",
-              "error"
-            );
-
+            errorMessage =
+            "Invalid email address.";
             break;
 
-          case "auth/weak-password":
+          case
+          "auth/weak-password":
 
-            showMessage(
-              "Password is too weak.",
-              "error"
-            );
-
+            errorMessage =
+            "Password is too weak.";
             break;
 
-          case "auth/network-request-failed":
+          case
+          "auth/network-request-failed":
 
-            showMessage(
-              "Network error. Check your connection.",
-              "error"
-            );
-
+            errorMessage =
+            "Check your internet connection.";
             break;
-
-          default:
-
-            showMessage(
-              error.message,
-              "error"
-            );
 
         }
 
+        showMessage(
+          errorMessage,
+          "error"
+        );
+
       }finally{
 
-        signupBtn.textContent =
-        "Create Account";
-
-        signupBtn.classList.remove("loading");
+        setLoading(false);
 
       }
 
-    });
+    }
+  );
 
-  </script>
+</script>
 
 </body>
 </html>
