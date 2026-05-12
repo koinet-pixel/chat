@@ -955,6 +955,55 @@ background:transparent;
 
 }
 
+/* ================= TYPING ================= */
+
+.typing{
+
+  display:none;
+
+  align-items:center;
+
+  gap:6px;
+
+  padding:0 24px 14px;
+
+}
+
+.typing span{
+
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  background:#64748b;
+
+  animation:typingBounce 1s infinite;
+
+}
+
+.typing span:nth-child(2){
+  animation-delay:0.2s;
+}
+
+.typing span:nth-child(3){
+  animation-delay:0.4s;
+}
+
+@keyframes typingBounce{
+
+  0%,80%,100%{
+    transform:scale(0.7);
+    opacity:0.5;
+  }
+
+  40%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
 /* ================= SCROLL ================= */
 
 ::-webkit-scrollbar{
@@ -1235,7 +1284,11 @@ background:transparent;
 
     <!-- TYPING -->
 
-    <div class="typing" id="typingText"></div>
+    <div class="typing" id="typingText">
+      <span></span>
+      <span></span>
+      <span></span>
+  </div>
 
     <!-- INPUT -->
 
@@ -1311,16 +1364,16 @@ background:transparent;
 // ================= FIREBASE =================
 
 import { auth, db } from "./firebase.js";
+
 import {
   getStorage,
-  ref,
+  ref as storageRef,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-const storage = getStorage();
-
 import {
+  getDoc,
   collection,
   addDoc,
   query,
@@ -1329,16 +1382,26 @@ import {
   serverTimestamp,
   doc,
   setDoc,
-  updateDoc,
-  deleteDoc
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
   signOut,
   onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  set,
+  onDisconnect,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// ================= INIT =================
+
+const storage = getStorage();
+const rtdb = getDatabase();
 
 // ================= ELEMENTS =================
 
@@ -1361,7 +1424,7 @@ const emojiBtn = document.getElementById("emojiBtn");
 const emojiPicker = document.getElementById("emojiPicker");
 const micBtn = document.getElementById("micBtn");
 
-// ================= DM STATE =================
+// ================= STATE =================
 
 function getChatId(uid1, uid2) {
   return [uid1, uid2].sort().join("_");
@@ -1371,25 +1434,13 @@ let currentUser = null;
 let activeDMUser = null;
 let activeChatId = null;
 let unsubscribeMessages = null;
+let typingTimeout;
 
-// ================= MOBILE MENU =================
 // ================= MOBILE MENU =================
 
 menuBtn.addEventListener("click", () => {
-
   sidebar.classList.toggle("active");
-
-  // CHANGE ICON
-  if (sidebar.classList.contains("active")) {
-
-    menuBtn.innerHTML = "✕";
-
-  } else {
-
-    menuBtn.innerHTML = "☰";
-
-  }
-
+  menuBtn.innerHTML = sidebar.classList.contains("active") ? "✕" : "☰";
 });
 
 // ================= CLEAR =================
@@ -1428,8 +1479,22 @@ onAuthStateChanged(auth, async (user) => {
   await setDoc(doc(db, "users", user.uid), {
     username: user.displayName || "User",
     email: user.email,
-    online: true
+    online: true,
+    lastSeen: serverTimestamp()
   }, { merge: true });
+
+  // PRESENCE SYSTEM
+  const statusRef = ref(rtdb, `status/${user.uid}`);
+
+  set(statusRef, {
+    state: "online",
+    lastChanged: Date.now()
+  });
+
+  onDisconnect(statusRef).set({
+    state: "offline",
+    lastChanged: Date.now()
+  });
 
 });
 
@@ -1515,16 +1580,9 @@ micBtn.addEventListener("click", async () => {
 
 function openDM(userId, name) {
 
-  if (!currentUser) return;
-
-  // prevent chatting with yourself
-  if (userId === currentUser.uid) {
-    alert("You cannot message yourself");
-    return;
-  }
+  if (!currentUser || userId === currentUser.uid) return;
 
   activeDMUser = userId;
-
   activeChatId = getChatId(currentUser.uid, userId);
 
   document.querySelector(".chat-title h1").innerText = name;
@@ -1534,26 +1592,15 @@ function openDM(userId, name) {
 
   listenToDM(activeChatId);
 
-  // close mobile sidebar
-  // close mobile sidebar
-// close mobile sidebar
-sidebar.classList.remove("active");
-
-// reset menu icon
-menuBtn.innerHTML = "☰";
-
-} // CLOSE openDM FUNCTION HERE
+  sidebar.classList.remove("active");
+  menuBtn.innerHTML = "☰";
+}
 
 // ================= LISTEN DM =================
 
 function listenToDM(chatId) {
 
-  if (!chatId) return;
-
-  // remove old realtime listener
-  if (unsubscribeMessages) {
-    unsubscribeMessages();
-  }
+  if (unsubscribeMessages) unsubscribeMessages();
 
   const dmQuery = query(
     collection(db, "chats", chatId, "messages"),
@@ -1564,90 +1611,33 @@ function listenToDM(chatId) {
 
     messages.innerHTML = "";
 
-    // EMPTY CHAT
     if (snapshot.empty) {
-
-      messages.innerHTML = `
-        <div class="empty-chat">
-          No messages yet 🚀<br/>
-          Start chatting now
-        </div>
-      `;
-
+      messages.innerHTML = `<div class="empty-chat">No messages yet 🚀<br/>Start chatting now</div>`;
       return;
     }
 
     snapshot.forEach((docSnap) => {
 
       const data = docSnap.data();
-
       const isMe = data.uid === currentUser.uid;
 
       const div = document.createElement("div");
-
-      div.classList.add(
-        "message",
-        isMe ? "sent" : "received"
-      );
+      div.classList.add("message", isMe ? "sent" : "received");
 
       let content = "";
 
-      // TEXT
       if (data.type === "text") {
-
-        content = `
-          <div class="message-text">
-            ${data.text}
-          </div>
-        `;
-
-      }
-
-      // IMAGE
-      else if (data.type === "image") {
-
-        content = `
-          <img
-            src="${data.fileURL}"
-            style="
-              max-width:260px;
-              border-radius:12px;
-            "
-          >
-        `;
-
-      }
-
-      // VIDEO
-      else if (data.type === "video") {
-
-        content = `
-          <video
-            controls
-            src="${data.fileURL}"
-            style="
-              max-width:260px;
-              border-radius:12px;
-            "
-          ></video>
-        `;
-
-      }
-
-      // AUDIO
-      else if (data.type === "audio") {
-
-        content = `
-          <audio controls src="${data.fileURL}"></audio>
-        `;
-
+        content = `<div class="message-text">${data.text}</div>`;
+      } else if (data.type === "image") {
+        content = `<img src="${data.fileURL}" style="max-width:260px;border-radius:12px;">`;
+      } else if (data.type === "video") {
+        content = `<video controls src="${data.fileURL}" style="max-width:260px;border-radius:12px;"></video>`;
+      } else if (data.type === "audio") {
+        content = `<audio controls src="${data.fileURL}"></audio>`;
       }
 
       div.innerHTML = `
-        <div class="message-name">
-          ${data.username}
-        </div>
-
+        <div class="message-name">${data.username}</div>
         ${content}
       `;
 
@@ -1657,25 +1647,19 @@ function listenToDM(chatId) {
     messages.scrollTop = messages.scrollHeight;
   });
 }
+
 // ================= SEND MESSAGE =================
 
 async function sendMessage() {
 
-  if (!currentUser) return;
-
-if (!activeChatId) {
-  alert("Select a user to start chatting");
-  return;
-}
+  if (!currentUser || !activeChatId) return;
 
   const text = messageInput.value.trim();
   const files = fileInput.files;
 
   if (!text && files.length === 0) return;
 
-  // TEXT
   if (text) {
-
     await addDoc(
       collection(db, "chats", activeChatId, "messages"),
       {
@@ -1683,12 +1667,12 @@ if (!activeChatId) {
         uid: currentUser.uid,
         username: currentUser.displayName || "User",
         type: "text",
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        seenBy: {}
       }
     );
   }
 
-  // FILES
   for (const file of files) {
 
     const type =
@@ -1700,11 +1684,10 @@ if (!activeChatId) {
         ? "audio"
         : "file";
 
-    const storageRef = ref(storage, `chatFiles/${Date.now()}_${file.name}`);
+    const fileRef = storageRef(storage, `chatFiles/${Date.now()}_${file.name}`);
 
-    await uploadBytes(storageRef, file);
-
-    const url = await getDownloadURL(storageRef);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
 
     await addDoc(
       collection(db, "chats", activeChatId, "messages"),
@@ -1713,7 +1696,8 @@ if (!activeChatId) {
         type,
         uid: currentUser.uid,
         username: currentUser.displayName || "User",
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        seenBy: {}
       }
     );
   }
@@ -1723,7 +1707,7 @@ if (!activeChatId) {
   previewContainer.innerHTML = "";
 }
 
-// ================= SEND EVENTS =================
+// ================= EVENTS =================
 
 sendBtn.addEventListener("click", sendMessage);
 
@@ -1742,69 +1726,56 @@ onSnapshot(collection(db, "users"), (snapshot) => {
   usersContainer.innerHTML = "";
 
   allUsers
-  .filter(user => user.id !== currentUser?.uid)
-  .forEach(user => {
-    
-    const div = document.createElement("div");
-    div.classList.add("user");
-
-    div.onclick = () => openDM(user.id, user.username);
-
-    div.innerHTML = `
-      <div class="user-avatar">${getInitials(user.username)}</div>
-      <div class="user-details">
-        <h4>${user.username}</h4>
-        <p>${user.online ? "Online" : "Offline"}</p>
-      </div>
-    `;
-
-    usersContainer.appendChild(div);
-  });
-
-});
-
-// ================= SEARCH USERS =================
-
-searchInput.addEventListener("input", () => {
-
-  const value =
-    searchInput.value.toLowerCase();
-
-  usersContainer.innerHTML = "";
-
-  allUsers
-    .filter(user =>
-      user.id !== currentUser?.uid &&
-      user.username
-        .toLowerCase()
-        .includes(value)
-    )
+    .filter(u => u.id !== currentUser?.uid)
     .forEach(user => {
 
       const div = document.createElement("div");
-
       div.classList.add("user");
 
-      div.onclick = () =>
-        openDM(user.id, user.username);
+      div.onclick = () => openDM(user.id, user.username);
 
       div.innerHTML = `
-        <div class="user-avatar">
-          ${getInitials(user.username)}
-        </div>
-
+        <div class="user-avatar">${getInitials(user.username)}</div>
         <div class="user-details">
           <h4>${user.username}</h4>
-          <p>
-            ${user.online ? "Online" : "Offline"}
-          </p>
+          <p>${user.online ? "Online" : "Offline"}</p>
         </div>
       `;
 
       usersContainer.appendChild(div);
-
     });
+});
 
+// ================= SEARCH =================
+
+searchInput.addEventListener("input", () => {
+
+  const value = searchInput.value.toLowerCase();
+
+  usersContainer.innerHTML = "";
+
+  allUsers
+    .filter(u =>
+      u.id !== currentUser?.uid &&
+      u.username.toLowerCase().includes(value)
+    )
+    .forEach(user => {
+
+      const div = document.createElement("div");
+      div.classList.add("user");
+
+      div.onclick = () => openDM(user.id, user.username);
+
+      div.innerHTML = `
+        <div class="user-avatar">${getInitials(user.username)}</div>
+        <div class="user-details">
+          <h4>${user.username}</h4>
+          <p>${user.online ? "Online" : "Offline"}</p>
+        </div>
+      `;
+
+      usersContainer.appendChild(div);
+    });
 });
 
 // ================= LOGOUT =================
@@ -1813,7 +1784,8 @@ logoutBtn.addEventListener("click", async () => {
 
   if (currentUser) {
     await updateDoc(doc(db, "users", currentUser.uid), {
-      online: false
+      online: false,
+      lastSeen: serverTimestamp()
     });
   }
 
