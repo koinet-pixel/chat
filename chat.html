@@ -1704,15 +1704,28 @@ messageInput.addEventListener("keydown", (e) => {
 });
 
 // ================= USERS =================
+
+const searchUsers = document.getElementById("searchUsers");
+
 let allUsers = [];
 
+// LOAD USERS
 onSnapshot(collection(db, "users"), (snapshot) => {
 
-  allUsers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  allUsers = snapshot.docs.map(d => ({
+    id: d.id,
+    ...d.data()
+  }));
+
+  renderUsers(allUsers);
+});
+
+// RENDER FUNCTION
+function renderUsers(users) {
 
   usersContainer.innerHTML = "";
 
-  allUsers
+  users
     .filter(u => u.id !== currentUser?.uid)
     .forEach(user => {
 
@@ -1722,7 +1735,10 @@ onSnapshot(collection(db, "users"), (snapshot) => {
       div.onclick = () => openDM(user.id, user.username);
 
       div.innerHTML = `
-        <div class="user-avatar">${getInitials(user.username)}</div>
+        <div class="user-avatar">
+          ${getInitials(user.username)}
+        </div>
+
         <div class="user-details">
           <h4>${user.username}</h4>
           <p>${user.online ? "Online" : "Offline"}</p>
@@ -1731,8 +1747,19 @@ onSnapshot(collection(db, "users"), (snapshot) => {
 
       usersContainer.appendChild(div);
     });
-});
+}
 
+// SEARCH USERS
+searchUsers.addEventListener("input", () => {
+
+  const value = searchUsers.value.toLowerCase();
+
+  const filteredUsers = allUsers.filter(user =>
+    user.username.toLowerCase().includes(value)
+  );
+
+  renderUsers(filteredUsers);
+});
 // ================= LOGOUT =================
 logoutBtn.addEventListener("click", async () => {
 
