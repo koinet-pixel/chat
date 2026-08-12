@@ -1,38 +1,64 @@
-// Firebase App
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-// Firebase Auth
 import {
-  getAuth
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    getAuth
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Firestore
 import {
-  getFirestore
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    getFirestore
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase Config
+import {
+    getStorage
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+import {
+    getDatabase
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCDTY77Pz07f6vnXQ-J5wGalXZQYmx8hEg",
-  authDomain: "project-5363e817-8c2e-4fcc-af9.firebaseapp.com",
-  projectId: "project-5363e817-8c2e-4fcc-af9",
-  storageBucket: "project-5363e817-8c2e-4fcc-af9.firebasestorage.app",
-  messagingSenderId: "330166619870",
-  appId: "1:330166619870:web:9c7342da5f1f94c7e5fc4f"
-
+  apiKey: "AIzaSyBjtMM-pG6tSbMj36QCX57vwbohNqgI-ws",
+  authDomain: "newglobchat.firebaseapp.com",
+  projectId: "newglobchat",
+  storageBucket: "newglobchat.firebasestorage.app",
+  messagingSenderId: "1033424696083",
+  appId: "1:1033424696083:web:d27e3417531a9650a7e0e6",
+  measurementId: "G-ZH60S94RHK"
 };
 
-// Initialize Firebase
+
 const app =
-initializeApp(firebaseConfig);
+    initializeApp(
+        firebaseConfig
+    );
 
-// Auth
-export const auth =
-getAuth(app);
 
-// Firestore
-export const db =
-getFirestore(app);
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
+
+
+const storage =
+    getStorage(app);
+
+
+const rtdb =
+    getDatabase(app);
+
+
+export {
+    app,
+    auth,
+    db,
+    storage,
+    rtdb
+};

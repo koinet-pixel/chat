@@ -1,1780 +1,545 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced Firebase Chat App</title>
-
-  <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Inter',sans-serif;
-  -webkit-tap-highlight-color:transparent;
-}
-
-:root{
-
-  --bg:
-  linear-gradient(
-    135deg,
-    #dfe9f3,
-    #c7d8ee,
-    #d8ede4
-  );
-
-  --sidebar:
-  rgba(240,248,255,0.72);
-
-  --card:
-  rgba(255,255,255,0.60);
-
-  --primary:#3b82f6;
-
-  --primary-hover:#2563eb;
-
-  --secondary:#10b981;
-
-  --text:#0f172a;
-
-  --gray:#475569;
-
-  --danger:#ef4444;
-
-  --success:#16a34a;
-
-  --border:
-  rgba(148,163,184,0.22);
-
-  --shadow:
-  0 10px 30px rgba(15,23,42,0.10);
-
-  --blur:blur(14px);
-
-}
-
-html,
-body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-}
-
-body{
-
-  background:var(--bg);
-
-  color:var(--text);
-
-  position:relative;
-
-}
-
-/* ================= BACKGROUND EFFECTS ================= */
-
-body::before{
-
-  content:"";
-
-  position:fixed;
-
-  width:450px;
-  height:450px;
-
-  border-radius:50%;
-
-  background:
-  rgba(59,130,246,0.12);
-
-  top:-160px;
-  right:-160px;
-
-  filter:blur(90px);
-
-  z-index:-1;
-}
-
-body::after{
-
-  content:"";
-
-  position:fixed;
-
-  width:420px;
-  height:420px;
-
-  border-radius:50%;
-
-  background:
-  rgba(16,185,129,0.10);
-
-  bottom:-160px;
-  left:-140px;
-
-  filter:blur(90px);
-
-  z-index:-1;
-}
-
-/* ================= APP ================= */
-
-.chat-app{
-
-  display:flex;
-
-  width:100%;
-
-  height:100dvh;
-
-  overflow:hidden;
-
-}
-
-/* ================= MOBILE MENU ================= */
-
-.mobile-menu-btn{
-transition:
-  transform 0.25s ease,
-  background 0.25s ease;
-
-  display:none;
-
-  position:fixed;
-
-  top:18px;
-  left:18px;
-
-  z-index:999;
-
-  width:48px;
-  height:48px;
-
-  border:none;
-
-  border-radius:16px;
-background:transparent;
-
-  backdrop-filter:var(--blur);
-
-  border:1px solid var(--border);
-
-  color:var(--primary);
-
-  font-size:22px;
-
-  cursor:pointer;
-
-  box-shadow:var(--shadow);
-
-}
-
-.mobile-menu-btn:active{
-  transform:scale(0.95);
-}
-
-/* ================= SIDEBAR ================= */
-
-.sidebar{
-
-  width:340px;
-
-  min-width:340px;
-
-  background:
-  rgba(240,248,255,0.66);
-
-  backdrop-filter:var(--blur);
-
-  border-right:1px solid rgba(148,163,184,0.18);
-
-  display:flex;
-
-  flex-direction:column;
-
-  transition:0.35s ease;
-
-  box-shadow:
-  0 10px 35px rgba(15,23,42,0.08);
-
-  overflow:hidden;
-
-}
-
-.sidebar.active{
-  left:0;
-}
-
-.sidebar-header{
-
-  padding:24px 22px;
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  border-bottom:1px solid rgba(148,163,184,0.12);
-
-}
-
-.logo{
-
-  font-size:28px;
-
-  font-weight:800;
-
-  letter-spacing:-1px;
-
-  color:var(--primary);
-
-}
-
-.logout-btn{
-
-  padding:12px 16px;
-
-  border:none;
-
-  border-radius:16px;
-
-  background:
-  linear-gradient(
-    135deg,
-    #fb7185,
-    #ef4444
-  );
-
-  color:white;
-
-  cursor:pointer;
-
-  font-weight:700;
-
-  transition:0.3s ease;
-
-  box-shadow:
-  0 10px 20px rgba(239,68,68,0.15);
-
-}
-
-.logout-btn:hover{
-  transform:translateY(-2px);
-}
-
-/* ================= PROFILE ================= */
-
-.profile{
-
-  padding:25px 12px;
-
-  text-align:center;
-
-  border-bottom:1px solid rgba(148,163,184,0.12);
-
-}
-
-.avatar{
-
-  width:100px;
-  height:100px;
-
-  border-radius:50%;
-
-  background:
-  linear-gradient(
-    135deg,
-    #3b82f6,
-    #10b981
-  );
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  margin:auto;
-
-  font-size:38px;
-
-  font-weight:800;
-
-  margin-bottom:18px;
-
-  color:white;
-
-  box-shadow:
-  0 12px 28px rgba(16,185,129,0.18);
-
-}
-
-.profile h3{
-
-  margin-bottom:6px;
-
-  color:var(--text);
-
-  font-size:22px;
-
-  font-weight:700;
-
-}
-
-.profile p{
-
-  color:var(--gray);
-
-  font-size:14px;
-
-  word-break:break-word;
-
-  font-weight:500;
-
-}
-
-.status{
-
-  margin-top:15px;
-
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:8px;
-
-  background:
-  rgba(16,185,129,0.10);
-
-  color:#047857;
-
-  padding:10px 16px;
-
-  border-radius:40px;
-
-  font-size:13px;
-
-  font-weight:600;
-
-  border:1px solid rgba(16,185,129,0.12);
-
-}
-
-.status-dot{
-
-  width:9px;
-  height:9px;
-
-  border-radius:50%;
-
-  background:#10b981;
-
-  box-shadow:
-  0 0 10px rgba(16,185,129,0.45);
-
-}
-
-/* ================= SEARCH ================= */
-
-.search-box{
-  padding:18px;
-}
-
-.search-box input{
-
-  width:100%;
-
-  padding:14px 15px;
-
-  border:none;
-
-  border-radius:18px;
-
-  background:
-  rgba(255,255,255,0.78);
-
-  border:1px solid rgba(148,163,184,0.14);
-
-  color:#0f172a;
-
-  outline:none;
-
-  font-size:15px;
-
-  font-weight:500;
-
-}
-
-/* ================= USERS ================= */
-
-.users-list{
-
-  flex:1;
-
-  overflow-y:auto;
-
-  padding:18px;
-
-}
-
-.users-title{
-
-  color:var(--gray);
-
-  margin-bottom:15px;
-
-  font-size:13px;
-
-  font-weight:700;
-
-  letter-spacing:1px;
-
-  text-transform:uppercase;
-
-}
-
-.user{
-
-  background:
-  rgba(255,255,255,0.55);
-
-  backdrop-filter:var(--blur);
-
-  padding:10px;
-
-  border-radius:22px;
-
-  margin-bottom:14px;
-
-  display:flex;
-
-  align-items:center;
-
-  gap:14px;
-
-  transition:0.3s ease;
-
-  cursor:pointer;
-
-  border:1px solid rgba(148,163,184,0.15);
-
-  box-shadow:
-  0 6px 16px rgba(15,23,42,0.05);
-
-}
-
-.user:hover{
-
-  transform:translateY(-3px);
-
-  background:
-  rgba(255,255,255,0.78);
-
-}
-
-.user-avatar{
-
-  width:52px;
-  height:52px;
-
-  border-radius:50%;
-
-  background:
-  linear-gradient(
-    135deg,
-    #3b82f6,
-    #10b981
-  );
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  font-weight:700;
-
-  font-size:18px;
-
-  color:white;
-
-}
-
-.user-details{
-  flex:1;
-  min-width:0;
-}
-
-.user-details h4{
-
-  margin-bottom:4px;
-
-  font-size:15px;
-
-  color:var(--text);
-
-  font-weight:700;
-
-}
-
-.user-details p{
-
-  color:var(--gray);
-
-  font-size:12px;
-
-  font-weight:500;
-
-}
-
-/* ================= CHAT ================= */
-
-.chat-section{
-
-  flex:1;
-
-  display:flex;
-
-  flex-direction:column;
-
-  min-width:0;
-
-  width:100%;
-
-  height:100dvh;
-
-  overflow:hidden;
-
-}
-
-.chat-header{
-
-  background:
-  rgba(240,248,255,0.62);
-
-  backdrop-filter:var(--blur);
-
-  padding:24px;
-
-  border-bottom:1px solid rgba(148,163,184,0.12);
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  flex-wrap:wrap;
-
-  gap:12px;
-
-}
-
-.chat-title h1{
-
-  font-size:30px;
-
-  font-weight:800;
-
-  letter-spacing:-1px;
-
-}
-
-.chat-title p{
-
-  color:var(--gray);
-
-  margin-top:6px;
-
-  font-size:14px;
-
-  font-weight:500;
-
-}
-
-.chat-actions{
-  display:flex;
-  gap:10px;
-}
-
-.header-btn{
-
-  background:
-  rgba(255,255,255,0.75);
-
-  border:none;
-
-  color:var(--primary);
-
-  padding:12px 18px;
-
-  border-radius:16px;
-
-  cursor:pointer;
-
-  font-weight:700;
-
-}
-
-/* ================= MESSAGES ================= */
-
-.messages{
-
-  flex:1;
-
-  overflow-y:auto;
-
-  overflow-x:hidden;
-
-  padding:24px;
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:18px;
-
-  scroll-behavior:smooth;
-
-}
-
-.message{
-
-  max-width:75%;
-
-  padding:16px 18px;
-
-  border-radius:24px;
-
-  word-wrap:break-word;
-
-  animation:fadeIn 0.2s ease;
-
-}
-
-@keyframes fadeIn{
-
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-
-}
-
-.sent{
-
-  align-self:flex-end;
-
-  background:
-  linear-gradient(
-    135deg,
-    #3b82f6,
-    #10b981
-  );
-
-  color:white;
-
-  border-bottom-right-radius:8px;
-
-}
-
-.received{
-
-  align-self:flex-start;
-
-  background:
-  rgba(255,255,255,0.68);
-
-  border-bottom-left-radius:8px;
-
-  border:1px solid rgba(148,163,184,0.15);
-
-}
-
-.message-name{
-
-  font-size:13px;
-
-  margin-bottom:7px;
-
-  font-weight:700;
-
-}
-
-.sent .message-name{
-  color:#dbeafe;
-}
-
-.received .message-name{
-  color:#0f766e;
-}
-
-.message-text{
-
-  font-size:15px;
-
-  line-height:1.7;
-
-  font-weight:500;
-
-}
-
-/* ================= INPUT ================= */
-
-.chat-input-area{
-
-  flex-shrink:0;
-
-  padding:22px;
-
-  background:
-  rgba(240,248,255,0.60);
-
-  backdrop-filter:var(--blur);
-
-  border-top:1px solid rgba(148,163,184,0.12);
-
-}
-
-.input-wrapper{
-
-  display:flex;
-
-  gap:12px;
-
-  align-items:center;
-
-  width:100%;
-
-}
-
-.chat-input-area input{
-
-  flex:1;
-
-  min-width:0;
-
-  padding:17px 20px;
-
-  border:none;
-
-  border-radius:22px;
-
-  background:
-  rgba(255,255,255,0.78);
-
-  border:1px solid rgba(148,163,184,0.14);
-
-  color:#0f172a;
-
-  outline:none;
-
-  font-size:15px;
-
-  font-weight:500;
-
-}
-
-.send-btn{
-
-  padding:16px 24px;
-
-  border:none;
-
-  border-radius:20px;
-
-  background:
-  linear-gradient(
-    135deg,
-    #3b82f6,
-    #10b981
-  );
-
-  color:white;
-
-  cursor:pointer;
-
-  font-weight:700;
-
-  flex-shrink:0;
-
-}
-
-/* ================= ICON BUTTONS ================= */
-
-.icon-btn{
-
-  width:48px;
-  height:48px;
-
-  flex-shrink:0;
-
-  border:none;
-
-  border-radius:16px;
-
-  background:
-  rgba(255,255,255,0.75);
-
-  backdrop-filter:var(--blur);
-
-  border:1px solid rgba(148,163,184,0.14);
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  cursor:pointer;
-
-  font-size:22px;
-
-  color:var(--primary);
-
-}
-
-/* ================= EMOJI PICKER ================= */
-
-.emoji-picker{
-
-  position:absolute;
-
-  bottom:95px;
-
-  right:25px;
-
-  width:240px;
-
-  padding:15px;
-
-  border-radius:22px;
-
-  background:
-  rgba(255,255,255,0.82);
-
-  backdrop-filter:var(--blur);
-
-  border:1px solid rgba(148,163,184,0.14);
-
-  box-shadow:
-  0 10px 30px rgba(15,23,42,0.12);
-
-  display:none;
-
-  flex-wrap:wrap;
-
-  gap:12px;
-
-  z-index:999;
-
-}
-
-.emoji-picker span{
-
-  font-size:24px;
-
-  cursor:pointer;
-
-}
-
-/* ================= PREVIEW ================= */
-
-.preview-container{
-
-  display:flex;
-
-  gap:12px;
-
-  flex-wrap:wrap;
-
-  margin-bottom:14px;
-
-}
-
-.preview-item{
-
-  width:90px;
-  height:90px;
-
-  border-radius:18px;
-
-  overflow:hidden;
-
-  position:relative;
-
-  background:
-  rgba(255,255,255,0.75);
-
-}
-
-.preview-item img,
-.preview-item video{
-
-  width:100%;
-  height:100%;
-
-  object-fit:cover;
-
-}
-
-.preview-item audio{
-
-  width:100%;
-
-  position:absolute;
-
-  bottom:0;
-
-}
-
-/* ================= EMPTY ================= */
-
-.empty-chat{
-
-  margin:auto;
-
-  text-align:center;
-
-  color:#475569;
-
-  line-height:1.9;
-
-  font-weight:600;
-
-  font-size:16px;
-
-}
-
-/* ================= TYPING ================= */
-
-.typing{
-
-  display:none;
-
-  align-items:center;
-
-  gap:6px;
-
-  padding:0 24px 14px;
-
-}
-
-.typing span{
-
-  width:10px;
-  height:10px;
-
-  border-radius:50%;
-
-  background:#64748b;
-
-  animation:typingBounce 1s infinite;
-
-}
-
-.typing span:nth-child(2){
-  animation-delay:0.2s;
-}
-
-.typing span:nth-child(3){
-  animation-delay:0.4s;
-}
-
-@keyframes typingBounce{
-
-  0%,80%,100%{
-    transform:scale(0.7);
-    opacity:0.5;
-  }
-
-  40%{
-    transform:scale(1);
-    opacity:1;
-  }
-
-}
-
-/* ================= SCROLL ================= */
-
-::-webkit-scrollbar{
-  width:6px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:#94a3b8;
-  border-radius:10px;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:1100px){
-
-  .sidebar{
-    width:240px;
-    min-width:240px;
-  }
-
-}
-
-@media(max-width:900px){
-
-  .mobile-menu-btn{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  }
-
-  .sidebar{
-
-    position:fixed;
-
-    left:-100%;
-
-    top:0;
-
-    height:100%;
-
-    z-index:998;
-
-    transition:left 0.3s ease;
-
-  }
-
-  .sidebar.active{
-    left:0;
-  }
-
-  .profile{
-    padding:10px 5px;
-  }
-
-  .avatar{
-    width:55px;
-    height:55px;
-    font-size:18px;
-    margin-bottom:6px;
-  }
-
-  .profile h3{
-    font-size:15px;
-  }
-
-  .profile p{
-    font-size:12px;
-  }
-
-  .status{
-    padding:8px 12px;
-    font-size:12px;
-  }
-
-}
-
-@media(max-width:700px){
-
-  .chat-header{
-
-    padding:14px;
-
-    padding-left:70px;
-
-  }
-
-  .chat-title h1{
-    font-size:22px;
-  }
-
-  .messages{
-    padding:16px;
-  }
-
-  .message{
-
-    max-width:92%;
-
-    padding:15px;
-
-  }
-
-  .chat-input-area{
-
-    padding:15px;
-
-    padding-bottom:
-    calc(15px + env(safe-area-inset-bottom));
-
-  }
-
-  .input-wrapper{
-    gap:8px;
-  }
-
-  .chat-input-area input{
-
-    padding:15px;
-
-    font-size:14px;
-
-  }
-
-  .send-btn{
-    padding:15px 18px;
-  }
-
-  .icon-btn{
-
-    width:42px;
-    height:42px;
-
-    font-size:18px;
-
-  }
-
-}
-
-@media(max-width:480px){
-
-  .sidebar{
-    width:100%;
-    min-width:100%;
-  }
-
-  .chat-title h1{
-    font-size:20px;
-  }
-
-  .logo{
-    font-size:24px;
-  }
-
-  .header-btn{
-
-    padding:10px 14px;
-
-    font-size:13px;
-
-  }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Let's Chat</title>
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
+    <div class="auth-guard" id="authGuard">
+    <div class="auth-loader">
+        <div class="loader-ring"></div>
 
-<!-- MOBILE BUTTON -->
+        <strong>Verifying session...</strong>
 
-<button class="mobile-menu-btn" id="menuBtn">
-  ☰
-</button>
-
-<div class="chat-app">
-
-  <!-- ================= SIDEBAR ================= -->
-
-  <div class="sidebar" id="sidebar">
-
-    <div class="sidebar-header">
-
-      <div class="logo">
-        Let's Chat
-      </div>
-
-      <button class="logout-btn" id="logoutBtn">
-        Logout
-      </button>
-
+        <span>Please wait while we secure your account.</span>
     </div>
-
-    <!-- PROFILE -->
-
-    <div class="profile">
-
-      <div class="avatar" id="avatar">
-        U
-      </div>
-
-      <h3 id="username">
-        Loading...
-      </h3>
-
-      <p id="email">
-        Loading...
-      </p>
-
-      <div class="status">
-        <div class="status-dot"></div>
-        Online
-      </div>
-
-    </div>
-
-    <!-- SEARCH -->
-
-    <div class="search-box">
-
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search users..."
-      />
-
-    </div>
-
-    <!-- USERS -->
-
-    <div class="users-list">
-
-      <div class="users-title">
-        Users
-      </div>
-
-      <div id="usersContainer"></div>
-
-    </div>
-
-  </div>
-
-  <!-- ================= CHAT SECTION ================= -->
-
-  <div class="chat-section">
-
-    <div class="chat-header">
-
-  <div class="chat-title">
-
-    <h1>Global Chat Room</h1>
-
-    <p>
-      Seeker Realtime Chat Application
-    </p>
-
-  </div>
-
-  <div class="chat-actions">
-
-    <button class="header-btn" id="clearBtn">
-      Clear Input
-    </button>
-
-  </div>
-
-</div>
-    <!-- MESSAGES -->
-
-    <div class="messages" id="messages">
-
-      <div class="empty-chat">
-        No messages yet 🚀<br/>
-        Start chatting now
-      </div>
-
-    </div>
-
-    <!-- TYPING -->
-
-    <div class="typing" id="typingText">
-      <span></span>
-      <span></span>
-      <span></span>
-  </div>
-
-    <!-- INPUT -->
-
-    <!-- INPUT -->
-
-<div class="chat-input-area">
-
-  <!-- PREVIEW AREA -->
-  <div id="previewContainer" class="preview-container"></div>
-
-  <!-- EMOJI PICKER -->
-  <div class="emoji-picker" id="emojiPicker">
-
-    <span>😀</span>
-    <span>😂</span>
-    <span>😍</span>
-    <span>🔥</span>
-    <span>❤️</span>
-    <span>👍</span>
-    <span>😭</span>
-    <span>🎉</span>
-    <span>😎</span>
-    <span>🙏</span>
-
-  </div>
-
-  <div class="input-wrapper">
-
-    <!-- ATTACH -->
-    <label for="fileInput" class="icon-btn">
-      📎
-    </label>
-
-    <input
-      type="file"
-      id="fileInput"
-      accept="image/*,video/*,audio/*"
-      multiple
-      hidden
-    />
-
-    <!-- MESSAGE -->
-    <input
-      type="text"
-      id="messageInput"
-      placeholder="Type your message..."
-    />
-
-    <!-- EMOJI -->
-    <button class="icon-btn" id="emojiBtn">
-      😊
-    </button>
-
-    <!-- VOICE -->
-    <button class="icon-btn" id="micBtn">
-      🎤
-    </button>
-
-    <!-- SEND -->
-    <button class="send-btn" id="sendBtn">
-      Send
-    </button>
-
-  </div>
-
-</div>
-  </div>
-
 </div>
 
-<script type="module">
-
-// ================= FIREBASE =================
-import { auth, db } from "./firebase.js";
-
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-import {
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-  doc,
-  setDoc,
-  updateDoc,
-  deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-  getDatabase,
-  ref,
-  set,
-  onDisconnect,
-  onValue,
-  remove
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-// ================= INIT =================
-const storage = getStorage();
-const rtdb = getDatabase();
-
-// ================= ELEMENTS =================
-const username = document.getElementById("username");
-const email = document.getElementById("email");
-const avatar = document.getElementById("avatar");
-const usersContainer = document.getElementById("usersContainer");
-const messages = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const searchInput = document.getElementById("searchInput");
-const clearBtn = document.getElementById("clearBtn");
-const typingText = document.getElementById("typingText");
-const menuBtn = document.getElementById("menuBtn");
-const sidebar = document.getElementById("sidebar");
-const fileInput = document.getElementById("fileInput");
-const previewContainer = document.getElementById("previewContainer");
-const emojiBtn = document.getElementById("emojiBtn");
-const emojiPicker = document.getElementById("emojiPicker");
-const micBtn = document.getElementById("micBtn");
-
-// ================= STATE =================
-function getChatId(uid1, uid2) {
-  return [uid1, uid2].sort().join("_");
-}
-
-let currentUser = null;
-let activeChatId = null;
-let unsubscribeMessages = null;
-let typingTimeout;
-
-// ================= MOBILE MENU =================
-menuBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("active");
-  menuBtn.innerHTML = sidebar.classList.contains("active") ? "✕" : "☰";
-});
-
-// ================= CLEAR =================
-clearBtn?.addEventListener("click", () => {
-  messageInput.value = "";
-  previewContainer.innerHTML = "";
-  fileInput.value = "";
-});
-
-// ================= INITIALS =================
-function getInitials(name) {
-  if (!name) return "U";
-  const parts = name.trim().split(" ");
-  return parts.length === 1
-    ? parts[0][0].toUpperCase()
-    : (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
-// ================= AUTH =================
-onAuthStateChanged(auth, async (user) => {
-
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  currentUser = user;
-
-  username.innerText = user.displayName || "User";
-  email.innerText = user.email;
-  avatar.innerText = getInitials(user.displayName);
-
-  // Firestore presence
-  await setDoc(doc(db, "users", user.uid), {
-    username: user.displayName || "User",
-    email: user.email,
-    online: true,
-    lastSeen: serverTimestamp()
-  }, { merge: true });
-
-  // RTDB presence (REAL TIME)
-  const statusRef = ref(rtdb, `status/${user.uid}`);
-
-  set(statusRef, {
-    state: "online",
-    lastChanged: Date.now()
-  });
-
-  onDisconnect(statusRef).set({
-    state: "offline",
-    lastChanged: Date.now()
-  });
-
-});
-
-// ================= TYPING =================
-function listenTyping(chatId) {
-  const typingRef = ref(rtdb, `typing/${chatId}`);
+    <!-- =========================================================
+         MOBILE MENU
+    ========================================================== -->
 
-  onValue(typingRef, (snap) => {
-    const data = snap.val();
+    <button
+        class="mobile-menu-btn"
+        id="menuBtn"
+        aria-label="Open navigation"
+    >
+        ☰
+    </button>
 
-    if (!data) {
-      typingText.style.display = "none";
-      return;
-    }
 
-    const users = Object.values(data);
-    const typing = users.some(u => u?.typing);
+    <div class="chat-app">
 
-    typingText.style.display = typing ? "flex" : "none";
-  });
-}
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
 
-// ================= FILE PREVIEW =================
-fileInput.addEventListener("change", (e) => {
-  previewContainer.innerHTML = "";
+        <aside class="sidebar" id="sidebar">
 
-  Array.from(e.target.files).forEach(file => {
-    const reader = new FileReader();
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
 
-    reader.onload = (event) => {
-      const div = document.createElement("div");
-      div.classList.add("preview-item");
+                <div class="logo">
+                    Let's Chat
+                </div>
 
-      if (file.type.startsWith("image/")) {
-        div.innerHTML = `<img src="${event.target.result}">`;
-      } else if (file.type.startsWith("video/")) {
-        div.innerHTML = `<video controls src="${event.target.result}"></video>`;
-      } else {
-        div.innerHTML = `<audio controls src="${event.target.result}"></audio>`;
-      }
+                <button
+                    class="logout-btn"
+                    id="logoutBtn"
+                >
+                    Logout
+                </button>
 
-      previewContainer.appendChild(div);
-    };
+            </div>
 
-    reader.readAsDataURL(file);
-  });
-});
 
-// ================= MESSAGE OPTIONS =================
-function showMessageOptions(messageId) {
+            <!-- Profile -->
+            <div class="profile">
 
-  const box = document.createElement("div");
-  box.style.cssText = `
-    position:fixed;
-    bottom:80px;
-    right:20px;
-    background:white;
-    padding:12px;
-    border-radius:10px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-    z-index:9999;
-  `;
+                <div
+                    class="avatar"
+                    id="avatar"
+                >
+                    U
+                </div>
 
-  box.innerHTML = `
-    <button id="delMe">Delete for me</button><br/>
-    <button id="delAll">Delete for everyone</button><br/>
-    <button id="close">Cancel</button>
-  `;
+                <h3 id="username">
+                    Loading...
+                </h3>
 
-  document.body.appendChild(box);
+                <p id="email">
+                    Loading...
+                </p>
 
-  document.getElementById("delMe").onclick = async () => {
-    await deleteDoc(doc(db, "chats", activeChatId, "messages", messageId));
-    box.remove();
-  };
+                <div class="status">
 
-  document.getElementById("delAll").onclick = async () => {
-    await deleteDoc(doc(db, "chats", activeChatId, "messages", messageId));
-    box.remove();
-  };
-
-  document.getElementById("close").onclick = () => box.remove();
-}
+                    <div class="status-dot"></div>
 
-// ================= OPEN CHAT =================
-function openDM(userId, name) {
+                    Online
 
-  if (!currentUser || userId === currentUser.uid) return;
+                </div>
 
-  activeChatId = getChatId(currentUser.uid, userId);
+            </div>
 
-  document.querySelector(".chat-title h1").innerText = name;
 
-  messageInput.disabled = false;
-  messageInput.placeholder = `Message ${name}...`;
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
 
-  listenTyping(activeChatId);
-  listenToDM(activeChatId);
-
-  sidebar.classList.remove("active");
-  menuBtn.innerHTML = "☰";
-}
-
-// ================= LISTEN CHAT =================
-function listenToDM(chatId) {
-
-  if (unsubscribeMessages) unsubscribeMessages();
-
-  const q = query(
-    collection(db, "chats", chatId, "messages"),
-    orderBy("createdAt", "asc")
-  );
-
-  unsubscribeMessages = onSnapshot(q, (snapshot) => {
-
-    messages.innerHTML = "";
-
-    if (snapshot.empty) {
-      messages.innerHTML = `<div class="empty-chat">No messages yet 🚀</div>`;
-      return;
-    }
+                <div class="nav-title">
+                    Navigation
+                </div>
 
-    snapshot.forEach((docSnap) => {
 
-      const data = docSnap.data();
-      const isMe = data.uid === currentUser.uid;
+                <a
+                    href="chat.html"
+                    class="nav-link active"
+                >
 
-      const div = document.createElement("div");
-      div.classList.add("message", isMe ? "sent" : "received");
+                    <span class="nav-icon">
+                        ▣
+                    </span>
 
-      div.oncontextmenu = (e) => {
-        e.preventDefault();
-        showMessageOptions(docSnap.id);
-      };
+                    <span>
+                        Dashboard
+                    </span>
 
-      let content = "";
+                </a>
+                <a
+                    href="messages.html"
+                    class="nav-link"
+                >
+                    <span class="nav-icon">
+                        💬
+                    </span>
+                    <span>
+                        Messages
+                    </span>
+                </a>
+                <a
+                    href="users.html"
+                    class="nav-link"
+                >
 
-      if (data.type === "text") {
-        content = `<div class="message-text">${data.text}</div>`;
-      } else if (data.type === "image") {
-        content = `<img src="${data.fileURL}" style="max-width:260px;border-radius:12px;">`;
-      } else if (data.type === "video") {
-        content = `<video controls src="${data.fileURL}" style="max-width:260px;border-radius:12px;"></video>`;
-      } else {
-        content = `<audio controls src="${data.fileURL}"></audio>`;
-      }
+                    <span class="nav-icon">
+                        👥
+                    </span>
 
-      div.innerHTML = `
-        <div class="message-name">${data.username}</div>
-        ${content}
-      `;
+                    <span>
+                        Users
+                    </span>
 
-      messages.appendChild(div);
-    });
+                </a>
 
-    messages.scrollTop = messages.scrollHeight;
-  });
-}
 
-// ================= SEND MESSAGE =================
-async function sendMessage() {
+                <a
+                    href="profile.html"
+                    class="nav-link"
+                >
 
-  if (!currentUser || !activeChatId) return;
+                    <span class="nav-icon">
+                        👤
+                    </span>
 
-  const text = messageInput.value.trim();
-  const files = fileInput.files;
+                    <span>
+                        Profile
+                    </span>
 
-  if (!text && files.length === 0) return;
+                </a>
 
-  if (text) {
-    await addDoc(
-      collection(db, "chats", activeChatId, "messages"),
-      {
-        text,
-        uid: currentUser.uid,
-        username: currentUser.displayName,
-        type: "text",
-        createdAt: serverTimestamp()
-      }
-    );
-  }
 
-  for (const file of files) {
+                <a
+                    href="#"
+                    class="nav-link"
+                >
 
-    const fileRef = storageRef(storage, `chatFiles/${Date.now()}_${file.name}`);
+                    <span class="nav-icon">
+                        ⚙
+                    </span>
 
-    await uploadBytes(fileRef, file);
-    const url = await getDownloadURL(fileRef);
+                    <span>
+                        Settings
+                    </span>
 
-    await addDoc(
-      collection(db, "chats", activeChatId, "messages"),
-      {
-        fileURL: url,
-        uid: currentUser.uid,
-        username: currentUser.displayName,
-        type: file.type.startsWith("image") ? "image"
-              : file.type.startsWith("video") ? "video"
-              : "audio",
-        createdAt: serverTimestamp()
-      }
-    );
-  }
+                </a>
 
-  messageInput.value = "";
-  fileInput.value = "";
-  previewContainer.innerHTML = "";
-}
+            </nav>
 
-// ================= EVENTS =================
-sendBtn.addEventListener("click", sendMessage);
 
-messageInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                Seeker Realtime Chat Application
+            </div>
 
-// ================= USERS =================
+        </aside>
 
-const searchUsers = document.getElementById("searchUsers");
 
-let allUsers = [];
+        <!-- =====================================================
+             MAIN DASHBOARD
+        ====================================================== -->
 
-// LOAD USERS
-onSnapshot(collection(db, "users"), (snapshot) => {
+        <main class="main-section">
 
-  allUsers = snapshot.docs.map(d => ({
-    id: d.id,
-    ...d.data()
-  }));
+            <!-- Page Header -->
+            <header class="page-header">
 
-  renderUsers(allUsers);
-});
+                <div class="page-title">
 
-// RENDER FUNCTION
-function renderUsers(users) {
+                    <h1>
+                        Dashboard
+                    </h1>
 
-  usersContainer.innerHTML = "";
+                    <p>
+                        Welcome back,
+                        <span id="welcomeName">
+                            User
+                        </span>.
+                        Here's your chat overview.
+                    </p>
 
-  users
-    .filter(u => u.id !== currentUser?.uid)
-    .forEach(user => {
+                </div>
 
-      const div = document.createElement("div");
-      div.classList.add("user");
 
-      div.onclick = () => openDM(user.id, user.username);
+                <div
+                    class="header-date"
+                    id="currentDate"
+                >
+                    Loading date...
+                </div>
 
-      div.innerHTML = `
-        <div class="user-avatar">
-          ${getInitials(user.username)}
-        </div>
+            </header>
 
-        <div class="user-details">
-          <h4>${user.username}</h4>
-          <p>${user.online ? "Online" : "Offline"}</p>
-        </div>
-      `;
 
-      usersContainer.appendChild(div);
-    });
-}
+            <!-- Welcome Card -->
+            <section class="welcome-card">
 
-// SEARCH USERS
-searchUsers.addEventListener("input", () => {
+                <h2>
+                    Welcome to Seeker GlobalChat 👋
+                </h2>
 
-  const value = searchUsers.value.toLowerCase();
+                <p>
+                    Connect with other users, start conversations,
+                    share files and communicate in real time using
+                    the Seeker Realtime Chat Application.
+                </p>
 
-  const filteredUsers = allUsers.filter(user =>
-    user.username.toLowerCase().includes(value)
-  );
+            </section>
 
-  renderUsers(filteredUsers);
-});
-// ================= LOGOUT =================
-logoutBtn.addEventListener("click", async () => {
 
-  if (currentUser) {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      online: false,
-      lastSeen: serverTimestamp()
-    });
-  }
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
 
-  await signOut(auth);
-  window.location.href = "login.html";
-});
+            <section class="stats-grid">
 
-</script>
+                <!-- Total Users -->
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-label">
+                            Total Users
+                        </div>
+
+                        <div class="stat-icon">
+                            👥
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalUsers"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Registered users
+                    </div>
+
+                </div>
+
+
+                <!-- Online Users -->
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-label">
+                            Online Users
+                        </div>
+
+                        <div class="stat-icon">
+                            🟢
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="onlineUsers"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Currently online
+                    </div>
+
+                </div>
+
+
+                <!-- Messages -->
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-label">
+                            Messages
+                        </div>
+
+                        <div class="stat-icon">
+                            💬
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalMessages"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Messages in the system
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-label">
+                            My Status
+                        </div>
+
+                        <div class="stat-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="myStatus"
+                    >
+                        Online
+                    </div>
+
+                    <div class="stat-description">
+                        Your current presence
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DASHBOARD CONTENT
+            ================================================== -->
+
+            <section class="dashboard-grid">
+
+
+                <!-- Recent Activity -->
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h2>
+                            Recent Activity
+                        </h2>
+
+                        <span>
+                            Latest users
+                        </span>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div
+                            class="activity-list"
+                            id="activityList"
+                        >
+
+                            <div class="activity-item">
+
+                                <div class="activity-avatar">
+                                    ...
+                                </div>
+
+                                <div class="activity-info">
+
+                                    <strong>
+                                        Loading...
+                                    </strong>
+
+                                    <p>
+                                        Loading user activity...
+                                    </p>
+
+                                </div>
+
+                                <div class="activity-time">
+                                    --
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="quick-actions">
+
+                            <a
+                                href="messages.html"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    💬
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Start Chat
+                                    </strong>
+
+                                    <small>
+                                        Send a message
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="users.html"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    👥
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        View Users
+                                    </strong>
+
+                                    <small>
+                                        Find someone
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="profile.html"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    👤
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        My Profile
+                                    </strong>
+
+                                    <small>
+                                        Manage profile
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="#"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    ⚙
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Settings
+                                    </strong>
+
+                                    <small>
+                                        Manage preferences
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+        </main>
+    </div>
+    <script type="module" src="layout.js"></script>
+
 
 </body>
 </html>

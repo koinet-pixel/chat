@@ -1,588 +1,3970 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Advanced Chat Settings</title>
+    <title>Settings | Let's Chat</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
 
-<style>
+    <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Inter',sans-serif;
-}
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
 
-:root{
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    --primary-white:#F8FBFF;
-    --secondary-white:#EEF4FF;
+        :root {
+            --bg:
+                linear-gradient(
+                    135deg,
+                    #dfe9f3,
+                    #c7d8ee,
+                    #d8ede4
+                );
 
-    --blue:#4F8CFF;
-    --blue-light:#DCE8FF;
+            --surface: rgba(255, 255, 255, 0.68);
+            --surface-solid: rgba(255, 255, 255, 0.88);
+            --surface-soft: rgba(255, 255, 255, 0.48);
 
-    --text:#0F172A;
-    --text-light:#64748B;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
 
-    --glass:rgba(255,255,255,0.55);
+            --secondary: #10b981;
 
-    --shadow-light:rgba(255,255,255,0.9);
-    --shadow-dark:rgba(15,23,42,0.08);
+            --text: #0f172a;
+            --gray: #475569;
+            --muted: #64748b;
 
-}
+            --border: rgba(148, 163, 184, 0.20);
 
-body{
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, 0.09);
 
-    min-height:100vh;
+            --success: #16a34a;
+            --warning: #f59e0b;
 
-    background:
-    linear-gradient(
-    135deg,
-    #F8FBFF,
-    #EEF4FF
-    );
+            --shadow:
+                0 12px 35px rgba(15, 23, 42, 0.08);
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+            --radius: 22px;
+            --blur: blur(18px);
+        }
 
-    padding:30px;
 
-    overflow-x:hidden;
-}
+        /* =========================================================
+           HTML / BODY
+        ========================================================= */
 
-.settings-container{
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
 
-    width:100%;
-    max-width:420px;
+        body {
+            min-height: 100dvh;
 
-    background:var(--glass);
+            background: var(--bg);
+            background-attachment: fixed;
 
-    backdrop-filter:blur(25px);
+            color: var(--text);
 
-    border:1px solid rgba(255,255,255,0.35);
+            overflow-x: hidden;
+        }
 
-    border-radius:35px;
 
-    padding:28px;
+        /* =========================================================
+           BACKGROUND EFFECTS
+        ========================================================= */
 
-    box-shadow:
-    0 10px 40px rgba(79,140,255,0.12),
-    0 4px 15px rgba(0,0,0,0.05);
+        body::before {
+            content: "";
 
-    position:relative;
+            position: fixed;
 
-    overflow:hidden;
-}
+            width: 460px;
+            height: 460px;
 
-/* decorative blur */
+            top: -170px;
+            right: -160px;
 
-.settings-container::before{
+            border-radius: 50%;
 
-    content:"";
+            background:
+                rgba(59, 130, 246, 0.13);
 
-    position:absolute;
+            filter: blur(100px);
 
-    width:250px;
-    height:250px;
+            pointer-events: none;
 
-    background:rgba(79,140,255,0.15);
+            z-index: -1;
+        }
 
-    border-radius:50%;
+        body::after {
+            content: "";
 
-    top:-120px;
-    right:-120px;
+            position: fixed;
 
-    filter:blur(40px);
-}
+            width: 430px;
+            height: 430px;
 
-.top-bar{
+            bottom: -170px;
+            left: -150px;
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+            border-radius: 50%;
 
-    margin-bottom:30px;
-}
+            background:
+                rgba(16, 185, 129, 0.11);
 
-.top-bar h1{
+            filter: blur(100px);
 
-    font-size:28px;
-    font-weight:700;
+            pointer-events: none;
 
-    color:var(--text);
+            z-index: -1;
+        }
 
-    letter-spacing:-1px;
-}
 
-.profile-card{
+        /* =========================================================
+           PAGE
+        ========================================================= */
 
-    background:rgba(255,255,255,0.45);
+        .settings-page {
+            width: 100%;
+            min-height: 100dvh;
 
-    border-radius:28px;
+            padding: 30px;
+        }
 
-    padding:22px;
 
-    display:flex;
-    align-items:center;
-    gap:18px;
+        /* =========================================================
+           TOP HEADER
+        ========================================================= */
 
-    backdrop-filter:blur(15px);
+        .settings-header {
+            width: 100%;
+            max-width: 1450px;
 
-    box-shadow:
-    8px 8px 20px rgba(0,0,0,0.05),
-    -8px -8px 20px rgba(255,255,255,0.7);
+            margin: 0 auto 25px;
 
-    margin-bottom:25px;
-}
+            display: flex;
 
-.profile-card img{
+            align-items: center;
 
-    width:80px;
-    height:80px;
+            justify-content: space-between;
 
-    border-radius:50%;
+            gap: 20px;
+        }
 
-    object-fit:cover;
+        .header-left {
+            min-width: 0;
+        }
 
-    border:4px solid rgba(255,255,255,0.7);
+        .eyebrow {
+            display: flex;
 
-    box-shadow:0 5px 15px rgba(79,140,255,0.2);
-}
+            align-items: center;
 
-.profile-info h2{
+            gap: 8px;
 
-    font-size:20px;
-    color:var(--text);
-    font-weight:700;
-}
+            margin-bottom: 8px;
 
-.profile-info p{
+            color: var(--primary);
 
-    font-size:14px;
-    color:var(--text-light);
+            font-size: 11px;
 
-    margin-top:5px;
-}
+            font-weight: 800;
 
-.section-title{
+            letter-spacing: 1.4px;
 
-    margin:25px 0 15px;
+            text-transform: uppercase;
+        }
 
-    font-size:14px;
-    font-weight:700;
+        .eyebrow span {
+            width: 7px;
+            height: 7px;
 
-    color:var(--text-light);
+            border-radius: 50%;
 
-    text-transform:uppercase;
+            background: var(--secondary);
 
-    letter-spacing:1px;
-}
+            box-shadow:
+                0 0 10px rgba(16, 185, 129, 0.45);
+        }
 
-.setting-item{
+        .settings-header h1 {
+            font-size: 32px;
 
-    background:rgba(255,255,255,0.45);
+            font-weight: 850;
 
-    backdrop-filter:blur(15px);
+            letter-spacing: -1.2px;
+        }
 
-    border-radius:22px;
+        .settings-header p {
+            margin-top: 7px;
 
-    padding:18px 20px;
+            color: var(--gray);
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+            font-size: 13px;
 
-    margin-bottom:15px;
+            line-height: 1.6;
+        }
 
-    transition:0.3s ease;
+        .header-status {
+            display: inline-flex;
 
-    box-shadow:
-    5px 5px 12px rgba(0,0,0,0.05),
-    -5px -5px 12px rgba(255,255,255,0.7);
-}
+            align-items: center;
 
-.setting-item:hover{
+            gap: 8px;
 
-    transform:translateY(-3px);
+            padding: 11px 15px;
 
-    box-shadow:
-    0 12px 25px rgba(79,140,255,0.12);
-}
+            border-radius: 15px;
 
-.setting-left{
+            background:
+                rgba(255, 255, 255, 0.62);
 
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
+            border:
+                1px solid var(--border);
 
-.icon{
+            box-shadow: var(--shadow);
 
-    width:45px;
-    height:45px;
+            color: var(--gray);
 
-    border-radius:15px;
+            font-size: 11px;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+            font-weight: 700;
 
-    background:linear-gradient(
-    135deg,
-    #ffffff,
-    #dce8ff
-    );
+            white-space: nowrap;
+        }
 
-    box-shadow:
-    4px 4px 10px rgba(0,0,0,0.05),
-    -4px -4px 10px rgba(255,255,255,0.8);
+        .header-status i {
+            width: 8px;
+            height: 8px;
 
-    font-size:20px;
-}
+            border-radius: 50%;
 
-.setting-text h3{
+            background: var(--success);
+        }
 
-    font-size:16px;
-    color:var(--text);
 
-    font-weight:600;
-}
+        /* =========================================================
+           MAIN LAYOUT
+        ========================================================= */
 
-.setting-text p{
+        .settings-container {
+            width: 100%;
+            max-width: 1450px;
 
-    font-size:13px;
-    color:var(--text-light);
+            margin: 0 auto;
 
-    margin-top:2px;
-}
+            display: grid;
 
-/* toggle */
+            grid-template-columns:
+                240px minmax(0, 1fr);
 
-.toggle{
+            gap: 22px;
 
-    width:55px;
-    height:30px;
+            align-items: start;
+        }
 
-    background:#dbeafe;
 
-    border-radius:50px;
+        /* =========================================================
+           SETTINGS NAV
+        ========================================================= */
 
-    position:relative;
+        .settings-navigation {
+            position: sticky;
 
-    cursor:pointer;
+            top: 25px;
 
-    transition:0.3s ease;
-}
+            padding: 11px;
 
-.toggle::before{
+            border-radius: 22px;
 
-    content:"";
+            background:
+                rgba(255, 255, 255, 0.55);
 
-    position:absolute;
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
 
-    width:24px;
-    height:24px;
+            border:
+                1px solid var(--border);
 
-    background:white;
+            box-shadow: var(--shadow);
+        }
 
-    border-radius:50%;
+        .navigation-label {
+            padding: 12px;
 
-    top:3px;
-    left:4px;
+            color: var(--muted);
 
-    transition:0.3s ease;
+            font-size: 10px;
 
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+            font-weight: 800;
 
-.toggle.active{
+            letter-spacing: 1.1px;
 
-    background:var(--blue);
-}
+            text-transform: uppercase;
+        }
 
-.toggle.active::before{
+        .settings-tab {
+            width: 100%;
 
-    transform:translateX(24px);
-}
+            display: flex;
 
-/* buttons */
+            align-items: center;
 
-.action-btn{
+            gap: 11px;
 
-    width:100%;
+            padding: 11px;
 
-    padding:17px;
+            margin-bottom: 4px;
 
-    border:none;
+            border: 1px solid transparent;
 
-    border-radius:20px;
+            border-radius: 14px;
 
-    font-size:15px;
-    font-weight:600;
+            background: transparent;
 
-    cursor:pointer;
+            color: var(--gray);
 
-    margin-top:12px;
+            cursor: pointer;
 
-    transition:0.3s ease;
-}
+            text-align: left;
 
-.password-btn{
+            transition: 0.22s ease;
+        }
 
-    background:linear-gradient(
-    135deg,
-    #ffffff,
-    #dce8ff
-    );
+        .settings-tab:hover {
+            background:
+                rgba(255, 255, 255, 0.68);
 
-    color:var(--text);
+            color: var(--primary);
 
-    box-shadow:
-    5px 5px 12px rgba(0,0,0,0.05),
-    -5px -5px 12px rgba(255,255,255,0.8);
-}
+            transform: translateX(2px);
+        }
 
-.password-btn:hover{
+        .settings-tab.active {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(59, 130, 246, 0.13),
+                    rgba(16, 185, 129, 0.08)
+                );
 
-    transform:scale(1.02);
-}
+            border-color:
+                rgba(59, 130, 246, 0.13);
 
-.logout-btn{
+            color: var(--primary);
 
-    background:linear-gradient(
-    135deg,
-    #4F8CFF,
-    #7AA8FF
-    );
+            box-shadow:
+                0 6px 18px rgba(59, 130, 246, 0.07);
+        }
 
-    color:white;
+        .tab-icon {
+            width: 35px;
+            height: 35px;
 
-    box-shadow:
-    0 10px 20px rgba(79,140,255,0.25);
-}
+            flex-shrink: 0;
 
-.logout-btn:hover{
+            display: flex;
 
-    transform:scale(1.02);
+            align-items: center;
+            justify-content: center;
 
-    box-shadow:
-    0 15px 25px rgba(79,140,255,0.35);
-}
+            border-radius: 11px;
 
-/* dark mode */
+            background:
+                rgba(255, 255, 255, 0.65);
 
-.dark-mode{
+            font-size: 16px;
+        }
 
-    background:
-    linear-gradient(
-    135deg,
-    #0F172A,
-    #1E293B
-    );
-}
+        .settings-tab.active .tab-icon {
+            background:
+                rgba(59, 130, 246, 0.12);
+        }
 
-.dark-mode .settings-container{
+        .tab-text {
+            display: flex;
 
-    background:rgba(15,23,42,0.55);
+            flex-direction: column;
 
-    border:1px solid rgba(255,255,255,0.08);
-}
+            gap: 2px;
 
-.dark-mode .top-bar h1,
-.dark-mode .setting-text h3,
-.dark-mode .profile-info h2{
+            min-width: 0;
+        }
 
-    color:white;
-}
+        .tab-text strong {
+            font-size: 12px;
 
-.dark-mode .profile-info p,
-.dark-mode .setting-text p,
-.dark-mode .section-title{
+            font-weight: 750;
+        }
 
-    color:#CBD5E1;
-}
+        .tab-text small {
+            color: var(--muted);
 
-.dark-mode .setting-item,
-.dark-mode .profile-card{
+            font-size: 9px;
+        }
 
-    background:rgba(30,41,59,0.45);
-}
 
-.dark-mode .icon{
+        /* =========================================================
+           CONTENT
+        ========================================================= */
 
-    background:linear-gradient(
-    135deg,
-    #1E293B,
-    #334155
-    );
+        .settings-content {
+            min-width: 0;
+        }
 
-    color:white;
-}
+        .settings-section {
+            display: none;
 
-.dark-mode .password-btn{
+            animation:
+                sectionIn 0.25s ease;
+        }
 
-    background:#1E293B;
+        .settings-section.active {
+            display: block;
+        }
 
-    color:white;
-}
+        @keyframes sectionIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
 
-</style>
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* =========================================================
+           SETTINGS CARD
+        ========================================================= */
+
+        .settings-card {
+            margin-bottom: 20px;
+
+            overflow: hidden;
+
+            border:
+                1px solid rgba(148, 163, 184, 0.16);
+
+            border-radius: 23px;
+
+            background:
+                rgba(255, 255, 255, 0.62);
+
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+
+            box-shadow:
+                0 9px 28px rgba(15, 23, 42, 0.065);
+        }
+
+        .card-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 20px 22px;
+
+            border-bottom:
+                1px solid rgba(148, 163, 184, 0.11);
+        }
+
+        .card-header h2 {
+            font-size: 17px;
+
+            font-weight: 800;
+        }
+
+        .card-header p {
+            margin-top: 5px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            line-height: 1.55;
+        }
+
+        .card-body {
+            padding: 22px;
+        }
+
+
+        /* =========================================================
+           PROFILE HERO
+        ========================================================= */
+
+        .profile-hero {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            padding: 19px;
+
+            margin-bottom: 22px;
+
+            border-radius: 19px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(59, 130, 246, 0.11),
+                    rgba(16, 185, 129, 0.08)
+                );
+
+            border:
+                1px solid rgba(59, 130, 246, 0.11);
+        }
+
+        .profile-avatar {
+            width: 78px;
+            height: 78px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #10b981
+                );
+
+            color: white;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 12px 28px rgba(59, 130, 246, 0.18);
+        }
+
+        .profile-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .profile-info h3 {
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .profile-info p {
+            margin-top: 4px;
+
+            color: var(--gray);
+
+            font-size: 11px;
+        }
+
+        .profile-info small {
+            display: block;
+
+            margin-top: 7px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+        }
+
+        .online-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-top: 8px;
+
+            padding: 6px 9px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(16, 185, 129, 0.10);
+
+            color: #047857;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+        .online-badge span {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: var(--secondary);
+        }
+
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            color: var(--text);
+
+            font-size: 11px;
+
+            font-weight: 750;
+        }
+
+        .form-help {
+            color: var(--muted);
+
+            font-size: 9px;
+
+            line-height: 1.5;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+
+            outline: none;
+
+            padding: 13px 14px;
+
+            border:
+                1px solid rgba(148, 163, 184, 0.24);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255, 255, 255, 0.72);
+
+            color: var(--text);
+
+            font-size: 12px;
+
+            transition: 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color:
+                rgba(59, 130, 246, 0.45);
+
+            box-shadow:
+                0 0 0 4px rgba(59, 130, 246, 0.08);
+        }
+
+        .form-input:disabled {
+            background:
+                rgba(226, 232, 240, 0.55);
+
+            color: var(--muted);
+
+            cursor: not-allowed;
+        }
+
+        .form-textarea {
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .button-row {
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 9px;
+
+            margin-top: 20px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid rgba(148, 163, 184, 0.10);
+        }
+
+        .btn {
+            border: none;
+
+            border-radius: 13px;
+
+            padding: 11px 16px;
+
+            font-size: 11px;
+
+            font-weight: 750;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #2563eb
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 18px rgba(59, 130, 246, 0.18);
+        }
+
+        .btn-secondary {
+            background:
+                rgba(255, 255, 255, 0.70);
+
+            color: var(--gray);
+
+            border:
+                1px solid var(--border);
+        }
+
+        .btn-danger {
+            background:
+                rgba(239, 68, 68, 0.09);
+
+            color: var(--danger);
+
+            border:
+                1px solid rgba(239, 68, 68, 0.14);
+        }
+
+
+        /* =========================================================
+           SETTING ROW
+        ========================================================= */
+
+        .setting-list {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .setting-row {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 17px 0;
+
+            border-bottom:
+                1px solid rgba(148, 163, 184, 0.11);
+        }
+
+        .setting-row:first-child {
+            padding-top: 0;
+        }
+
+        .setting-row:last-child {
+            padding-bottom: 0;
+
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .setting-info strong {
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 750;
+        }
+
+        .setting-info p {
+            margin-top: 4px;
+
+            max-width: 700px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           TOGGLE
+        ========================================================= */
+
+        .switch {
+            position: relative;
+
+            width: 48px;
+            height: 27px;
+
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            width: 0;
+            height: 0;
+
+            opacity: 0;
+        }
+
+        .slider {
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: 30px;
+
+            background:
+                #cbd5e1;
+
+            cursor: pointer;
+
+            transition: 0.25s ease;
+        }
+
+        .slider::before {
+            content: "";
+
+            position: absolute;
+
+            width: 21px;
+            height: 21px;
+
+            left: 3px;
+            top: 3px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow:
+                0 2px 6px rgba(15, 23, 42, 0.15);
+
+            transition: 0.25s ease;
+        }
+
+        .switch input:checked + .slider {
+            background:
+                var(--primary);
+        }
+
+        .switch input:checked + .slider::before {
+            transform:
+                translateX(21px);
+        }
+
+
+        /* =========================================================
+           THEME GRID
+        ========================================================= */
+
+        .theme-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 13px;
+        }
+
+        .theme-option {
+            padding: 10px;
+
+            border:
+                2px solid transparent;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255, 255, 255, 0.50);
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-2px);
+        }
+
+        .theme-option.active {
+            border-color:
+                var(--primary);
+        }
+
+        .theme-preview {
+            height: 85px;
+
+            overflow: hidden;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        .preview-light {
+            background:
+                linear-gradient(
+                    135deg,
+                    #dfe9f3,
+                    #ffffff
+                );
+        }
+
+        .preview-dark {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+        }
+
+        .preview-system {
+            background:
+                linear-gradient(
+                    135deg,
+                    #dfe9f3 50%,
+                    #1e293b 50%
+                );
+        }
+
+        .theme-name {
+            display: block;
+
+            margin-top: 9px;
+
+            text-align: center;
+
+            color: var(--gray);
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           SECURITY
+        ========================================================= */
+
+        .security-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 15px;
+
+            margin-bottom: 10px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255, 255, 255, 0.48);
+
+            border:
+                1px solid rgba(148, 163, 184, 0.11);
+        }
+
+        .security-icon {
+            width: 42px;
+            height: 42px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background:
+                rgba(59, 130, 246, 0.10);
+
+            color: var(--primary);
+
+            font-size: 18px;
+        }
+
+        .security-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .security-info strong {
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 750;
+        }
+
+        .security-info p {
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+        }
+
+
+        /* =========================================================
+           PRIVACY BADGES
+        ========================================================= */
+
+        .privacy-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 13px;
+        }
+
+        .privacy-box {
+            padding: 16px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255, 255, 255, 0.46);
+
+            border:
+                1px solid rgba(148, 163, 184, 0.11);
+        }
+
+        .privacy-box strong {
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 750;
+        }
+
+        .privacy-box p {
+            margin-top: 5px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+            line-height: 1.55;
+        }
+
+        .privacy-status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-top: 11px;
+
+            padding: 6px 9px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(16, 185, 129, 0.09);
+
+            color: #047857;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           DANGER ZONE
+        ========================================================= */
+
+        .danger-card {
+            background:
+                rgba(254, 242, 242, 0.54);
+
+            border:
+                1px solid rgba(239, 68, 68, 0.17);
+        }
+
+        .danger-card .card-header {
+            border-bottom-color:
+                rgba(239, 68, 68, 0.12);
+        }
+
+        .danger-card .card-header h2 {
+            color: var(--danger);
+        }
+
+        .danger-warning {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 15px;
+
+            margin-bottom: 16px;
+
+            border-radius: 15px;
+
+            background:
+                rgba(239, 68, 68, 0.06);
+
+            border:
+                1px solid rgba(239, 68, 68, 0.10);
+        }
+
+        .danger-warning-icon {
+            font-size: 18px;
+        }
+
+        .danger-warning p {
+            color: #991b1b;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           SAVE INDICATOR
+        ========================================================= */
+
+        .save-indicator {
+            display: none;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--success);
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+        .save-indicator.show {
+            display: inline-flex;
+        }
+
+        .save-indicator span {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--success);
+        }
+
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            z-index: 10000;
+
+            min-width: 270px;
+
+            max-width: calc(100vw - 40px);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 14px 17px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(15, 23, 42, 0.93);
+
+            color: white;
+
+            box-shadow:
+                0 15px 35px rgba(15, 23, 42, 0.20);
+
+            font-size: 11px;
+
+            font-weight: 650;
+
+            transform:
+                translateY(120px);
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: 0.3s ease;
+        }
+
+        .toast.show {
+            transform:
+                translateY(0);
+
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 25px;
+            height: 25px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1050px) {
+
+            .settings-page {
+                padding: 22px;
+            }
+
+            .settings-container {
+                grid-template-columns:
+                    210px minmax(0, 1fr);
+            }
+        }
+
+
+        @media (max-width: 850px) {
+
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-navigation {
+                position: static;
+
+                display: grid;
+
+                grid-template-columns:
+                    repeat(4, minmax(0, 1fr));
+
+                gap: 5px;
+            }
+
+            .navigation-label {
+                display: none;
+            }
+
+            .settings-tab {
+                justify-content: center;
+
+                flex-direction: column;
+
+                text-align: center;
+
+                gap: 5px;
+            }
+
+            .tab-text small {
+                display: none;
+            }
+
+            .tab-icon {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+
+        @media (max-width: 650px) {
+
+            .settings-page {
+                padding: 16px;
+            }
+
+            .settings-header {
+                display: block;
+
+                margin-bottom: 18px;
+            }
+
+            .settings-header h1 {
+                font-size: 25px;
+            }
+
+            .settings-header p {
+                font-size: 11px;
+            }
+
+            .header-status {
+                margin-top: 12px;
+
+                font-size: 9px;
+            }
+
+            .settings-navigation {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .settings-card {
+                border-radius: 19px;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 17px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .profile-hero {
+                padding: 15px;
+
+                gap: 12px;
+            }
+
+            .profile-avatar {
+                width: 64px;
+                height: 64px;
+
+                font-size: 22px;
+            }
+
+            .profile-info h3 {
+                font-size: 15px;
+            }
+
+            .profile-info p {
+                font-size: 10px;
+            }
+
+            .theme-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-preview {
+                height: 70px;
+            }
+
+            .privacy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setting-row {
+                align-items: flex-start;
+            }
+
+            .button-row {
+                justify-content: flex-start;
+
+                flex-wrap: wrap;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+
+                min-width: 0;
+                max-width: none;
+            }
+        }
+
+
+        @media (max-width: 430px) {
+
+            .settings-navigation {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .settings-tab {
+                padding: 9px;
+
+                font-size: 10px;
+            }
+
+            .tab-icon {
+                width: 29px;
+                height: 29px;
+
+                font-size: 14px;
+            }
+
+            .security-item {
+                align-items: flex-start;
+            }
+
+            .security-item .btn {
+                padding: 9px 10px;
+
+                font-size: 9px;
+            }
+
+            .setting-row {
+                gap: 12px;
+            }
+        }
+
+
+        /* =========================================================
+           DARK THEME
+        ========================================================= */
+
+        body.dark-theme {
+            --bg:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #172554,
+                    #064e3b
+                );
+
+            --surface: rgba(15, 23, 42, 0.72);
+            --surface-solid: rgba(15, 23, 42, 0.90);
+            --surface-soft: rgba(30, 41, 59, 0.58);
+
+            --text: #f8fafc;
+            --gray: #cbd5e1;
+            --muted: #94a3b8;
+
+            --border:
+                rgba(148, 163, 184, 0.18);
+        }
+
+        body.dark-theme .settings-navigation,
+        body.dark-theme .settings-card {
+            background:
+                rgba(15, 23, 42, 0.68);
+        }
+
+        body.dark-theme .settings-tab:hover,
+        body.dark-theme .settings-tab.active {
+            background:
+                rgba(59, 130, 246, 0.12);
+        }
+
+        body.dark-theme .tab-icon,
+        body.dark-theme .theme-option,
+        body.dark-theme .security-item,
+        body.dark-theme .privacy-box {
+            background:
+                rgba(30, 41, 59, 0.55);
+        }
+
+        body.dark-theme .form-input,
+        body.dark-theme .form-select,
+        body.dark-theme .form-textarea {
+            background:
+                rgba(30, 41, 59, 0.70);
+
+            color: var(--text);
+        }
+
+        body.dark-theme .form-input:disabled {
+            background:
+                rgba(51, 65, 85, 0.60);
+        }
+
+    </style>
 </head>
+
 <body>
 
-<div class="settings-container">
+    <div class="settings-page">
 
-    <div class="top-bar">
-        <h1>Settings</h1>
-    </div>
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
 
-    <!-- PROFILE -->
+        <header class="settings-header">
 
-    <div class="profile-card">
+            <div class="header-left">
 
-        <img src="https://i.pravatar.cc/300" alt="profile">
+                <div class="eyebrow">
+                    <span></span>
+                    Account Control Center
+                </div>
 
-        <div class="profile-info">
-            <h2>Karl Johnson</h2>
-            <p>Building the future 🚀</p>
-            <p>karl@gmail.com</p>
+                <h1>
+                    Settings
+                </h1>
+
+                <p>
+                    Customize your Let's Chat experience,
+                    privacy, notifications and account preferences.
+                </p>
+
+            </div>
+
+            <div class="header-status">
+                <i></i>
+                All systems operational
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             SETTINGS CONTAINER
+        ====================================================== -->
+
+        <div class="settings-container">
+
+
+            <!-- =================================================
+                 SETTINGS NAVIGATION
+            ================================================== -->
+
+            <aside class="settings-navigation">
+
+                <div class="navigation-label">
+                    Settings
+                </div>
+
+
+                <button
+                    class="settings-tab active"
+                    data-section="account"
+                >
+
+                    <span class="tab-icon">
+                        👤
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Account</strong>
+                        <small>Profile details</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="notifications"
+                >
+
+                    <span class="tab-icon">
+                        🔔
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Notifications</strong>
+                        <small>Alerts & sounds</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="privacy"
+                >
+
+                    <span class="tab-icon">
+                        🛡️
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Privacy</strong>
+                        <small>Visibility</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="appearance"
+                >
+
+                    <span class="tab-icon">
+                        🎨
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Appearance</strong>
+                        <small>Theme & layout</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="chat"
+                >
+
+                    <span class="tab-icon">
+                        💬
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Chat</strong>
+                        <small>Conversation options</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="security"
+                >
+
+                    <span class="tab-icon">
+                        🔐
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Security</strong>
+                        <small>Account protection</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="data"
+                >
+
+                    <span class="tab-icon">
+                        💾
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Data</strong>
+                        <small>Storage & data</small>
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="settings-tab"
+                    data-section="danger"
+                >
+
+                    <span class="tab-icon">
+                        ⚠️
+                    </span>
+
+                    <span class="tab-text">
+                        <strong>Danger Zone</strong>
+                        <small>Account actions</small>
+                    </span>
+
+                </button>
+
+            </aside>
+
+
+            <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+            <main class="settings-content">
+
+
+                <!-- =================================================
+                     ACCOUNT
+                ================================================== -->
+
+                <section
+                    class="settings-section active"
+                    id="account"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Account Information
+                                </h2>
+
+                                <p>
+                                    Manage your personal account information.
+                                </p>
+                            </div>
+
+                            <div
+                                class="save-indicator"
+                                id="accountSaved"
+                            >
+                                <span></span>
+                                Saved
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="profile-hero">
+
+                                <div
+                                    class="profile-avatar"
+                                    id="profileAvatar"
+                                >
+                                    U
+                                </div>
+
+                                <div class="profile-info">
+
+                                    <h3 id="profileName">
+                                        User
+                                    </h3>
+
+                                    <p id="profileEmail">
+                                        user@example.com
+                                    </p>
+
+                                    <small>
+                                        Your account information is used
+                                        to identify you across the chat.
+                                    </small>
+
+                                    <div class="online-badge">
+                                        <span></span>
+                                        Account Active
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <form id="accountForm">
+
+                                <div class="form-grid">
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Display Name
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="displayName"
+                                            type="text"
+                                            placeholder="Enter your name"
+                                            autocomplete="name"
+                                        >
+
+                                        <span class="form-help">
+                                            This name will be visible to other users.
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Email Address
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="emailAddress"
+                                            type="email"
+                                            disabled
+                                        >
+
+                                        <span class="form-help">
+                                            Your authentication email address.
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Username
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="username"
+                                            type="text"
+                                            placeholder="@username"
+                                        >
+
+                                        <span class="form-help">
+                                            A unique username for your profile.
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="form-label">
+                                            Phone Number
+                                        </label>
+
+                                        <input
+                                            class="form-input"
+                                            id="phoneNumber"
+                                            type="tel"
+                                            placeholder="+254..."
+                                        >
+
+                                        <span class="form-help">
+                                            Optional contact number.
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="form-group full">
+
+                                        <label class="form-label">
+                                            About Me
+                                        </label>
+
+                                        <textarea
+                                            class="form-textarea"
+                                            id="aboutMe"
+                                            placeholder="Tell other users something about yourself..."
+                                        ></textarea>
+
+                                        <span class="form-help">
+                                            Keep your description short and informative.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="button-row">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        id="resetAccount"
+                                    >
+                                        Reset
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    >
+                                        Save Changes
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     NOTIFICATIONS
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="notifications"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Notification Preferences
+                                </h2>
+
+                                <p>
+                                    Choose how Let's Chat notifies you.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="setting-list">
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Push Notifications
+                                        </strong>
+
+                                        <p>
+                                            Receive notifications when someone
+                                            sends you a new message.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="pushNotifications"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Message Sounds
+                                        </strong>
+
+                                        <p>
+                                            Play a notification sound when
+                                            new messages arrive.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="messageSounds"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            New User Notifications
+                                        </strong>
+
+                                        <p>
+                                            Notify you when a new user joins
+                                            the application.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="newUserNotifications"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Typing Indicators
+                                        </strong>
+
+                                        <p>
+                                            Show when another user is typing
+                                            a message to you.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="typingNotifications"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Read Receipt Alerts
+                                        </strong>
+
+                                        <p>
+                                            Receive visual confirmation when
+                                            messages are delivered and read.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="readNotifications"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Notification Preview
+                                </h2>
+
+                                <p>
+                                    Control how much information appears
+                                    in notifications.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Notification Detail
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    id="notificationPreview"
+                                >
+
+                                    <option value="full">
+                                        Show sender and message
+                                    </option>
+
+                                    <option value="sender">
+                                        Show sender only
+                                    </option>
+
+                                    <option value="minimal">
+                                        Show notification only
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     PRIVACY
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="privacy"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Privacy Controls
+                                </h2>
+
+                                <p>
+                                    Control what other users can see.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="setting-list">
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Show Online Status
+                                        </strong>
+
+                                        <p>
+                                            Allow other users to see when
+                                            you are currently online.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="showOnline"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Show Last Seen
+                                        </strong>
+
+                                        <p>
+                                            Allow contacts to see when
+                                            you were last active.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="showLastSeen"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Read Receipts
+                                        </strong>
+
+                                        <p>
+                                            Let users know when you have
+                                            read their messages.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="readReceipts"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Profile Discoverability
+                                        </strong>
+
+                                        <p>
+                                            Allow your profile to appear
+                                            in user searches.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="profileDiscoverability"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Privacy Overview
+                                </h2>
+
+                                <p>
+                                    Current privacy configuration.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="privacy-grid">
+
+                                <div class="privacy-box">
+
+                                    <strong>
+                                        Presence
+                                    </strong>
+
+                                    <p>
+                                        Your online presence is currently
+                                        visible to other users.
+                                    </p>
+
+                                    <div class="privacy-status">
+                                        ● Visible
+                                    </div>
+
+                                </div>
+
+
+                                <div class="privacy-box">
+
+                                    <strong>
+                                        Messages
+                                    </strong>
+
+                                    <p>
+                                        Read receipts are currently enabled
+                                        for conversations.
+                                    </p>
+
+                                    <div class="privacy-status">
+                                        ● Enabled
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     APPEARANCE
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="appearance"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Appearance
+                                </h2>
+
+                                <p>
+                                    Personalize the visual appearance
+                                    of your chat application.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="theme-grid">
+
+                                <div
+                                    class="theme-option active"
+                                    data-theme="light"
+                                >
+
+                                    <div class="theme-preview preview-light">
+                                    </div>
+
+                                    <span class="theme-name">
+                                        Light
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="theme-option"
+                                    data-theme="dark"
+                                >
+
+                                    <div class="theme-preview preview-dark">
+                                    </div>
+
+                                    <span class="theme-name">
+                                        Dark
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="theme-option"
+                                    data-theme="system"
+                                >
+
+                                    <div class="theme-preview preview-system">
+                                    </div>
+
+                                    <span class="theme-name">
+                                        System
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Interface Preferences
+                                </h2>
+
+                                <p>
+                                    Fine-tune how the application behaves.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="setting-list">
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Compact Chat Layout
+                                        </strong>
+
+                                        <p>
+                                            Reduce spacing between messages
+                                            to display more content.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="compactMode"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Smooth Animations
+                                        </strong>
+
+                                        <p>
+                                            Enable transitions and interface
+                                            animations.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="animations"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Auto Scroll Conversations
+                                        </strong>
+
+                                        <p>
+                                            Automatically move to the latest
+                                            message when a conversation updates.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+                                        <input
+                                            type="checkbox"
+                                            id="autoScroll"
+                                            checked
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     CHAT
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="chat"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Chat Preferences
+                                </h2>
+
+                                <p>
+                                    Configure your messaging experience.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Enter Key Behavior
+                                    </label>
+
+                                    <select
+                                        class="form-select"
+                                        id="enterBehavior"
+                                    >
+
+                                        <option value="send">
+                                            Enter sends message
+                                        </option>
+
+                                        <option value="newline">
+                                            Enter creates new line
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Default Message Sort
+                                    </label>
+
+                                    <select
+                                        class="form-select"
+                                        id="messageSort"
+                                    >
+
+                                        <option value="latest">
+                                            Latest messages first
+                                        </option>
+
+                                        <option value="oldest">
+                                            Oldest messages first
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group full">
+
+                                    <label class="form-label">
+                                        Message Font Size
+                                    </label>
+
+                                    <select
+                                        class="form-select"
+                                        id="messageFontSize"
+                                    >
+
+                                        <option value="small">
+                                            Small
+                                        </option>
+
+                                        <option value="medium" selected>
+                                            Medium
+                                        </option>
+
+                                        <option value="large">
+                                            Large
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="setting-list" style="margin-top:22px;">
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Send Read Receipts
+                                        </strong>
+
+                                        <p>
+                                            Automatically mark messages as
+                                            read when you open a conversation.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+
+                                        <input
+                                            type="checkbox"
+                                            id="chatReadReceipts"
+                                            checked
+                                        >
+
+                                        <span class="slider"></span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Typing Indicator
+                                        </strong>
+
+                                        <p>
+                                            Show other users when you are
+                                            composing a message.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+
+                                        <input
+                                            type="checkbox"
+                                            id="chatTyping"
+                                            checked
+                                        >
+
+                                        <span class="slider"></span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Link Previews
+                                        </strong>
+
+                                        <p>
+                                            Generate previews for supported
+                                            links shared in conversations.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+
+                                        <input
+                                            type="checkbox"
+                                            id="linkPreviews"
+                                            checked
+                                        >
+
+                                        <span class="slider"></span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="button-row">
+
+                                <button
+                                    class="btn btn-primary"
+                                    id="saveChat"
+                                >
+                                    Save Chat Preferences
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     SECURITY
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="security"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Account Security
+                                </h2>
+
+                                <p>
+                                    Protect your account and authentication.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    🔑
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Password
+                                    </strong>
+
+                                    <p>
+                                        Update your account password regularly.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-secondary"
+                                    id="changePassword"
+                                >
+                                    Change
+                                </button>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    📧
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Email Verification
+                                    </strong>
+
+                                    <p>
+                                        Keep your authentication email verified.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-primary"
+                                    id="verifyEmail"
+                                >
+                                    Verify
+                                </button>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    🛡️
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Two-Factor Authentication
+                                    </strong>
+
+                                    <p>
+                                        Add an additional layer of protection
+                                        to your account.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-secondary"
+                                    id="twoFactor"
+                                >
+                                    Configure
+                                </button>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    💻
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Active Sessions
+                                    </strong>
+
+                                    <p>
+                                        Review devices currently associated
+                                        with your account.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-secondary"
+                                    id="sessions"
+                                >
+                                    Review
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     DATA
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="data"
+                >
+
+                    <div class="settings-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Data & Storage
+                                </h2>
+
+                                <p>
+                                    Manage local application data and storage.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="setting-list">
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Auto Download Media
+                                        </strong>
+
+                                        <p>
+                                            Automatically download supported
+                                            images and media received in chat.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+
+                                        <input
+                                            type="checkbox"
+                                            id="autoDownload"
+                                        >
+
+                                        <span class="slider"></span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="setting-row">
+
+                                    <div class="setting-info">
+
+                                        <strong>
+                                            Cache Conversations
+                                        </strong>
+
+                                        <p>
+                                            Keep recently viewed conversations
+                                            available locally for faster loading.
+                                        </p>
+
+                                    </div>
+
+                                    <label class="switch">
+
+                                        <input
+                                            type="checkbox"
+                                            id="cacheMessages"
+                                            checked
+                                        >
+
+                                        <span class="slider"></span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="button-row">
+
+                                <button
+                                    class="btn btn-secondary"
+                                    id="clearCache"
+                                >
+                                    Clear Local Cache
+                                </button>
+
+                                <button
+                                    class="btn btn-primary"
+                                    id="exportData"
+                                >
+                                    Export My Data
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     DANGER ZONE
+                ================================================== -->
+
+                <section
+                    class="settings-section"
+                    id="danger"
+                >
+
+                    <div class="settings-card danger-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h2>
+                                    Danger Zone
+                                </h2>
+
+                                <p>
+                                    These actions can affect your account
+                                    permanently.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="danger-warning">
+
+                                <div class="danger-warning-icon">
+                                    ⚠️
+                                </div>
+
+                                <p>
+                                    Be careful when using these controls.
+                                    Some account actions may not be reversible.
+                                    Make sure you understand the effect before
+                                    continuing.
+                                </p>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    🧹
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Clear Local Data
+                                    </strong>
+
+                                    <p>
+                                        Remove cached settings and local
+                                        application data from this device.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-danger"
+                                    id="dangerClear"
+                                >
+                                    Clear
+                                </button>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    🚪
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Sign Out
+                                    </strong>
+
+                                    <p>
+                                        Sign out from the current account
+                                        on this device.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-danger"
+                                    id="logoutBtn"
+                                >
+                                    Sign Out
+                                </button>
+
+                            </div>
+
+
+                            <div class="security-item">
+
+                                <div class="security-icon">
+                                    🗑️
+                                </div>
+
+                                <div class="security-info">
+
+                                    <strong>
+                                        Delete Account
+                                    </strong>
+
+                                    <p>
+                                        Permanently remove your account.
+                                        This action requires confirmation.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    class="btn btn-danger"
+                                    id="deleteAccount"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
         </div>
 
     </div>
 
-    <!-- SETTINGS -->
 
-    <div class="section-title">
-        Preferences
-    </div>
+    <!-- =========================================================
+         TOAST
+    ========================================================== -->
 
-    <!-- DARK MODE -->
+    <div
+        class="toast"
+        id="toast"
+    >
 
-    <div class="setting-item">
-
-        <div class="setting-left">
-
-            <div class="icon">
-                🌙
-            </div>
-
-            <div class="setting-text">
-                <h3>Dark Mode</h3>
-                <p>Switch appearance</p>
-            </div>
-
+        <div class="toast-icon">
+            ✓
         </div>
 
-        <div class="toggle" id="darkToggle"></div>
+        <span id="toastMessage">
+            Settings saved successfully.
+        </span>
 
     </div>
 
-    <!-- NOTIFICATIONS -->
 
-    <div class="setting-item">
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
 
-        <div class="setting-left">
+    <script>
 
-            <div class="icon">
-                🔔
-            </div>
+        /* =========================================================
+           ELEMENTS
+        ========================================================= */
 
-            <div class="setting-text">
-                <h3>Notifications</h3>
-                <p>Message alerts enabled</p>
-            </div>
+        const tabs =
+            document.querySelectorAll(".settings-tab");
 
-        </div>
+        const sections =
+            document.querySelectorAll(".settings-section");
 
-        <div class="toggle active"></div>
+        const toast =
+            document.getElementById("toast");
 
-    </div>
+        const toastMessage =
+            document.getElementById("toastMessage");
 
-    <!-- ONLINE STATUS -->
 
-    <div class="setting-item">
+        /* =========================================================
+           TOAST
+        ========================================================= */
 
-        <div class="setting-left">
+        let toastTimer;
 
-            <div class="icon">
-                🟢
-            </div>
+        function showToast(message) {
 
-            <div class="setting-text">
-                <h3>Online Status</h3>
-                <p>Visible to contacts</p>
-            </div>
+            toastMessage.textContent = message;
 
-        </div>
+            toast.classList.add("show");
 
-        <div class="toggle active"></div>
+            clearTimeout(toastTimer);
 
-    </div>
+            toastTimer = setTimeout(() => {
 
-    <!-- LAST SEEN -->
+                toast.classList.remove("show");
 
-    <div class="setting-item">
+            }, 2800);
+        }
 
-        <div class="setting-left">
 
-            <div class="icon">
-                ⏰
-            </div>
+        /* =========================================================
+           SETTINGS NAVIGATION
+        ========================================================= */
 
-            <div class="setting-text">
-                <h3>Last Seen</h3>
-                <p>Show activity time</p>
-            </div>
+        tabs.forEach(tab => {
 
-        </div>
+            tab.addEventListener("click", () => {
 
-        <div class="toggle"></div>
+                const target =
+                    tab.dataset.section;
 
-    </div>
 
-    <!-- BUTTONS -->
+                tabs.forEach(item => {
 
-    <button class="action-btn password-btn">
-        Change Password
-    </button>
+                    item.classList.remove("active");
 
-    <button class="action-btn logout-btn">
-        Logout
-    </button>
+                });
 
-</div>
 
-<script>
+                sections.forEach(section => {
 
-const darkToggle = document.getElementById("darkToggle");
+                    section.classList.remove("active");
 
-darkToggle.addEventListener("click",()=>{
+                });
 
-    darkToggle.classList.toggle("active");
 
-    document.body.classList.toggle("dark-mode");
+                tab.classList.add("active");
 
-});
 
-const toggles = document.querySelectorAll(".toggle");
+                const targetSection =
+                    document.getElementById(target);
 
-toggles.forEach(toggle=>{
+                if (targetSection) {
 
-    toggle.addEventListener("click",()=>{
+                    targetSection.classList.add("active");
 
-        toggle.classList.toggle("active");
+                }
 
-    });
+            });
 
-});
+        });
 
-</script>
+
+        /* =========================================================
+           PROFILE
+        ========================================================= */
+
+        const displayName =
+            document.getElementById("displayName");
+
+        const emailAddress =
+            document.getElementById("emailAddress");
+
+        const usernameInput =
+            document.getElementById("username");
+
+        const phoneNumber =
+            document.getElementById("phoneNumber");
+
+        const aboutMe =
+            document.getElementById("aboutMe");
+
+        const profileName =
+            document.getElementById("profileName");
+
+        const profileEmail =
+            document.getElementById("profileEmail");
+
+        const profileAvatar =
+            document.getElementById("profileAvatar");
+
+
+        function getInitials(name) {
+
+            if (!name) {
+                return "U";
+            }
+
+            const parts =
+                name.trim().split(/\s+/);
+
+            if (parts.length === 1) {
+
+                return parts[0]
+                    .charAt(0)
+                    .toUpperCase();
+
+            }
+
+            return (
+                parts[0].charAt(0) +
+                parts[1].charAt(0)
+            ).toUpperCase();
+        }
+
+
+        displayName.addEventListener(
+            "input",
+            () => {
+
+                const name =
+                    displayName.value.trim() || "User";
+
+                profileName.textContent =
+                    name;
+
+                profileAvatar.textContent =
+                    getInitials(name);
+
+            }
+        );
+
+
+        /* =========================================================
+           ACCOUNT FORM
+        ========================================================= */
+
+        document
+            .getElementById("accountForm")
+            .addEventListener("submit", event => {
+
+                event.preventDefault();
+
+                const accountData = {
+
+                    displayName:
+                        displayName.value.trim(),
+
+                    username:
+                        usernameInput.value.trim(),
+
+                    phone:
+                        phoneNumber.value.trim(),
+
+                    about:
+                        aboutMe.value.trim()
+
+                };
+
+
+                localStorage.setItem(
+                    "chatAccountSettings",
+                    JSON.stringify(accountData)
+                );
+
+
+                const saved =
+                    document.getElementById("accountSaved");
+
+                saved.classList.add("show");
+
+
+                showToast(
+                    "Account settings saved successfully."
+                );
+
+
+                setTimeout(() => {
+
+                    saved.classList.remove("show");
+
+                }, 2500);
+
+            });
+
+
+        /* =========================================================
+           RESET ACCOUNT FORM
+        ========================================================= */
+
+        document
+            .getElementById("resetAccount")
+            .addEventListener("click", () => {
+
+                displayName.value = "";
+                usernameInput.value = "";
+                phoneNumber.value = "";
+                aboutMe.value = "";
+
+                profileName.textContent =
+                    "User";
+
+                profileAvatar.textContent =
+                    "U";
+
+                showToast(
+                    "Account form has been reset."
+                );
+
+            });
+
+
+        /* =========================================================
+           THEME
+        ========================================================= */
+
+        const themeOptions =
+            document.querySelectorAll(".theme-option");
+
+
+        function applyTheme(theme) {
+
+            if (theme === "dark") {
+
+                document.body.classList.add(
+                    "dark-theme"
+                );
+
+            }
+
+            else if (theme === "system") {
+
+                const prefersDark =
+                    window.matchMedia(
+                        "(prefers-color-scheme: dark)"
+                    ).matches;
+
+                document.body.classList.toggle(
+                    "dark-theme",
+                    prefersDark
+                );
+
+            }
+
+            else {
+
+                document.body.classList.remove(
+                    "dark-theme"
+                );
+
+            }
+
+        }
+
+
+        themeOptions.forEach(option => {
+
+            option.addEventListener("click", () => {
+
+                const theme =
+                    option.dataset.theme;
+
+
+                themeOptions.forEach(item => {
+
+                    item.classList.remove("active");
+
+                });
+
+
+                option.classList.add("active");
+
+
+                localStorage.setItem(
+                    "chatTheme",
+                    theme
+                );
+
+
+                applyTheme(theme);
+
+
+                showToast(
+                    `${theme.charAt(0).toUpperCase() + theme.slice(1)} theme applied.`
+                );
+
+            });
+
+        });
+
+
+        /* =========================================================
+           LOAD THEME
+        ========================================================= */
+
+        const savedTheme =
+            localStorage.getItem("chatTheme") || "light";
+
+
+        themeOptions.forEach(option => {
+
+            option.classList.toggle(
+                "active",
+                option.dataset.theme === savedTheme
+            );
+
+        });
+
+
+        applyTheme(savedTheme);
+
+
+        /* =========================================================
+           LOAD ACCOUNT SETTINGS
+        ========================================================= */
+
+        const savedAccount =
+            localStorage.getItem(
+                "chatAccountSettings"
+            );
+
+
+        if (savedAccount) {
+
+            try {
+
+                const account =
+                    JSON.parse(savedAccount);
+
+
+                displayName.value =
+                    account.displayName || "";
+
+                usernameInput.value =
+                    account.username || "";
+
+                phoneNumber.value =
+                    account.phone || "";
+
+                aboutMe.value =
+                    account.about || "";
+
+
+                if (account.displayName) {
+
+                    profileName.textContent =
+                        account.displayName;
+
+                    profileAvatar.textContent =
+                        getInitials(
+                            account.displayName
+                        );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to load saved settings:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           TOGGLE PERSISTENCE
+        ========================================================== */
+
+        const toggles =
+            document.querySelectorAll(
+                '.switch input[type="checkbox"]'
+            );
+
+
+        toggles.forEach(toggle => {
+
+            const key =
+                `setting_${toggle.id}`;
+
+
+            const saved =
+                localStorage.getItem(key);
+
+
+            if (saved !== null) {
+
+                toggle.checked =
+                    saved === "true";
+
+            }
+
+
+            toggle.addEventListener(
+                "change",
+                () => {
+
+                    localStorage.setItem(
+                        key,
+                        toggle.checked
+                    );
+
+
+                    showToast(
+                        `${toggle.checked ? "Enabled" : "Disabled"}`
+                    );
+
+                }
+            );
+
+        });
+
+
+        /* =========================================================
+           CHAT SETTINGS
+        ========================================================== */
+
+        document
+            .getElementById("saveChat")
+            .addEventListener("click", () => {
+
+                const chatSettings = {
+
+                    enterBehavior:
+                        document.getElementById(
+                            "enterBehavior"
+                        ).value,
+
+                    messageSort:
+                        document.getElementById(
+                            "messageSort"
+                        ).value,
+
+                    messageFontSize:
+                        document.getElementById(
+                            "messageFontSize"
+                        ).value
+
+                };
+
+
+                localStorage.setItem(
+                    "chatPreferences",
+                    JSON.stringify(chatSettings)
+                );
+
+
+                showToast(
+                    "Chat preferences saved."
+                );
+
+            });
+
+
+        /* =========================================================
+           SECURITY BUTTONS
+        ========================================================== */
+
+        document
+            .getElementById("changePassword")
+            .addEventListener("click", () => {
+
+                showToast(
+                    "Password management will be connected to Firebase Authentication."
+                );
+
+            });
+
+
+        document
+            .getElementById("verifyEmail")
+            .addEventListener("click", () => {
+
+                showToast(
+                    "Email verification will be connected to Firebase Authentication."
+                );
+
+            });
+
+
+        document
+            .getElementById("twoFactor")
+            .addEventListener("click", () => {
+
+                showToast(
+                    "Two-factor authentication settings opened."
+                );
+
+            });
+
+
+        document
+            .getElementById("sessions")
+            .addEventListener("click", () => {
+
+                showToast(
+                    "Active session management is ready for Firebase integration."
+                );
+
+            });
+
+
+        /* =========================================================
+           DATA
+        ========================================================== */
+
+        document
+            .getElementById("clearCache")
+            .addEventListener("click", () => {
+
+                const confirmed =
+                    confirm(
+                        "Clear locally stored application settings?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                localStorage.clear();
+
+                showToast(
+                    "Local application data cleared."
+                );
+
+            });
+
+
+        document
+            .getElementById("dangerClear")
+            .addEventListener("click", () => {
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to clear local application data?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                localStorage.clear();
+
+                showToast(
+                    "Local data cleared successfully."
+                );
+
+            });
+
+
+        document
+            .getElementById("exportData")
+            .addEventListener("click", () => {
+
+                const data = {
+
+                    account:
+                        JSON.parse(
+                            localStorage.getItem(
+                                "chatAccountSettings"
+                            ) || "{}"
+                        ),
+
+                    theme:
+                        localStorage.getItem(
+                            "chatTheme"
+                        ),
+
+                    chat:
+                        JSON.parse(
+                            localStorage.getItem(
+                                "chatPreferences"
+                            ) || "{}"
+                        )
+
+                };
+
+
+                const blob =
+                    new Blob(
+                        [
+                            JSON.stringify(
+                                data,
+                                null,
+                                2
+                            )
+                        ],
+                        {
+                            type:
+                                "application/json"
+                        }
+                    );
+
+
+                const url =
+                    URL.createObjectURL(blob);
+
+
+                const link =
+                    document.createElement("a");
+
+                link.href = url;
+
+                link.download =
+                    "lets-chat-settings.json";
+
+                link.click();
+
+
+                URL.revokeObjectURL(url);
+
+
+                showToast(
+                    "Settings exported successfully."
+                );
+
+            });
+
+
+        /* =========================================================
+           LOGOUT
+        ========================================================== */
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener("click", () => {
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to sign out?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                /*
+                    Connect this button to Firebase:
+
+                    import {
+                        signOut
+                    } from
+                    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+                    await signOut(auth);
+                */
+
+
+                showToast(
+                    "Connect this action to Firebase Authentication."
+                );
+
+            });
+
+
+        /* =========================================================
+           DELETE ACCOUNT
+        ========================================================== */
+
+        document
+            .getElementById("deleteAccount")
+            .addEventListener("click", () => {
+
+                const confirmed =
+                    confirm(
+                        "This action can permanently delete the account. Continue?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                showToast(
+                    "Account deletion requires Firebase Authentication integration."
+                );
+
+            });
+
+    </script>
 
 </body>
 </html>

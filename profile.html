@@ -1,0 +1,3447 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | Let's Chat</title>
+
+<!-- Google Font -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* =========================================================
+   PROFILE PAGE ONLY
+   Navigation / Sidebar / Main Layout
+   are controlled by global style.css
+========================================================= */
+
+
+/* =========================================================
+   PROFILE PAGE HEADER
+========================================================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    min-width: 0;
+}
+
+.page-title h1 {
+    font-size: 31px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.page-title p {
+    color: var(--gray);
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.header-btn {
+    border: 1px solid var(--border);
+
+    background:
+        rgba(255, 255, 255, 0.68);
+
+    color: var(--text);
+
+    padding: 11px 16px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease,
+        background 0.25s ease;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.header-btn:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   PROFILE HERO
+========================================================= */
+
+.profile-hero {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 27px;
+
+    margin-bottom: 20px;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(59, 130, 246, 0.92),
+            rgba(16, 185, 129, 0.88)
+        );
+
+    color: white;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 35px rgba(59, 130, 246, 0.15);
+}
+
+.profile-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    right: -80px;
+    top: -100px;
+
+    pointer-events: none;
+}
+
+.profile-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    left: 35%;
+    bottom: -100px;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO AVATAR
+========================================================= */
+
+.hero-avatar-wrapper {
+    position: relative;
+    z-index: 2;
+
+    flex-shrink: 0;
+}
+
+.hero-avatar {
+    width: 104px;
+    height: 104px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.18);
+
+    border:
+        4px solid rgba(255, 255, 255, 0.75);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+    font-weight: 800;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: none;
+}
+
+.avatar-edit {
+    position: absolute;
+
+    right: 0;
+    bottom: 0;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    border: 3px solid white;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.avatar-edit:hover {
+    background: var(--primary-hover);
+}
+
+
+/* =========================================================
+   HERO INFORMATION
+========================================================= */
+
+.hero-info {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 0;
+
+    flex: 1;
+}
+
+.hero-info h2 {
+    font-size: 26px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.7px;
+
+    word-break: break-word;
+}
+
+.hero-info .hero-email {
+    margin-top: 5px;
+
+    font-size: 13px;
+
+    color:
+        rgba(255, 255, 255, 0.85);
+
+    word-break: break-word;
+}
+
+.hero-badges {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+.hero-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 11px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.16);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* =========================================================
+   PROFILE CONTENT GRID
+========================================================= */
+
+.profile-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.55fr)
+        minmax(280px, 0.75fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PROFILE CARD
+========================================================= */
+
+.profile-card {
+    background:
+        rgba(255, 255, 255, 0.64);
+
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.15);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.06);
+
+    overflow: hidden;
+
+    margin-bottom: 20px;
+}
+
+.card-header {
+    padding: 20px 22px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.10);
+}
+
+.card-header h2 {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.card-header p {
+    color: var(--gray);
+
+    font-size: 11px;
+
+    margin-top: 4px;
+
+    font-weight: 500;
+}
+
+.card-body {
+    padding: 22px;
+}
+
+
+/* =========================================================
+   PROFILE COMPLETION
+========================================================= */
+
+.completion {
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+}
+
+.completion-circle {
+    width: 72px;
+    height: 72px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        conic-gradient(
+            var(--primary) 0deg,
+            var(--primary) 288deg,
+            rgba(59, 130, 246, 0.10) 288deg,
+            rgba(59, 130, 246, 0.10) 360deg
+        );
+
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+.completion-circle::after {
+    content: "";
+
+    position: absolute;
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 50%;
+
+    background: white;
+}
+
+.completion-number {
+    position: relative;
+
+    z-index: 2;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    color: var(--primary);
+}
+
+.completion-info {
+    flex: 1;
+}
+
+.completion-info strong {
+    display: block;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.completion-info p {
+    margin-top: 5px;
+
+    color: var(--gray);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 17px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: var(--text);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+
+    left: 13px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    pointer-events: none;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.22);
+
+    outline: none;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.70);
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.form-input {
+    height: 46px;
+
+    padding:
+        0 14px 0 40px;
+}
+
+.form-textarea {
+    min-height: 115px;
+
+    resize: vertical;
+
+    padding: 13px 14px;
+
+    line-height: 1.6;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    border-color:
+        rgba(59, 130, 246, 0.55);
+
+    box-shadow:
+        0 0 0 4px rgba(59, 130, 246, 0.08);
+
+    background: white;
+}
+
+.form-input:disabled {
+    background:
+        rgba(226, 232, 240, 0.48);
+
+    cursor: not-allowed;
+
+    color: var(--muted);
+}
+
+.field-note {
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid rgba(148, 163, 184, 0.10);
+}
+
+.btn {
+    border: none;
+
+    border-radius: 13px;
+
+    padding: 11px 17px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #2563eb
+        );
+
+    box-shadow:
+        0 8px 18px rgba(59, 130, 246, 0.16);
+}
+
+.btn-secondary {
+    color: var(--gray);
+
+    background:
+        rgba(255, 255, 255, 0.75);
+
+    border:
+        1px solid var(--border);
+}
+
+
+/* =========================================================
+   ACCOUNT INFORMATION
+========================================================= */
+
+.info-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.info-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255, 255, 255, 0.52);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.10);
+}
+
+.info-icon {
+    width: 37px;
+    height: 37px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(59, 130, 246, 0.10);
+
+    color: var(--primary);
+
+    font-size: 15px;
+}
+
+.info-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.info-label {
+    color: var(--muted);
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    font-weight: 800;
+}
+
+.info-value {
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+.copy-btn {
+    border: none;
+
+    background:
+        rgba(59, 130, 246, 0.08);
+
+    color: var(--primary);
+
+    border-radius: 9px;
+
+    padding: 7px 9px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.copy-btn:hover {
+    background:
+        rgba(59, 130, 246, 0.14);
+}
+
+
+/* =========================================================
+   SECURITY CARD
+========================================================= */
+
+.security-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 14px 0;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.10);
+}
+
+.security-item:last-child {
+    border-bottom: none;
+}
+
+.security-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(16, 185, 129, 0.10);
+
+    color: #047857;
+
+    flex-shrink: 0;
+}
+
+.security-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.security-info strong {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+.security-info p {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.security-badge {
+    padding: 6px 9px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(16, 185, 129, 0.10);
+
+    color: #047857;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PREFERENCES
+========================================================= */
+
+.preference-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px 0;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.10);
+}
+
+.preference-item:last-child {
+    border-bottom: none;
+}
+
+.preference-info {
+    flex: 1;
+}
+
+.preference-info strong {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+.preference-info p {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.switch {
+    position: relative;
+
+    width: 44px;
+    height: 24px;
+
+    flex-shrink: 0;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 30px;
+
+    background:
+        #cbd5e1;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+    height: 18px;
+
+    left: 3px;
+    top: 3px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 2px 5px rgba(15, 23, 42, 0.18);
+
+    transition: 0.25s ease;
+}
+
+.switch input:checked + .slider {
+    background:
+        var(--primary);
+}
+
+.switch input:checked + .slider::before {
+    transform:
+        translateX(20px);
+}
+
+
+/* =========================================================
+   DANGER ZONE
+========================================================= */
+
+.danger-card {
+    border:
+        1px solid rgba(239, 68, 68, 0.14);
+}
+
+.danger-card .card-header {
+    background:
+        rgba(239, 68, 68, 0.035);
+}
+
+.danger-card .card-header h2 {
+    color: #dc2626;
+}
+
+.danger-content {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.danger-content strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+.danger-content p {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.danger-btn {
+    flex-shrink: 0;
+
+    padding: 10px 13px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(239, 68, 68, 0.20);
+
+    background:
+        rgba(239, 68, 68, 0.07);
+
+    color: #dc2626;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.danger-btn:hover {
+    background:
+        rgba(239, 68, 68, 0.12);
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 10000;
+
+    max-width: 340px;
+
+    padding: 13px 17px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(15, 23, 42, 0.92);
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 15px 35px rgba(15, 23, 42, 0.20);
+
+    transform:
+        translateY(20px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: 0.3s ease;
+}
+
+.toast.show {
+    transform:
+        translateY(0);
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   PROFILE RESPONSIVE
+   Only profile-specific responsive rules.
+   Navigation responsiveness stays in style.css.
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .profile-grid {
+        grid-template-columns:
+            minmax(0, 1.4fr)
+            minmax(260px, 0.8fr);
+    }
+}
+
+
+@media (max-width: 950px) {
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .page-header {
+        display: block;
+
+        margin-bottom: 20px;
+    }
+
+    .page-title h1 {
+        font-size: 24px;
+    }
+
+    .page-title p {
+        font-size: 12px;
+    }
+
+    .header-actions {
+        margin-top: 12px;
+    }
+
+    .header-btn {
+        font-size: 11px;
+
+        padding: 9px 12px;
+    }
+
+    .profile-hero {
+        padding: 21px;
+
+        gap: 16px;
+
+        align-items: flex-start;
+    }
+
+    .hero-avatar {
+        width: 82px;
+        height: 82px;
+
+        font-size: 30px;
+    }
+
+    .hero-info h2 {
+        font-size: 20px;
+    }
+
+    .hero-info .hero-email {
+        font-size: 11px;
+    }
+
+    .hero-badge {
+        font-size: 9px;
+
+        padding: 6px 8px;
+    }
+
+    .card-header,
+    .card-body {
+        padding: 17px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .profile-hero {
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .hero-info {
+        width: 100%;
+    }
+
+    .hero-badges {
+        justify-content: center;
+    }
+
+    .completion {
+        align-items: flex-start;
+    }
+
+    .danger-content {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .danger-btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .profile-card {
+        border-radius: 20px;
+    }
+
+    .toast {
+        left: 15px;
+        right: 15px;
+
+        bottom: 15px;
+
+        max-width: none;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+
+    .header-btn,
+    .btn,
+    .copy-btn,
+    .danger-btn {
+        touch-action: manipulation;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .profile-hero,
+    .profile-card,
+    .btn,
+    .header-btn,
+    .toast,
+    .slider,
+    .slider::before {
+        transition: none !important;
+    }
+}
+</style>
+
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     MOBILE MENU
+========================================================== -->
+
+<button
+    class="mobile-menu-btn"
+    id="menuBtn"
+    aria-label="Open navigation"
+>
+    ☰
+</button>
+
+
+<div class="chat-app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+
+        <!-- Sidebar Header -->
+
+        <div class="sidebar-header">
+
+            <div class="logo">
+                Let's Chat
+            </div>
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+            >
+                Logout
+            </button>
+
+        </div>
+
+
+        <!-- Sidebar Profile -->
+
+            <div class="profile">
+
+                <div
+                    class="avatar"
+                    id="avatar"
+                >
+                    U
+                </div>
+
+                <h3 id="username">
+                    Loading...
+                </h3>
+
+                <p id="email">
+                    Loading...
+                </p>
+
+                <div class="status">
+
+                    <div class="status-dot"></div>
+
+                    Online
+
+                </div>
+
+            </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="sidebar-nav">
+
+            <div class="nav-title">
+                Navigation
+            </div>
+
+
+            <a
+                href="chat.html"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a
+                href="messages.html"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    💬
+                </span>
+
+                <span>
+                    Messages
+                </span>
+
+            </a>
+
+
+            <a
+                href="users.html"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    👥
+                </span>
+
+                <span>
+                    Users
+                </span>
+
+            </a>
+
+
+            <a
+                href="profile.html"
+                class="nav-link active"
+            >
+
+                <span class="nav-icon">
+                    👤
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar Footer -->
+
+        <div class="sidebar-footer">
+
+            Seeker Realtime Chat Application
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN PROFILE
+    ====================================================== -->
+
+    <main class="main-section">
+
+
+        <!-- Page Header -->
+
+        <header class="page-header">
+
+            <div class="page-title">
+
+                <h1>
+                    My Profile
+                </h1>
+
+                <p>
+                    Manage your personal information and account.
+                </p>
+
+            </div>
+
+            <div class="header-actions">
+
+                <button
+                    class="header-btn"
+                    id="refreshBtn"
+                >
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PROFILE HERO
+        ================================================== -->
+
+        <section class="profile-hero">
+
+
+            <div class="hero-avatar-wrapper">
+
+                <div
+                    class="hero-avatar"
+                    id="heroAvatar"
+                >
+
+                    <span id="heroInitials">
+                        U
+                    </span>
+
+                    <img
+                        id="heroAvatarImage"
+                        alt="Profile photo"
+                    >
+
+                </div>
+
+
+                <label
+                    for="photoInput"
+                    class="avatar-edit"
+                    title="Change profile photo"
+                >
+                    ✎
+                </label>
+
+                <input
+                    type="file"
+                    id="photoInput"
+                    accept="image/*"
+                    hidden
+                >
+
+            </div>
+
+
+            <div class="hero-info">
+
+                <h2 id="heroName">
+                    Loading...
+                </h2>
+
+                <div
+                    class="hero-email"
+                    id="heroEmail"
+                >
+                    Loading...
+                </div>
+
+
+                <div class="hero-badges">
+
+                    <div class="hero-badge">
+                        🟢
+                        Active Account
+                    </div>
+
+                    <div class="hero-badge">
+                        🔒
+                        Verified Login
+                    </div>
+
+                    <div class="hero-badge">
+                        💬
+                        Chat Member
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PROFILE CONTENT
+        ================================================== -->
+
+        <section class="profile-grid">
+
+
+            <!-- =================================================
+                 LEFT COLUMN
+            ================================================= -->
+
+            <div>
+
+
+                <!-- Profile Completion -->
+
+                <div class="profile-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Profile Completion
+                            </h2>
+
+                            <p>
+                                Complete your profile for a better experience.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="completion">
+
+                            <div class="completion-circle">
+
+                                <span
+                                    class="completion-number"
+                                    id="completionNumber"
+                                >
+                                    80%
+                                </span>
+
+                            </div>
+
+                            <div class="completion-info">
+
+                                <strong id="completionTitle">
+                                    Your profile is looking good
+                                </strong>
+
+                                <p id="completionText">
+                                    Add a phone number and profile photo
+                                    to make your profile more complete.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Edit Profile -->
+
+                <div class="profile-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Personal Information
+                            </h2>
+
+                            <p>
+                                Update the information visible on your account.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <form id="profileForm">
+
+                            <div class="form-grid">
+
+
+                                <!-- Display Name -->
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Display Name
+                                    </label>
+
+                                    <div class="input-wrapper">
+
+                                        <span class="input-icon">
+                                            👤
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="displayName"
+                                            class="form-input"
+                                            placeholder="Your name"
+                                            maxlength="60"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Email -->
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Email Address
+                                    </label>
+
+                                    <div class="input-wrapper">
+
+                                        <span class="input-icon">
+                                            ✉
+                                        </span>
+
+                                        <input
+                                            type="email"
+                                            id="emailInput"
+                                            class="form-input"
+                                            disabled
+                                        >
+
+                                    </div>
+
+                                    <span class="field-note">
+                                        Your Firebase authentication email cannot be changed here.
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Phone -->
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Phone Number
+                                    </label>
+
+                                    <div class="input-wrapper">
+
+                                        <span class="input-icon">
+                                            ☎
+                                        </span>
+
+                                        <input
+                                            type="tel"
+                                            id="phoneInput"
+                                            class="form-input"
+                                            placeholder="+254..."
+                                            maxlength="20"
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Location -->
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Location
+                                    </label>
+
+                                    <div class="input-wrapper">
+
+                                        <span class="input-icon">
+                                            📍
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="locationInput"
+                                            class="form-input"
+                                            placeholder="Your location"
+                                            maxlength="80"
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Bio -->
+
+                                <div class="form-group full">
+
+                                    <label class="form-label">
+                                        About Me
+                                    </label>
+
+                                    <textarea
+                                        id="bioInput"
+                                        class="form-textarea"
+                                        placeholder="Tell people a little about yourself..."
+                                        maxlength="300"
+                                    ></textarea>
+
+                                    <span class="field-note">
+                                        Maximum 300 characters.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    id="resetBtn"
+                                >
+                                    Reset
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    id="saveBtn"
+                                >
+                                    Save Changes
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Security -->
+
+                <div class="profile-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Security
+                            </h2>
+
+                            <p>
+                                Account authentication and security information.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="security-item">
+
+                            <div class="security-icon">
+                                🔐
+                            </div>
+
+                            <div class="security-info">
+
+                                <strong>
+                                    Firebase Authentication
+                                </strong>
+
+                                <p>
+                                    Your account is protected by Firebase Authentication.
+                                </p>
+
+                            </div>
+
+                            <div class="security-badge">
+                                ACTIVE
+                            </div>
+
+                        </div>
+
+
+                        <div class="security-item">
+
+                            <div class="security-icon">
+                                ✉
+                            </div>
+
+                            <div class="security-info">
+
+                                <strong>
+                                    Email Account
+                                </strong>
+
+                                <p id="securityEmail">
+                                    Loading...
+                                </p>
+
+                            </div>
+
+                            <div class="security-badge">
+                                ACCOUNT
+                            </div>
+
+                        </div>
+
+
+                        <div class="security-item">
+
+                            <div class="security-icon">
+                                🟢
+                            </div>
+
+                            <div class="security-info">
+
+                                <strong>
+                                    Current Session
+                                </strong>
+
+                                <p>
+                                    You are currently signed in to this device.
+                                </p>
+
+                            </div>
+
+                            <div class="security-badge">
+                                ONLINE
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RIGHT COLUMN
+            ================================================== -->
+
+            <div>
+
+
+                <!-- Account Information -->
+
+                <div class="profile-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Account Information
+                            </h2>
+
+                            <p>
+                                Your account details.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="info-list">
+
+
+                            <div class="info-row">
+
+                                <div class="info-icon">
+                                    🆔
+                                </div>
+
+                                <div class="info-content">
+
+                                    <div class="info-label">
+                                        User ID
+                                    </div>
+
+                                    <div
+                                        class="info-value"
+                                        id="userId"
+                                    >
+                                        Loading...
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    class="copy-btn"
+                                    id="copyUidBtn"
+                                >
+                                    Copy
+                                </button>
+
+                            </div>
+
+
+                            <div class="info-row">
+
+                                <div class="info-icon">
+                                    📅
+                                </div>
+
+                                <div class="info-content">
+
+                                    <div class="info-label">
+                                        Account Created
+                                    </div>
+
+                                    <div
+                                        class="info-value"
+                                        id="createdDate"
+                                    >
+                                        Loading...
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="info-row">
+
+                                <div class="info-icon">
+                                    🟢
+                                </div>
+
+                                <div class="info-content">
+
+                                    <div class="info-label">
+                                        Current Status
+                                    </div>
+
+                                    <div class="info-value">
+                                        Online
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="info-row">
+
+                                <div class="info-icon">
+                                    💬
+                                </div>
+
+                                <div class="info-content">
+
+                                    <div class="info-label">
+                                        Account Type
+                                    </div>
+
+                                    <div class="info-value">
+                                        Chat User
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Preferences -->
+
+                <div class="profile-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Profile Preferences
+                            </h2>
+
+                            <p>
+                                Control how your profile behaves.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <div class="preference-item">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Show Online Status
+                                </strong>
+
+                                <p>
+                                    Allow other users to see when you are online.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="onlineStatusToggle"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="preference-item">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Allow Messages
+                                </strong>
+
+                                <p>
+                                    Allow other registered users to start conversations with you.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="messagesToggle"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="preference-item">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Read Receipts
+                                </strong>
+
+                                <p>
+                                    Let other users know when you have read their messages.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="readReceiptsToggle"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="preference-item">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Typing Indicator
+                                </strong>
+
+                                <p>
+                                    Show other users when you are typing a message.
+                                </p>
+
+                            </div>
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="typingToggle"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Danger Zone -->
+
+                <div class="profile-card danger-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Account Actions
+                            </h2>
+
+                            <p>
+                                Sensitive account operations.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="danger-content">
+
+                            <div>
+
+                                <strong>
+                                    Sign out from this device
+                                </strong>
+
+                                <p>
+                                    End your current Let's Chat session.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="danger-btn"
+                                id="dangerLogoutBtn"
+                            >
+                                Sign Out
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- Toast -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Changes saved successfully.
+</div>
+
+
+<!-- =========================================================
+     FIREBASE + PROFILE JAVASCRIPT
+========================================================== -->
+<script src="layout.js"></script>
+<script type="module">
+
+    /* =====================================================
+       FIREBASE
+    ====================================================== */
+
+    import {
+        auth,
+        db
+    } from "./firebase.js";
+
+    import {
+        onAuthStateChanged,
+        signOut,
+        updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+    /* =====================================================
+       ELEMENTS
+    ====================================================== */
+
+    const menuBtn =
+        document.getElementById("menuBtn");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    const dangerLogoutBtn =
+        document.getElementById("dangerLogoutBtn");
+
+    const sidebarUsername =
+        document.getElementById("sidebarUsername");
+
+    const sidebarEmail =
+        document.getElementById("sidebarEmail");
+
+    const sidebarInitials =
+        document.getElementById("sidebarInitials");
+
+    const sidebarAvatarImage =
+        document.getElementById("sidebarAvatarImage");
+
+    const heroName =
+        document.getElementById("heroName");
+
+    const heroEmail =
+        document.getElementById("heroEmail");
+
+    const heroInitials =
+        document.getElementById("heroInitials");
+
+    const heroAvatarImage =
+        document.getElementById("heroAvatarImage");
+
+    const displayName =
+        document.getElementById("displayName");
+
+    const emailInput =
+        document.getElementById("emailInput");
+
+    const phoneInput =
+        document.getElementById("phoneInput");
+
+    const locationInput =
+        document.getElementById("locationInput");
+
+    const bioInput =
+        document.getElementById("bioInput");
+
+    const profileForm =
+        document.getElementById("profileForm");
+
+    const saveBtn =
+        document.getElementById("saveBtn");
+
+    const resetBtn =
+        document.getElementById("resetBtn");
+
+    const userId =
+        document.getElementById("userId");
+
+    const createdDate =
+        document.getElementById("createdDate");
+
+    const securityEmail =
+        document.getElementById("securityEmail");
+
+    const copyUidBtn =
+        document.getElementById("copyUidBtn");
+
+    const refreshBtn =
+        document.getElementById("refreshBtn");
+
+    const photoInput =
+        document.getElementById("photoInput");
+
+    const toast =
+        document.getElementById("toast");
+
+    const completionNumber =
+        document.getElementById("completionNumber");
+
+    const completionTitle =
+        document.getElementById("completionTitle");
+
+    const completionText =
+        document.getElementById("completionText");
+
+    const onlineStatusToggle =
+        document.getElementById("onlineStatusToggle");
+
+    const messagesToggle =
+        document.getElementById("messagesToggle");
+
+    const readReceiptsToggle =
+        document.getElementById("readReceiptsToggle");
+
+    const typingToggle =
+        document.getElementById("typingToggle");
+
+
+    /* =====================================================
+       STATE
+    ====================================================== */
+
+    let currentUser = null;
+
+    let originalProfile = {
+
+        displayName: "",
+        phone: "",
+        location: "",
+        bio: "",
+        photoURL: ""
+    };
+
+
+    /* =====================================================
+       INITIALS
+    ====================================================== */
+
+    function getInitials(name) {
+
+        if (!name) {
+            return "U";
+        }
+
+        const parts =
+            name.trim().split(/\s+/);
+
+        if (parts.length === 1) {
+
+            return parts[0][0]
+                .toUpperCase();
+        }
+
+        return (
+            parts[0][0] +
+            parts[parts.length - 1][0]
+        ).toUpperCase();
+    }
+
+
+    /* =====================================================
+       TOAST
+    ====================================================== */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+        toast.textContent =
+            message;
+
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer =
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 3000);
+    }
+
+
+    /* =====================================================
+       MOBILE MENU
+    ====================================================== */
+
+    menuBtn.addEventListener(
+        "click",
+        () => {
+
+            sidebar.classList.toggle(
+                "active"
+            );
+
+            menuBtn.innerHTML =
+                sidebar.classList.contains("active")
+                    ? "✕"
+                    : "☰";
+        }
+    );
+
+
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    sidebar.classList.remove(
+                        "active"
+                    );
+
+                    menuBtn.innerHTML =
+                        "☰";
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       FORMAT DATE
+    ====================================================== */
+
+    function formatDate(timestamp) {
+
+        if (!timestamp) {
+            return "Not available";
+        }
+
+        try {
+
+            const date =
+                timestamp.toDate
+                    ? timestamp.toDate()
+                    : new Date(timestamp);
+
+            return date.toLocaleDateString(
+                "en-KE",
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+        } catch {
+
+            return "Not available";
+        }
+    }
+
+
+    /* =====================================================
+       UPDATE AVATAR
+    ====================================================== */
+
+    function updateAvatar(
+        name,
+        photoURL
+    ) {
+
+        const initials =
+            getInitials(name);
+
+        sidebarInitials.textContent =
+            initials;
+
+        heroInitials.textContent =
+            initials;
+
+
+        if (photoURL) {
+
+            sidebarAvatarImage.src =
+                photoURL;
+
+            sidebarAvatarImage.style.display =
+                "block";
+
+            sidebarInitials.style.display =
+                "none";
+
+
+            heroAvatarImage.src =
+                photoURL;
+
+            heroAvatarImage.style.display =
+                "block";
+
+            heroInitials.style.display =
+                "none";
+
+        } else {
+
+            sidebarAvatarImage.style.display =
+                "none";
+
+            sidebarInitials.style.display =
+                "block";
+
+
+            heroAvatarImage.style.display =
+                "none";
+
+            heroInitials.style.display =
+                "block";
+        }
+    }
+
+
+    /* =====================================================
+       CALCULATE PROFILE COMPLETION
+    ====================================================== */
+
+    function updateCompletion(
+        name,
+        email,
+        phone,
+        location,
+        bio,
+        photoURL
+    ) {
+
+        const fields = [
+
+            name,
+
+            email,
+
+            phone,
+
+            location,
+
+            bio,
+
+            photoURL
+
+        ];
+
+        const completed =
+            fields.filter(
+                value =>
+                    value &&
+                    String(value).trim() !== ""
+            ).length;
+
+        const percentage =
+            Math.round(
+                (completed / fields.length) * 100
+            );
+
+
+        completionNumber.textContent =
+            `${percentage}%`;
+
+
+        const degree =
+            percentage * 3.6;
+
+
+        document
+            .querySelector(".completion-circle")
+            .style.background =
+            `conic-gradient(
+                var(--primary) 0deg,
+                var(--primary) ${degree}deg,
+                rgba(59,130,246,0.10) ${degree}deg,
+                rgba(59,130,246,0.10) 360deg
+            )`;
+
+
+        if (percentage >= 100) {
+
+            completionTitle.textContent =
+                "Your profile is complete";
+
+            completionText.textContent =
+                "Everything looks good. Your profile is fully configured.";
+
+        } else if (percentage >= 80) {
+
+            completionTitle.textContent =
+                "Your profile is looking good";
+
+            completionText.textContent =
+                "Complete the remaining information to finish your profile.";
+
+        } else {
+
+            completionTitle.textContent =
+                "Complete your profile";
+
+            completionText.textContent =
+                "Add more information to make your profile more complete.";
+        }
+    }
+
+
+    /* =====================================================
+       LOAD FIREBASE USER
+    ====================================================== */
+
+    async function loadProfile(user) {
+
+        currentUser =
+            user;
+
+
+        const name =
+            user.displayName || "User";
+
+        const email =
+            user.email || "";
+
+
+        /* Authentication information */
+
+        sidebarUsername.textContent =
+            name;
+
+        sidebarEmail.textContent =
+            email;
+
+        heroName.textContent =
+            name;
+
+        heroEmail.textContent =
+            email;
+
+        displayName.value =
+            name;
+
+        emailInput.value =
+            email;
+
+        securityEmail.textContent =
+            email;
+
+        userId.textContent =
+            user.uid;
+
+        updateAvatar(
+            name,
+            user.photoURL || ""
+        );
+
+
+        /* Account creation */
+
+        createdDate.textContent =
+            formatDate(
+                user.metadata?.creationTime
+            );
+
+
+        /* Firestore profile */
+
+        try {
+
+            const profileRef =
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                );
+
+            const profileSnap =
+                await getDoc(profileRef);
+
+
+            if (profileSnap.exists()) {
+
+                const data =
+                    profileSnap.data();
+
+
+                phoneInput.value =
+                    data.phone || "";
+
+                locationInput.value =
+                    data.location || "";
+
+                bioInput.value =
+                    data.bio || "";
+
+
+                const photoURL =
+                    data.photoURL ||
+                    user.photoURL ||
+                    "";
+
+
+                originalProfile = {
+
+                    displayName:
+                        data.username ||
+                        user.displayName ||
+                        "User",
+
+                    phone:
+                        data.phone || "",
+
+                    location:
+                        data.location || "",
+
+                    bio:
+                        data.bio || "",
+
+                    photoURL:
+                        photoURL
+                };
+
+
+                updateAvatar(
+                    originalProfile.displayName,
+                    photoURL
+                );
+
+
+                updateCompletion(
+
+                    originalProfile.displayName,
+
+                    email,
+
+                    originalProfile.phone,
+
+                    originalProfile.location,
+
+                    originalProfile.bio,
+
+                    originalProfile.photoURL
+                );
+
+
+                if (
+                    typeof data.showOnlineStatus
+                    === "boolean"
+                ) {
+
+                    onlineStatusToggle.checked =
+                        data.showOnlineStatus;
+                }
+
+
+                if (
+                    typeof data.allowMessages
+                    === "boolean"
+                ) {
+
+                    messagesToggle.checked =
+                        data.allowMessages;
+                }
+
+
+                if (
+                    typeof data.readReceipts
+                    === "boolean"
+                ) {
+
+                    readReceiptsToggle.checked =
+                        data.readReceipts;
+                }
+
+
+                if (
+                    typeof data.typingIndicator
+                    === "boolean"
+                ) {
+
+                    typingToggle.checked =
+                        data.typingIndicator;
+                }
+
+            } else {
+
+                originalProfile = {
+
+                    displayName:
+                        user.displayName || "User",
+
+                    phone: "",
+
+                    location: "",
+
+                    bio: "",
+
+                    photoURL:
+                        user.photoURL || ""
+                };
+
+
+                updateCompletion(
+
+                    originalProfile.displayName,
+
+                    email,
+
+                    "",
+                    "",
+                    "",
+                    originalProfile.photoURL
+                );
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load profile:",
+                error
+            );
+
+            showToast(
+                "Unable to load some profile information."
+            );
+        }
+    }
+
+
+    /* =====================================================
+       AUTH STATE
+    ====================================================== */
+
+    onAuthStateChanged(
+        auth,
+        async user => {
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            await loadProfile(user);
+        }
+    );
+
+
+    /* =====================================================
+       SAVE PROFILE
+    ====================================================== */
+
+    profileForm.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            if (!currentUser) {
+
+                showToast(
+                    "You are not signed in."
+                );
+
+                return;
+            }
+
+
+            const name =
+                displayName.value.trim();
+
+            const phone =
+                phoneInput.value.trim();
+
+            const location =
+                locationInput.value.trim();
+
+            const bio =
+                bioInput.value.trim();
+
+
+            if (!name) {
+
+                showToast(
+                    "Please enter your display name."
+                );
+
+                displayName.focus();
+
+                return;
+            }
+
+
+            saveBtn.disabled =
+                true;
+
+            saveBtn.textContent =
+                "Saving...";
+
+
+            try {
+
+                /* Update Firebase Authentication profile */
+
+                await updateProfile(
+                    currentUser,
+                    {
+                        displayName:
+                            name
+                    }
+                );
+
+
+                /* Update Firestore */
+
+                const profileRef =
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid
+                    );
+
+
+                await setDoc(
+
+                    profileRef,
+
+                    {
+
+                        username:
+                            name,
+
+                        email:
+                            currentUser.email || "",
+
+                        phone:
+                            phone,
+
+                        location:
+                            location,
+
+                        bio:
+                            bio,
+
+                        photoURL:
+                            currentUser.photoURL || "",
+
+                        showOnlineStatus:
+                            onlineStatusToggle.checked,
+
+                        allowMessages:
+                            messagesToggle.checked,
+
+                        readReceipts:
+                            readReceiptsToggle.checked,
+
+                        typingIndicator:
+                            typingToggle.checked,
+
+                        updatedAt:
+                            new Date()
+
+                    },
+
+                    {
+                        merge: true
+                    }
+                );
+
+
+                originalProfile = {
+
+                    ...originalProfile,
+
+                    displayName:
+                        name,
+
+                    phone:
+                        phone,
+
+                    location:
+                        location,
+
+                    bio:
+                        bio,
+
+                    photoURL:
+                        currentUser.photoURL || ""
+                };
+
+
+                sidebarUsername.textContent =
+                    name;
+
+                heroName.textContent =
+                    name;
+
+
+                updateAvatar(
+                    name,
+                    currentUser.photoURL || ""
+                );
+
+
+                updateCompletion(
+
+                    name,
+
+                    currentUser.email || "",
+
+                    phone,
+
+                    location,
+
+                    bio,
+
+                    currentUser.photoURL || ""
+                );
+
+
+                showToast(
+                    "Profile updated successfully."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Profile update failed:",
+                    error
+                );
+
+                showToast(
+                    "Unable to save profile changes."
+                );
+
+            } finally {
+
+                saveBtn.disabled =
+                    false;
+
+                saveBtn.textContent =
+                    "Save Changes";
+            }
+        }
+    );
+
+
+    /* =====================================================
+       RESET PROFILE
+    ====================================================== */
+
+    resetBtn.addEventListener(
+        "click",
+        () => {
+
+            displayName.value =
+                originalProfile.displayName;
+
+            phoneInput.value =
+                originalProfile.phone;
+
+            locationInput.value =
+                originalProfile.location;
+
+            bioInput.value =
+                originalProfile.bio;
+
+
+            updateAvatar(
+                originalProfile.displayName,
+                originalProfile.photoURL
+            );
+
+
+            showToast(
+                "Changes have been reset."
+            );
+        }
+    );
+
+
+    /* =====================================================
+       PROFILE PHOTO PREVIEW
+    ====================================================== */
+
+    photoInput.addEventListener(
+        "change",
+        event => {
+
+            const file =
+                event.target.files?.[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            if (!file.type.startsWith("image/")) {
+
+                showToast(
+                    "Please select a valid image."
+                );
+
+                return;
+            }
+
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                showToast(
+                    "Image must be smaller than 5MB."
+                );
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = () => {
+
+                const imageURL =
+                    reader.result;
+
+                updateAvatar(
+                    displayName.value.trim() ||
+                    "User",
+                    imageURL
+                );
+
+                showToast(
+                    "Photo preview updated. Save to apply the profile changes."
+                );
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+
+    /* =====================================================
+       COPY UID
+    ====================================================== */
+
+    copyUidBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (!currentUser) {
+                return;
+            }
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    currentUser.uid
+                );
+
+                copyUidBtn.textContent =
+                    "Copied";
+
+                showToast(
+                    "User ID copied to clipboard."
+                );
+
+
+                setTimeout(
+                    () => {
+
+                        copyUidBtn.textContent =
+                            "Copy";
+
+                    },
+                    2000
+                );
+
+            } catch {
+
+                showToast(
+                    "Unable to copy User ID."
+                );
+            }
+        }
+    );
+
+
+    /* =====================================================
+       PREFERENCES
+    ====================================================== */
+
+    async function savePreference(
+        field,
+        value
+    ) {
+
+        if (!currentUser) {
+            return;
+        }
+
+        try {
+
+            await setDoc(
+
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
+                ),
+
+                {
+                    [field]: value,
+                    updatedAt: new Date()
+                },
+
+                {
+                    merge: true
+                }
+            );
+
+            showToast(
+                "Preference updated."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Preference update failed:",
+                error
+            );
+
+            showToast(
+                "Unable to update preference."
+            );
+        }
+    }
+
+
+    onlineStatusToggle.addEventListener(
+        "change",
+        () => {
+
+            savePreference(
+                "showOnlineStatus",
+                onlineStatusToggle.checked
+            );
+        }
+    );
+
+
+    messagesToggle.addEventListener(
+        "change",
+        () => {
+
+            savePreference(
+                "allowMessages",
+                messagesToggle.checked
+            );
+        }
+    );
+
+
+    readReceiptsToggle.addEventListener(
+        "change",
+        () => {
+
+            savePreference(
+                "readReceipts",
+                readReceiptsToggle.checked
+            );
+        }
+    );
+
+
+    typingToggle.addEventListener(
+        "change",
+        () => {
+
+            savePreference(
+                "typingIndicator",
+                typingToggle.checked
+            );
+        }
+    );
+
+
+    /* =====================================================
+       REFRESH
+    ====================================================== */
+
+    refreshBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (!currentUser) {
+                return;
+            }
+
+            refreshBtn.disabled =
+                true;
+
+            refreshBtn.textContent =
+                "↻ Loading...";
+
+            await loadProfile(
+                currentUser
+            );
+
+            refreshBtn.disabled =
+                false;
+
+            refreshBtn.textContent =
+                "↻ Refresh";
+
+            showToast(
+                "Profile refreshed."
+            );
+        }
+    );
+
+
+    /* =====================================================
+       LOGOUT
+    ====================================================== */
+
+    async function logoutUser() {
+
+        try {
+
+            await signOut(auth);
+
+            window.location.href =
+                "login.html";
+
+        } catch (error) {
+
+            console.error(
+                "Logout failed:",
+                error
+            );
+
+            showToast(
+                "Unable to logout. Please try again."
+            );
+        }
+    }
+
+
+    logoutBtn.addEventListener(
+        "click",
+        logoutUser
+    );
+
+
+    dangerLogoutBtn.addEventListener(
+        "click",
+        logoutUser
+    );
+
+</script>
+
+
+</body>
+</html>
