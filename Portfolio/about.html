@@ -1,0 +1,182 @@
+  <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isaack Koinet Shapashina | ICT Technician</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- AOS (Animate On Scroll) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body data-theme="dark">
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" aria-label="Home">
+        <div class="brand-badge">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
+        <div class="brand-title">
+          <div>Isaack Shapashina</div>
+          <small>ICT Technician • Technical Support</small>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="experience.html">Experience</a>
+        <a href="projects.html">Projects</a>
+        <a href="contacts.html">Contact</a>
+      </nav>
+
+      <div class="nav-cta">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile panel -->
+  <div class="mobile-panel" id="mobilePanel" data-open="false" role="dialog" aria-label="Mobile navigation">
+    <div class="panel">
+      <nav class="mobile-links">
+        <a href="index.html" data-close-mobile>Home</a>
+        <a href="about.html" data-close-mobile>About</a>
+        <a href="skills.html" data-close-mobile>Skills</a>
+        <a href="experience.html" data-close-mobile>Experience</a>
+        <a href="projects.html" data-close-mobile>Projects</a>
+        <a href="contacts.html" data-close-mobile>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head" data-aos="fade-up">
+        <div>
+          <div class="kicker">About</div>
+          <h2 class="title">Professional, reliable, and hands-on ICT support.</h2>
+          <div class="subtitle">
+            Delivering reliable ICT solutions through technical expertise, problem-solving, and exceptional user support.
+          </div>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div class="card" data-aos="fade-up">
+          <h3>Short introduction</h3>
+          <p class="subtitle" style="margin-top:0;">
+            I’m an ICT Technician focused on computer maintenance, troubleshooting, networking, and school ICT setups.
+            My goal is to keep systems working smoothly and help users feel confident with technology.
+          </p>
+
+          <ul class="about-bullets">
+            <li>
+              <i class="fa-solid fa-bolt"></i>
+              <div>
+                <b>Fast diagnosis</b>
+                <p>Identify hardware/software/network issues and resolve them efficiently.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-shield-halved"></i>
+              <div>
+                <b>Stable setups</b>
+                <p>Configure devices and systems so they perform well and stay manageable.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <div>
+                <b>User training</b>
+                <p>Train staff and students on practical tools like Microsoft Office and common workflows.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="120">
+          <h3>Professional summary</h3>
+          <p class="subtitle" style="margin-top:0;">
+            Experienced ICT Technician with hands-on technical support across school environments.
+            Skilled in installing software, setting up networks, configuring printers, deploying school management systems,
+            and providing practical user support and training.
+          </p>
+
+          <div class="grid-2" style="margin-top:16px;">
+            <div class="meta-row">
+              <b>Core Tech</b>
+              <span>PCs • Networks • Printers</span>
+            </div>
+            <div class="meta-row">
+              <b>Core Skills</b>
+              <span>Troubleshooting • Setup</span>
+            </div>
+          </div>
+
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <span class="tag"><i class="fa-solid fa-desktop" style="margin-right:8px; color:var(--accent)"></i>Computer Maintenance</span>
+            <span class="tag"><i class="fa-solid fa-wifi" style="margin-right:8px; color:var(--accent)"></i>Networking</span>
+            <span class="tag"><i class="fa-solid fa-print" style="margin-right:8px; color:var(--accent)"></i>Printer Installation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Isaack Koinet Shapashina</div>
+        <div class="social" aria-label="Social links">
+          <a href="#" aria-label="LinkedIn (edit link)"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="GitHub (edit link)"><i class="fa-brands fa-github-alt"></i></a>
+          <a href="#" aria-label="WhatsApp (edit link)"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#home" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="to-top" id="toTop" data-show="false" aria-label="Back to top" role="button" tabindex="0">
+    <i class="fa-solid fa-arrow-up"></i>
+  </div>
+
+  <div class="toast" id="toast" data-show="false" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check"></i>
+    <div id="toastText">Message sent successfully.</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

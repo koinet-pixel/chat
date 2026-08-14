@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isaack Koinet Shapashina | ICT Technician</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- AOS (Animate On Scroll) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body data-theme="dark">
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" aria-label="Home">
+        <div class="brand-badge">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
+        <div class="brand-title">
+          <div>Isaack Shapashina</div>
+          <small>ICT Technician • Technical Support</small>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="experience.html">Experience</a>
+        <a href="projects.html">Projects</a>
+        <a href="contacts.html">Contact</a>
+      </nav>
+
+      <div class="nav-cta">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile panel -->
+  <div class="mobile-panel" id="mobilePanel" data-open="false" role="dialog" aria-label="Mobile navigation">
+    <div class="panel">
+      <nav class="mobile-links">
+        <a href="index.html" data-close-mobile>Home</a>
+        <a href="about.html" data-close-mobile>About</a>
+        <a href="skills.html" data-close-mobile>Skills</a>
+        <a href="experience.html" data-close-mobile>Experience</a>
+        <a href="projects.html" data-close-mobile>Projects</a>
+        <a href="contacts.html" data-close-mobile>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <main id="home" class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-card" data-aos="fade-up">
+          <div class="hero-content">
+            <div class="kicker">Delivering reliable ICT solutions</div>
+
+            <h1 class="hero-name">Hi, I'm <span style="color:var(--accent);">Isaack Koinet Shapashina</span></h1>
+
+            <div class="subtitle">
+              <b>ICT Technician</b> • Technical Support • Computer Maintenance
+              <br/>I help schools and individuals keep technology fast, stable, and secure.
+            </div>
+
+            <div class="hero-role">
+              <div class="pill"><i class="fa-solid fa-screwdriver-wrench"></i>Computer Maintenance</div>
+              <div class="pill"><i class="fa-solid fa-headset"></i>Technical Support</div>
+              <div class="pill"><i class="fa-solid fa-network-wired"></i>Networking</div>
+            </div>
+
+            <div class="type-wrap" aria-label="Typing effect">
+              <div class="type-static">I specialize in:</div>
+              <div class="type-dynamic" id="typeText">
+                Software Installation<span class="cursor" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="projects.html" aria-label="View my work">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>View My Work</span>
+              </a>
+
+              <a class="btn" href="contacts.html" aria-label="Download CV (demo button)">
+                <i class="fa-solid fa-file-arrow-down"></i>
+                <span>Download CV</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="profile-card" data-aos="fade-up" data-aos-delay="120">
+          <div class="profile-inner">
+            <div class="profile-photo">
+                <img id="profileImage" src="images/default-avatar.png" alt="Profile Photo">
+
+                    <label for="uploadPhoto" class="upload-btn">
+                 <i class="fa-solid fa-camera"></i>
+             </label>
+
+                <input
+                    type="file"
+                    id="uploadPhoto"
+                    accept="image/*"
+                    hidden
+                    >
+            </div>
+            <button id="removePhoto" class="remove-btn">Remove Photo</button>
+
+            <div class="profile-meta">
+              <div class="meta-row">
+                <b>Current Role</b>
+                <span>Digischool Management Systems</span>
+              </div>
+              <div class="meta-row">
+                <b>Availability</b>
+                <span>ICT Support • School Visits</span>
+              </div>
+              <div class="meta-row">
+                <b>Focus</b>
+                <span>Repair • Setup • Training</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Isaack Koinet Shapashina</div>
+        <div class="social" aria-label="Social links">
+          <a href="#" aria-label="LinkedIn (edit link)"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="GitHub (edit link)"><i class="fa-brands fa-github-alt"></i></a>
+          <a href="#" aria-label="WhatsApp (edit link)"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#home" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="to-top" id="toTop" data-show="false" aria-label="Back to top" role="button" tabindex="0">
+    <i class="fa-solid fa-arrow-up"></i>
+  </div>
+
+  <div class="toast" id="toast" data-show="false" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check"></i>
+    <div id="toastText">Message sent successfully.</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

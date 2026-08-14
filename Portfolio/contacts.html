@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isaack Koinet Shapashina | ICT Technician</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- AOS (Animate On Scroll) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body data-theme="dark">
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" aria-label="Home">
+        <div class="brand-badge">
+          <i class="fa-solid fa-microchip"></i>
+        </div>
+        <div class="brand-title">
+          <div>Isaack Shapashina</div>
+          <small>ICT Technician • Technical Support</small>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="experience.html">Experience</a>
+        <a href="projects.html">Projects</a>
+        <a href="contacts.html">Contact</a>
+      </nav>
+
+      <div class="nav-cta">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light/dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile panel -->
+  <div class="mobile-panel" id="mobilePanel" data-open="false" role="dialog" aria-label="Mobile navigation">
+    <div class="panel">
+      <nav class="mobile-links">
+        <a href="index.html" data-close-mobile>Home</a>
+        <a href="about.html" data-close-mobile>About</a>
+        <a href="skills.html" data-close-mobile>Skills</a>
+        <a href="experience.html" data-close-mobile>Experience</a>
+        <a href="projects.html" data-close-mobile>Projects</a>
+        <a href="contacts.html" data-close-mobile>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  
+<!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-head" data-aos="fade-up">
+        <div>
+          <div class="kicker">Contact</div>
+          <h2 class="title">Let’s solve your ICT problems.</h2>
+          <div class="subtitle">
+            Use the form below or reach out via phone, email, WhatsApp, LinkedIn, or GitHub.
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="card" data-aos="fade-up">
+          <h3>Contact information</h3>
+
+          <div class="contact-list">
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <b>Phone</b>
+                  <span>+00 000 000 000 (edit this)</span>
+                </div>
+              </div>
+              <a class="btn" href="tel:+0000000000" style="padding:10px 12px; border-radius:14px;">
+                <i class="fa-solid fa-phone-volume"></i>
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                  <b>Email</b>
+                  <span>isaack@example.com (edit this)</span>
+                </div>
+              </div>
+              <a class="btn" href="mailto:isaack@example.com" style="padding:10px 12px; border-radius:14px;">
+                <i class="fa-solid fa-paper-plane"></i>
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                  <b>Location</b>
+                  <span>Your City, Country (edit this)</span>
+                </div>
+              </div>
+              <div class="btn" style="padding:10px 12px; border-radius:14px; cursor:default;">
+                <i class="fa-solid fa-map-location-dot"></i>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-brands fa-linkedin"></i>
+                <div>
+                  <b>LinkedIn</b>
+                  <span>@your-handle (edit this)</span>
+                </div>
+              </div>
+              <a class="btn" href="#" style="padding:10px 12px; border-radius:14px;" aria-label="LinkedIn (edit link)">
+                <i class="fa-brands fa-linkedin-in"></i>
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-brands fa-github"></i>
+                <div>
+                  <b>GitHub</b>
+                  <span>@your-handle (edit this)</span>
+                </div>
+              </div>
+              <a class="btn" href="#" style="padding:10px 12px; border-radius:14px;" aria-label="GitHub (edit link)">
+                <i class="fa-brands fa-github-alt"></i>
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <div class="left">
+                <i class="fa-brands fa-whatsapp"></i>
+                <div>
+                  <b>WhatsApp</b>
+                  <span>+00 000 000 000 (edit this)</span>
+                </div>
+              </div>
+              <a class="btn" href="#" style="padding:10px 12px; border-radius:14px;" aria-label="WhatsApp (edit link)">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="120">
+          <h3>Contact form</h3>
+          <form id="contactForm">
+            <div class="form-row">
+              <div>
+                <label for="name">Your Name</label>
+                <input id="name" name="name" type="text" placeholder="e.g., John Doe" required />
+              </div>
+              <div>
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" placeholder="e.g., +27 00 000 0000" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="e.g., you@example.com" required />
+              </div>
+              <div>
+                <label for="topic">Topic</label>
+                <input id="topic" name="topic" type="text" placeholder="e.g., Computer repair / Networking / Setup" required />
+              </div>
+            </div>
+
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell me what you need help with..." required></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Send Message</span>
+              </button>
+              <div class="small-note">
+                Demo form: this will show a success message on the page.
+                Connect it to your backend later (PHP/Node/Google Forms).
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© 2026 Isaack Koinet Shapashina</div>
+        <div class="social" aria-label="Social links">
+          <a href="#" aria-label="LinkedIn (edit link)"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="GitHub (edit link)"><i class="fa-brands fa-github-alt"></i></a>
+          <a href="#" aria-label="WhatsApp (edit link)"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#home" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="to-top" id="toTop" data-show="false" aria-label="Back to top" role="button" tabindex="0">
+    <i class="fa-solid fa-arrow-up"></i>
+  </div>
+
+  <div class="toast" id="toast" data-show="false" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check"></i>
+    <div id="toastText">Message sent successfully.</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

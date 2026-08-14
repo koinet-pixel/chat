@@ -1,0 +1,154 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Create Admin Account | Isaack Shapashina</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="signup.css">
+    </head>
+
+    <body class="auth-page">
+
+    <div class="auth-background">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <main class="auth-container">
+        <section class="auth-card">
+
+            <div class="auth-logo">
+                <div class="auth-logo-icon">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                    <h1>Isaack Shapashina</h1>
+                    <span>Portfolio Administration</span>
+                </div>
+            </div>
+
+            <div class="auth-header">
+                <div class="auth-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h2>Create Admin Account</h2>
+                <p>Create your administrator account to manage your portfolio.</p>
+            </div>
+
+            <form id="signupForm" class="auth-form" novalidate>
+
+                <div class="input-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input
+                            type="text"
+                            id="fullName"
+                            autocomplete="name"
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input
+                            type="email"
+                            id="email"
+                            autocomplete="email"
+                            placeholder="admin@example.com"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input
+                            type="password"
+                            id="password"
+                            autocomplete="new-password"
+                            placeholder="Create a password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            autocomplete="new-password"
+                            placeholder="Confirm your password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="password-requirements">
+                    <div id="lengthCheck">
+                        <i class="fa-solid fa-circle"></i>
+                        <span>At least 8 characters</span>
+                    </div>
+                    <div id="letterCheck">
+                        <i class="fa-solid fa-circle"></i>
+                        <span>Contains a letter</span>
+                    </div>
+                    <div id="numberCheck">
+                        <i class="fa-solid fa-circle"></i>
+                        <span>Contains a number</span>
+                    </div>
+                </div>
+
+                <div class="auth-message error" id="errorMessage" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="errorText"></span>
+                </div>
+
+                <div class="auth-message success" id="successMessage" role="status">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="successText"></span>
+                </div>
+
+                <button type="submit" class="auth-submit" id="signupButton">
+                    <span id="signupButtonText">Create Admin Account</span>
+                    <i class="fa-solid fa-arrow-right" id="signupButtonIcon"></i>
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an administrator account?</p>
+                <a href="login.html">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Login to Dashboard
+                </a>
+            </div>
+
+        </section>
+    </main>
+
+    <script type="module" src="signup.js"></script>
+    </body>
+    </html>

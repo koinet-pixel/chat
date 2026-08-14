@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard | Isaack Shapashina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../admin/dashboard.css">
+</head>
+<body class="dashboard-page">
+
+<div id="dashboardAuthLock">
+<div class="auth-loader-icon"><i class="fa-solid fa-shield-halved"></i></div>
+<h2>Verifying Access</h2>
+<p>Checking administrator authentication...</p>
+<div class="auth-spinner"></div>
+</div>
+
+<div class="dashboard-app">
+
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand">
+<div class="brand-logo"><i class="fa-solid fa-microchip"></i></div>
+<div><strong>Isaack Admin</strong><small>Portfolio CMS</small></div>
+</div>
+
+<div class="admin-profile">
+<div class="admin-avatar"><img id="sidebarProfileImage" src="../images/default-avatar.png" alt="Admin"><span class="online-dot"></span></div>
+<div class="admin-info"><strong id="sidebarAdminName">Isaack Shapashina</strong><span>Administrator</span></div>
+</div>
+
+<nav class="sidebar-nav">
+<p class="nav-label">MAIN</p>
+<button class="sidebar-link active" data-section="overview"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></button>
+<button class="sidebar-link" data-section="profile"><i class="fa-solid fa-user"></i><span>Home / Profile</span></button>
+<button class="sidebar-link" data-section="contact"><i class="fa-solid fa-address-book"></i><span>Contact Information</span></button>
+<button class="sidebar-link" data-section="messages"><i class="fa-solid fa-envelope"></i><span>Messages</span><b class="nav-badge" id="navUnreadCount">0</b></button>
+<p class="nav-label nav-label-settings">SYSTEM</p>
+<button class="sidebar-link" data-section="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+</nav>
+
+<div class="sidebar-bottom">
+<a href="../index.html" target="_blank" class="sidebar-link"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>View Portfolio</span></a>
+<button class="sidebar-link logout-link logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+</div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<main class="dashboard-main">
+<header class="dashboard-topbar">
+<div class="topbar-left">
+<button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+<div><span class="topbar-small">Portfolio Administration</span><h1 id="pageTitle">Dashboard</h1></div>
+</div>
+
+<div class="topbar-actions">
+<button class="top-icon-btn" id="themeBtn" type="button" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+<button class="top-icon-btn notification-btn" id="notificationBtn" type="button" title="Messages"><i class="fa-solid fa-bell"></i><span id="notificationBadge" hidden>0</span></button>
+<div class="topbar-user"><img id="topbarProfileImage" src="../images/default-avatar.png" alt="Profile"><div><strong id="topbarUserName">Isaack</strong><span>Admin</span></div></div>
+</div>
+</header>
+
+<div class="dashboard-content">
+
+<section class="dashboard-section active" id="section-overview">
+<div class="welcome-card">
+<div><span class="welcome-kicker"><i class="fa-solid fa-sparkles"></i> Welcome back</span><h2>Manage your portfolio from one place.</h2><p>Update your profile, contact information, CV and respond to visitors who contact you.</p></div>
+<div class="welcome-icon"><i class="fa-solid fa-layer-group"></i></div>
+</div>
+
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-envelope"></i></div><div><span>Total Messages</span><strong id="totalMessages">0</strong></div></div>
+<div class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-envelope-open"></i></div><div><span>Unread Messages</span><strong id="unreadMessages">0</strong></div></div>
+<div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-reply"></i></div><div><span>Replied</span><strong id="repliedMessages">0</strong></div></div>
+<div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-user-check"></i></div><div><span>Profile</span><strong>Active</strong></div></div>
+</div>
+
+<div class="content-card">
+<div class="card-header"><div><span class="card-kicker">Inbox</span><h3>Recent Messages</h3></div><button class="text-btn" data-open-section="messages">View all <i class="fa-solid fa-arrow-right"></i></button></div>
+<div class="recent-messages" id="recentMessages"><div class="empty-state"><i class="fa-regular fa-envelope"></i><h4>No messages yet</h4><p>Messages from your contact form will appear here.</p></div></div>
+</div>
+</section>
+
+<section class="dashboard-section" id="section-profile">
+<div class="section-intro"><div><span class="card-kicker">Homepage</span><h2>Profile Management</h2><p>Manage the information displayed on your portfolio homepage.</p></div></div>
+
+<div class="management-grid">
+<div class="content-card">
+<div class="card-header"><div><span class="card-kicker">Personal Information</span><h3>Homepage Content</h3></div></div>
+<form id="profileForm">
+<div class="field"><label for="profileName">Full Name</label><input id="profileName" type="text" placeholder="Isaack Koinet Shapashina" required></div>
+<div class="field"><label for="profileTitle">Professional Title</label><input id="profileTitle" type="text" placeholder="ICT Technician" required></div>
+<div class="field"><label for="profileDescription">Short Description</label><textarea id="profileDescription" rows="4" placeholder="I help schools and individuals keep technology fast, stable, and secure."></textarea></div>
+<div class="field"><label for="specialty1">Specialty 1</label><input id="specialty1" type="text" placeholder="Computer Maintenance"></div>
+<div class="field"><label for="specialty2">Specialty 2</label><input id="specialty2" type="text" placeholder="Technical Support"></div>
+<div class="field"><label for="specialty3">Specialty 3</label><input id="specialty3" type="text" placeholder="Networking"></div>
+<div class="form-actions"><button type="submit" class="primary-btn"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button></div>
+</form>
+</div>
+
+<div>
+<div class="content-card">
+<div class="card-header"><div><span class="card-kicker">Profile Photo</span><h3>Your Photo</h3></div></div>
+<div class="photo-manager">
+<div class="large-profile-preview"><img id="dashboardProfileImage" src="../images/default-avatar.png" alt="Profile"></div>
+<input type="file" id="profilePhotoInput" accept="image/*" hidden>
+<button type="button" class="secondary-btn" id="uploadProfileBtn"><i class="fa-solid fa-camera"></i> Change Photo</button>
+<p class="field-help">Recommended: square JPG or PNG.</p>
+</div>
+</div>
+
+<div class="content-card cv-card">
+<div class="card-header"><div><span class="card-kicker">Resume</span><h3>CV / Resume</h3></div></div>
+<div class="file-manager"><div class="file-icon"><i class="fa-solid fa-file-pdf"></i></div><div class="file-info"><strong id="cvFileName">No CV uploaded</strong><span id="cvStatus">Upload your latest CV</span></div></div>
+<input type="file" id="cvInput" accept=".pdf,.doc,.docx" hidden>
+<div class="file-actions">
+<button type="button" class="secondary-btn" id="uploadCvBtn"><i class="fa-solid fa-upload"></i> Upload CV</button>
+<a href="#" class="secondary-btn disabled" id="viewCvBtn" target="_blank"><i class="fa-solid fa-eye"></i> View</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="dashboard-section" id="section-contact">
+<div class="section-intro"><div><span class="card-kicker">Public Contact Details</span><h2>Contact Information</h2><p>Update the contact details displayed on your portfolio.</p></div></div>
+<div class="content-card">
+<form id="contactSettingsForm">
+<div class="form-grid-2">
+<div class="field"><label for="contactPhone"><i class="fa-solid fa-phone"></i> Phone</label><input id="contactPhone" type="tel" placeholder="+254 7XX XXX XXX"></div>
+<div class="field"><label for="contactEmail"><i class="fa-solid fa-envelope"></i> Email</label><input id="contactEmail" type="email" placeholder="isaack@example.com"></div>
+<div class="field"><label for="contactLocation"><i class="fa-solid fa-location-dot"></i> Location</label><input id="contactLocation" type="text" placeholder="Kenya"></div>
+<div class="field"><label for="contactWhatsApp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</label><input id="contactWhatsApp" type="tel" placeholder="+254 7XX XXX XXX"></div>
+<div class="field"><label for="contactLinkedIn"><i class="fa-brands fa-linkedin"></i> LinkedIn URL</label><input id="contactLinkedIn" type="url" placeholder="https://linkedin.com/in/username"></div>
+<div class="field"><label for="contactGithub"><i class="fa-brands fa-github"></i> GitHub URL</label><input id="contactGithub" type="url" placeholder="https://github.com/username"></div>
+</div>
+<div class="form-actions"><button type="submit" class="primary-btn"><i class="fa-solid fa-floppy-disk"></i> Save Contact Information</button></div>
+</form>
+</div>
+</section>
+
+<section class="dashboard-section" id="section-messages">
+<div class="section-intro"><div><span class="card-kicker">Inbox</span><h2>Messages</h2><p>View and manage messages sent through your portfolio.</p></div></div>
+
+<div class="message-stats">
+<div><span>Total</span><strong id="messageTotalStat">0</strong></div>
+<div><span>Unread</span><strong id="messageUnreadStat">0</strong></div>
+<div><span>Replied</span><strong id="messageRepliedStat">0</strong></div>
+</div>
+
+<div class="content-card messages-card">
+<div class="messages-toolbar">
+<div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="messageSearch" placeholder="Search messages..."></div>
+<select id="messageFilter"><option value="all">All messages</option><option value="unread">Unread</option><option value="read">Read</option><option value="replied">Replied</option></select>
+</div>
+<div class="messages-list" id="messagesList"><div class="empty-state"><i class="fa-regular fa-envelope"></i><h4>No messages</h4><p>Messages will appear here.</p></div></div>
+</div>
+</section>
+
+<section class="dashboard-section" id="section-settings">
+<div class="section-intro"><div><span class="card-kicker">System</span><h2>Settings</h2><p>Manage dashboard preferences.</p></div></div>
+
+<div class="settings-grid">
+<div class="content-card">
+<div class="settings-row">
+<div class="settings-icon"><i class="fa-solid fa-moon"></i></div>
+<div class="settings-info"><strong>Dashboard Theme</strong><span>Switch between dark and light mode.</span></div>
+<button class="switch" id="themeSwitch" type="button"><span></span></button>
+</div>
+</div>
+
+<div class="content-card">
+<div class="settings-row">
+<div class="settings-icon"><i class="fa-solid fa-globe"></i></div>
+<div class="settings-info"><strong>Portfolio</strong><span>Open your public portfolio.</span></div>
+<a href="../index.html" target="_blank" class="secondary-btn">Open</a>
+</div>
+</div>
+
+<div class="content-card danger-card">
+<div class="settings-row">
+<div class="settings-icon danger"><i class="fa-solid fa-right-from-bracket"></i></div>
+<div class="settings-info"><strong>Sign Out</strong><span>End your current admin session.</span></div>
+<button class="danger-btn logout-btn" id="settingsLogoutBtn">Logout</button>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<div class="modal-overlay" id="messageModal" hidden>
+<div class="message-modal">
+<button class="modal-close" id="closeMessageModal" type="button"><i class="fa-solid fa-xmark"></i></button>
+<div class="modal-header"><div class="modal-avatar"><i class="fa-solid fa-user"></i></div><div><h2 id="modalMessageName">Visitor</h2><p id="modalMessageEmail">email@example.com</p></div></div>
+<div class="modal-details">
+<div><span>Phone</span><strong id="modalMessagePhone">—</strong></div>
+<div><span>Topic</span><strong id="modalMessageTopic">—</strong></div>
+<div><span>Date</span><strong id="modalMessageDate">—</strong></div>
+</div>
+<div class="visitor-message"><span>Message</span><p id="modalMessageBody">—</p></div>
+<div class="reply-area"><label for="replyMessage">Reply / Notes</label><textarea id="replyMessage" rows="4" placeholder="Write a reply or note..."></textarea></div>
+<div class="modal-actions">
+<button class="secondary-btn" id="markReadBtn"><i class="fa-solid fa-check"></i> Mark as Read</button>
+<button class="danger-outline-btn" id="deleteMessageBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+<button class="primary-btn" id="replyMessageBtn"><i class="fa-solid fa-reply"></i> Reply via Email</button>
+</div>
+</div>
+</div>
+
+<div class="dashboard-toast" id="dashboardToast" role="status" aria-live="polite"><i class="fa-solid fa-circle-check"></i><span id="toastMessage">Saved successfully.</span></div>
+
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>
